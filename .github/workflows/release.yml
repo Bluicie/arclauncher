@@ -192,6 +192,12 @@ jobs:
           mkdir -p dist
           cp release-apks/arc-launcher-universal-release.apk \
             "dist/${RELEASE_APK_FILENAME_PREFIX}-${TAG}.apk"
+          # Stable alias for TV box Downloader codes (e.g. 6330120) that resolve
+          # releases/latest/download/arclauncher.apk. Shipped through 1.0.5, lost
+          # in 1.0.6 when the universal APK became version-stamped. Do not remove.
+          # See https://github.com/meddouribadis/arclauncher/issues/42
+          cp release-apks/arc-launcher-universal-release.apk \
+            "dist/${RELEASE_APK_FILENAME_PREFIX}.apk"
           cp release-apks/arc-launcher-arm64-v8a-release.apk \
             "dist/${RELEASE_APK_FILENAME_PREFIX}-${TAG}-arm64-v8a.apk"
           cp release-apks/arc-launcher-armeabi-v7a-release.apk \

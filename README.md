@@ -16,6 +16,20 @@ This customized version introduces a modern smart TV-style grid layout, usabilit
 
 ### Downloader code : 6330120
 
+## Join the Google Play Store beta
+
+Arc Launcher is in closed beta on Google Play. To get early access to new builds and help shape what ships next,
+join the beta group here with your Google Play email:
+
+**[Arc Launcher Beta on Google Groups](https://groups.google.com/g/arc-launcher-beta/)**
+
+Once you're in the group, you can enrol in the beta either way:
+
+- **On the web** — open the [Google Play testing link](https://play.google.com/apps/testing/com.omeda.arc),
+  sign in, and add the devices you want Arc on.
+- **On Android** — follow the same testing link from the device itself, or find
+  [Arc Launcher](https://play.google.com/store/apps/details?id=com.omeda.arc) in the Play Store app.
+
 ## Key Features & Enhancements
 
 - **Modern TV Layout** - Redesigned home screen inspired by premium smart TV interfaces.
@@ -103,7 +117,63 @@ This customized version introduces a modern smart TV-style grid layout, usabilit
 
 This is the "safer" and easiest way. Use [Button Mapper](https://play.google.com/store/apps/details?id=flar2.homebutton) to remap the Home button of the remote to launch Arc Launcher.
 
-### Method 2: Disable the default launcher
+### Method 2: Set Arc as the home activity over ADB
+
+This is the recommended way to make Arc Launcher your actual home screen. It is a single command, it leaves the
+stock launcher untouched, and it can be undone just as easily.
+
+```shell
+$ adb shell cmd package set-home-activity com.omeda.arc/.MainActivity
+```
+
+This assigns Arc to the system `HOME` role, so the Home button on the remote goes straight to Arc. Nothing gets
+disabled, which means nothing needs to be re-enabled if you change your mind.
+
+To check which launcher is currently set as home:
+
+```shell
+$ adb shell cmd package resolve-activity -c android.intent.category.HOME -a android.intent.action.MAIN
+```
+
+To go back to the stock launcher, point the home activity at it instead. List the launchers installed on the
+box and copy the one you want back straight from the output:
+
+```shell
+$ adb shell cmd package query-activities -c android.intent.category.HOME -a android.intent.action.MAIN
+```
+
+```shell
+$ adb shell cmd package set-home-activity <package>/<activity>
+```
+
+> **Note**
+> `set-home-activity` requires Android 8.1 or newer, and what it accepts differs by version. On Android 10 and
+> above it assigns the `HOME` role through `RoleManager` and the package name alone is enough. On Android 8.1 to
+> 9 it sets a preferred activity directly and needs the full `<package>/<activity>` form. On older systems, use
+> Method 1 or the fallback below.
+
+> **Tip**
+> On Android 15 and newer you can also clear the assignment entirely with
+> `adb shell cmd package clear-package-preferred-activities`, which makes the system ask again on the next
+> Home press.
+
+### Method 3: TV Box Tools (no command line)
+
+TV Box Tools is a third-party tool that does the Method 2 setup without you typing any commands. Pick Arc
+Launcher in the tool, and it installs the latest release if it isn't on the box yet and sets it as the home
+activity. It runs on Windows, macOS, Linux, on a phone, or directly in a browser on the TV itself.
+
+- [Google Play](https://play.google.com/store/apps/details?id=com.tv.launcher.manager.adb.tvboxtools)
+- [tvboxtools.com](https://tvboxtools.com)
+
+TV Box Tools is not affiliated with or endorsed by this project. As with any tool that administers your device,
+review what it asks for before you run it — in particular whether it requires enabling wireless debugging on the
+box, which exposes a debugging interface on your network.
+
+### Fallback: Disable the default launcher
+
+Use this only if Methods 2 and 3 do not work on your device. It is more invasive: it disables the stock
+launcher, and it is the cause of the "YouTube" remote button issue described below.
 
 **:warning: Disclaimer :warning:**
 

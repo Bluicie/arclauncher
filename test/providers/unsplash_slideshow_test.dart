@@ -82,6 +82,24 @@ void main() {
     expect(requested, contains("https://api.unsplash.com/photos/p1/download"));
   });
 
+  test("unsplashSourceParams maps keywords, topics and collections", () {
+    expect(unsplashSourceParams(" nature landscape "), {'query': 'nature landscape'});
+    expect(unsplashSourceParams("topics:6sMVjTLSkeQ, bo8jQKTaE0Y"), {'topics': '6sMVjTLSkeQ,bo8jQKTaE0Y'});
+    expect(unsplashSourceParams("collections:2286207"), {'collections': '2286207'});
+    expect(unsplashSourceParams(""), isEmpty);
+  });
+
+  test("next filters by collection without sending a query", () async {
+    Uri? random;
+    final client = MockClient((req) async {
+      random ??= req.url;
+      return http.Response("{}", 500);
+    });
+    await UnsplashSlideshow(dir, client: client).next("collections:2286207", "k");
+    expect(random!.queryParameters['collections'], '2286207');
+    expect(random!.queryParameters.containsKey('query'), isFalse);
+  });
+
   test("next sends no query when keywords are empty", () async {
     Uri? random;
     final client = MockClient((req) async {

@@ -112,10 +112,10 @@ void main() async {
       expect(settingsService.unsplashSlideshowEnabled, isFalse);
     });
 
-    test("has defaults for interval and keywords", () {
+    test("has defaults for interval and sources", () {
       expect(settingsService.unsplashIntervalMinutes, 10);
-      expect(settingsService.unsplashDayQuery, "nature landscape");
-      expect(settingsService.unsplashNightQuery, "galaxy nebula");
+      expect(settingsService.unsplashDaySource, "nature landscape");
+      expect(settingsService.unsplashNightSource, "galaxy nebula");
     });
   });
 }

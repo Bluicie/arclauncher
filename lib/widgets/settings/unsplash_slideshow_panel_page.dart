@@ -64,20 +64,22 @@ class UnsplashSlideshowPanelPage extends StatelessWidget {
             ),
             FocusableSettingsTile(
               leading: const Icon(Icons.wb_sunny),
-              title: Text(localizations.unsplashDayKeywords),
-              trailing: Text(settings.unsplashDayQuery),
+              title: Text(localizations.unsplashDaySource),
+              trailing: _sourceLabel(settings.unsplashDaySource),
               onPressed: () async {
-                final query = await _askText(context, localizations.unsplashDayKeywords, settings.unsplashDayQuery);
-                if (query != null) await settings.setUnsplashDayQuery(query);
+                final source = await _askText(context, localizations.unsplashDaySource, settings.unsplashDaySource,
+                    help: localizations.unsplashSourceHelp);
+                if (source != null) await settings.setUnsplashDaySource(source);
               },
             ),
             FocusableSettingsTile(
               leading: const Icon(Icons.nights_stay),
-              title: Text(localizations.unsplashNightKeywords),
-              trailing: Text(settings.unsplashNightQuery),
+              title: Text(localizations.unsplashNightSource),
+              trailing: _sourceLabel(settings.unsplashNightSource),
               onPressed: () async {
-                final query = await _askText(context, localizations.unsplashNightKeywords, settings.unsplashNightQuery);
-                if (query != null) await settings.setUnsplashNightQuery(query);
+                final source = await _askText(context, localizations.unsplashNightSource, settings.unsplashNightSource,
+                    help: localizations.unsplashSourceHelp);
+                if (source != null) await settings.setUnsplashNightSource(source);
               },
             ),
           ],
@@ -85,6 +87,12 @@ class UnsplashSlideshowPanelPage extends StatelessWidget {
       },
     );
   }
+
+  // Long topic/collection lists would push the tile title off the side panel.
+  static Widget _sourceLabel(String source) => ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 120),
+        child: Text(source, overflow: TextOverflow.ellipsis),
+      );
 
   static String _tail(String key) => key.length <= 4 ? "" : key.substring(key.length - 4);
 

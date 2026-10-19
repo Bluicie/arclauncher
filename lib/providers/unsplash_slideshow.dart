@@ -43,22 +43,35 @@ class UnsplashPhoto {
       );
 }
 
+/// Turns a slideshow source setting into /photos/random filters:
+/// "topics:ID,ID", "collections:ID,ID", or plain search keywords (empty = any photo).
+/// The API does not allow combining `query` with topics or collections.
+Map<String, String> unsplashSourceParams(String source) {
+  final s = source.trim();
+  for (final kind in const ['topics', 'collections']) {
+    if (s.startsWith('$kind:')) {
+      return {kind: s.substring(kind.length + 1).replaceAll(' ', '')};
+    }
+  }
+  return s.isEmpty ? {} : {'query': s};
+}
+
 class UnsplashSlideshow {
   final Directory cacheDir;
   final http.Client _client;
 
   UnsplashSlideshow(this.cacheDir, {http.Client? client}) : _client = client ?? http.Client();
 
-  /// Downloads a random landscape photo matching [query] (any photo when empty)
+  /// Downloads a random landscape photo from [source] (see [unsplashSourceParams])
   /// into [cacheDir] and prunes older files. Returns the saved file and its
   /// author, or null on any failure (the caller keeps the current wallpaper).
-  Future<(File, String)?> next(String query, String accessKey) async {
+  Future<(File, String)?> next(String source, String accessKey) async {
     if (accessKey.isEmpty) return null;
     try {
       final headers = {'Authorization': 'Client-ID $accessKey', 'Accept-Version': 'v1'};
       final meta = await _client.get(
         Uri.https('api.unsplash.com', '/photos/random', {
-          if (query.isNotEmpty) 'query': query,
+          ...unsplashSourceParams(source),
           'orientation': 'landscape',
           'content_filter': 'high',
         }),

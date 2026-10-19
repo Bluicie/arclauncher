@@ -263,17 +263,18 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get unsplashDayQuery => _sharedPreferences.getString("unsplash_day_query") ?? "nature landscape";
+  /// Slideshow sources: search keywords, "topics:ID,ID" or "collections:ID,ID".
+  String get unsplashDaySource => _sharedPreferences.getString("unsplash_day_source") ?? "nature landscape";
 
-  Future<void> setUnsplashDayQuery(String query) async {
-    await _sharedPreferences.setString("unsplash_day_query", query.trim());
+  Future<void> setUnsplashDaySource(String source) async {
+    await _sharedPreferences.setString("unsplash_day_source", source.trim());
     notifyListeners();
   }
 
-  String get unsplashNightQuery => _sharedPreferences.getString("unsplash_night_query") ?? "galaxy nebula";
+  String get unsplashNightSource => _sharedPreferences.getString("unsplash_night_source") ?? "galaxy nebula";
 
-  Future<void> setUnsplashNightQuery(String query) async {
-    await _sharedPreferences.setString("unsplash_night_query", query.trim());
+  Future<void> setUnsplashNightSource(String source) async {
+    await _sharedPreferences.setString("unsplash_night_source", source.trim());
     notifyListeners();
   }
 

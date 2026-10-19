@@ -134,7 +134,7 @@ class WallpaperService extends ChangeNotifier {
     // Same 6h-18h day/night split as the time-based wallpaper.
     final isDay = hour >= 6 && hour < 18;
     final result = await _slideshow.next(
-      isDay ? _settingsService.unsplashDayQuery : _settingsService.unsplashNightQuery,
+      isDay ? _settingsService.unsplashDaySource : _settingsService.unsplashNightSource,
       _settingsService.unsplashAccessKey,
     );
     if (result == null || !_settingsService.unsplashSlideshowEnabled) return;

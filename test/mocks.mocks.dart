@@ -1718,20 +1718,20 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as int);
 
   @override
-  String get unsplashDayQuery => (super.noSuchMethod(
-        Invocation.getter(#unsplashDayQuery),
+  String get unsplashDaySource => (super.noSuchMethod(
+        Invocation.getter(#unsplashDaySource),
         returnValue: _i19.dummyValue<String>(
           this,
-          Invocation.getter(#unsplashDayQuery),
+          Invocation.getter(#unsplashDaySource),
         ),
       ) as String);
 
   @override
-  String get unsplashNightQuery => (super.noSuchMethod(
-        Invocation.getter(#unsplashNightQuery),
+  String get unsplashNightSource => (super.noSuchMethod(
+        Invocation.getter(#unsplashNightSource),
         returnValue: _i19.dummyValue<String>(
           this,
-          Invocation.getter(#unsplashNightQuery),
+          Invocation.getter(#unsplashNightSource),
         ),
       ) as String);
 
@@ -2014,20 +2014,21 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setUnsplashDayQuery(String? query) => (super.noSuchMethod(
+  _i9.Future<void> setUnsplashDaySource(String? source) => (super.noSuchMethod(
         Invocation.method(
-          #setUnsplashDayQuery,
-          [query],
+          #setUnsplashDaySource,
+          [source],
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),
       ) as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setUnsplashNightQuery(String? query) => (super.noSuchMethod(
+  _i9.Future<void> setUnsplashNightSource(String? source) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #setUnsplashNightQuery,
-          [query],
+          #setUnsplashNightSource,
+          [source],
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),

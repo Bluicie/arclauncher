@@ -328,10 +328,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get unsplashDayKeywords => 'Palabras clave de día';
+  String get unsplashDaySource => 'Fotos de día';
 
   @override
-  String get unsplashNightKeywords => 'Palabras clave de noche';
+  String get unsplashNightSource => 'Fotos de noche';
+
+  @override
+  String get unsplashSourceHelp =>
+      'Palabras clave (p. ej. nature landscape), o topics:ID,ID, o collections:ID,ID. Los ID aparecen en las URL de temas y colecciones de Unsplash.';
 
   @override
   String unsplashPhotoCredit(String author) {

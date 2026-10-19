@@ -160,8 +160,9 @@
             }
         }
     },
-    "unsplashDayKeywords": "Daytime keywords",
-    "unsplashNightKeywords": "Night keywords",
+    "unsplashDaySource": "Daytime photos",
+    "unsplashNightSource": "Night photos",
+    "unsplashSourceHelp": "Search keywords (e.g. nature landscape), or topics:ID,ID, or collections:ID,ID. IDs are in Unsplash topic and collection URLs.",
     "unsplashPhotoCredit": "Photo: {author} / Unsplash",
     "@unsplashPhotoCredit": {
         "placeholders": {

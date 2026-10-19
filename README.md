@@ -39,6 +39,7 @@ Once you're in the group, you can enrol in the beta either way:
 - **Quick Presets** - Select Time/Date formats and Category names from a list (No keyboard required).
 - **Video Wallpaper** - Set animated video files as your home screen background for a dynamic visual experience.
 - **Dynamic & Time-Based Wallpaper** - Switch between day/night backgrounds or enable automatic dark mode based on time.
+- **Unsplash Slideshow** - Rotate the wallpaper with random Unsplash photos (day/night keywords, 5–60 min interval, cross-fade, photographer credit). Requires your own free Unsplash access key.
 - **Watch Next Section** - Continue watching your shows with a dedicated "Watch Next" row at the top.
 - **Pitch Black Wallpaper** - A true black gradient background option for OLED optimization.
 - **Enhanced Focus Indicator** - New double-border design ensures perfect visibility on any background.
@@ -61,6 +62,9 @@ Once you're in the group, you can enrol in the beta either way:
 
 > [!TIP]
 > **Video File Size:** Video wallpapers are loaded into RAM for smooth playback. For optimal performance, use small, compressed video files (ideally under 10MB) rather than large, high-bitrate videos.
+
+> [!TIP]
+> **Unsplash Slideshow:** create a free app at [unsplash.com/developers](https://unsplash.com/developers) and paste its *Access Key* in Settings → Interface → Wallpaper → Unsplash slideshow. Demo keys allow 50 requests per hour; the slideshow uses at most 12. Only the two most recent photos are kept on disk.
 
 ## Screenshots
 

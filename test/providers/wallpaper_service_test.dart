@@ -43,6 +43,8 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
     final settingsService = MockSettingsService();
     when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+    when(settingsService.unsplashSlideshowEnabled).thenReturn(false);
+    when(settingsService.unsplashIntervalMinutes).thenReturn(10);
     final wallpaperService = WallpaperService(settingsService);
     await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
 
@@ -75,6 +77,8 @@ void main() {
 
     final settingsService = MockSettingsService();
     when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+    when(settingsService.unsplashSlideshowEnabled).thenReturn(false);
+    when(settingsService.unsplashIntervalMinutes).thenReturn(10);
     final wallpaperService = WallpaperService(settingsService);
     await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
     addTearDown(() async {
@@ -92,6 +96,8 @@ void main() {
   test("setGradient", () async {
     final settingsService = MockSettingsService();
     when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+    when(settingsService.unsplashSlideshowEnabled).thenReturn(false);
+    when(settingsService.unsplashIntervalMinutes).thenReturn(10);
     final wallpaperService = WallpaperService(settingsService);
 
     await untilCalled(pathProviderPlatform.getApplicationDocumentsPath());
@@ -105,6 +111,8 @@ void main() {
     test("without uuid from settings", () async {
       final settingsService = MockSettingsService();
       when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+      when(settingsService.unsplashSlideshowEnabled).thenReturn(false);
+      when(settingsService.unsplashIntervalMinutes).thenReturn(10);
       final wallpaperService = WallpaperService(settingsService);
       when(settingsService.gradientUuid).thenReturn(null);
 
@@ -117,6 +125,8 @@ void main() {
     test("with uuid from settings", () async {
       final settingsService = MockSettingsService();
       when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+      when(settingsService.unsplashSlideshowEnabled).thenReturn(false);
+      when(settingsService.unsplashIntervalMinutes).thenReturn(10);
       final wallpaperService = WallpaperService(settingsService);
       when(
         settingsService.gradientUuid,

@@ -23,6 +23,7 @@ import 'dart:typed_data';
 import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/gradients.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -39,6 +40,14 @@ class WallpaperService extends ChangeNotifier {
   bool _initialized = false;
   Timer? _timer;
   int _wallpaperRevision = 0;
+
+  late UnsplashSlideshow _slideshow;
+  Timer? _slideshowTimer;
+  File? _slideshowFile;
+
+  /// Photographer credit to display while the Unsplash slideshow is on screen.
+  String? get slideshowAuthor =>
+      _settingsService.unsplashSlideshowEnabled && _slideshowFile != null ? _settingsService.unsplashAuthor : null;
 
   ImageProvider? _wallpaper;
   int get wallpaperRevision => _wallpaperRevision;
@@ -61,6 +70,10 @@ class WallpaperService extends ChangeNotifier {
   }
 
   bool _lastTimeBasedEnabled = false;
+  // Slideshow settings that require restarting its timer when they change.
+  (bool, int) _lastSlideshowConfig = (false, 0);
+  (bool, int) get _slideshowConfig =>
+      (_settingsService.unsplashSlideshowEnabled, _settingsService.unsplashIntervalMinutes);
 
   void _onSettingsChanged() {
     final enabled = _settingsService.timeBasedWallpaperEnabled;
@@ -69,12 +82,18 @@ class WallpaperService extends ChangeNotifier {
       _updateTimerState();
       _updateWallpaper();
     }
+    if (_initialized && _slideshowConfig != _lastSlideshowConfig) {
+      _lastSlideshowConfig = _slideshowConfig;
+      _updateSlideshowState();
+      _updateWallpaper(force: true);
+    }
   }
 
   @override
   void dispose() {
     _settingsService.removeListener(_onSettingsChanged);
     _timer?.cancel();
+    _slideshowTimer?.cancel();
     super.dispose();
   }
 
@@ -86,11 +105,43 @@ class WallpaperService extends ChangeNotifier {
     _wallpaperVideoFile = File("${directory.path}/wallpaper_video");
     _wallpaperDayVideoFile = File("${directory.path}/wallpaper_day_video");
     _wallpaperNightVideoFile = File("${directory.path}/wallpaper_night_video");
+    _slideshow = UnsplashSlideshow(Directory("${directory.path}/slideshow"));
+    _slideshowFile = newestCachedImage(_slideshow.cacheDir);
     _initialized = true;
 
     _lastTimeBasedEnabled = _settingsService.timeBasedWallpaperEnabled;
+    _lastSlideshowConfig = _slideshowConfig;
     _updateWallpaper();
     _updateTimerState();
+    _updateSlideshowState();
+  }
+
+  void _updateSlideshowState() {
+    _slideshowTimer?.cancel();
+    _slideshowTimer = null;
+    if (!_settingsService.unsplashSlideshowEnabled) return;
+    final interval = Duration(minutes: _settingsService.unsplashIntervalMinutes);
+    _slideshowTimer = Timer.periodic(interval, (_) => _advanceSlideshow());
+    final file = _slideshowFile;
+    // Reuse the cached image after a reboot unless it is already due for a change.
+    if (file == null || DateTime.now().difference(file.lastModifiedSync()) >= interval) {
+      _advanceSlideshow();
+    }
+  }
+
+  Future<void> _advanceSlideshow() async {
+    final hour = DateTime.now().hour;
+    // Same 6h-18h day/night split as the time-based wallpaper.
+    final isDay = hour >= 6 && hour < 18;
+    final result = await _slideshow.next(
+      isDay ? _settingsService.unsplashDayQuery : _settingsService.unsplashNightQuery,
+      _settingsService.unsplashAccessKey,
+    );
+    if (result == null || !_settingsService.unsplashSlideshowEnabled) return;
+    final (file, author) = result;
+    _slideshowFile = file;
+    await _settingsService.setUnsplashAuthor(author);
+    _updateWallpaper(force: true);
   }
 
   void _updateTimerState() {
@@ -108,6 +159,7 @@ class WallpaperService extends ChangeNotifier {
 
   File? _resolveActiveVideoFile() {
     if (!isInitialized) return null;
+    if (_settingsService.unsplashSlideshowEnabled) return null;
 
     final now = DateTime.now();
     final isDay = now.hour >= 6 && now.hour < 18;
@@ -140,7 +192,10 @@ class WallpaperService extends ChangeNotifier {
 
     ImageProvider? newWallpaper;
 
-    if (videoFile != null) {
+    final slideshowFile = _slideshowFile;
+    if (_settingsService.unsplashSlideshowEnabled && slideshowFile != null && slideshowFile.existsSync()) {
+      newWallpaper = FileImage(slideshowFile);
+    } else if (videoFile != null) {
       newWallpaper = null;
     } else if (enabled) {
       if (isDay && _wallpaperDayFile.existsSync()) {

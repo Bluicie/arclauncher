@@ -91,4 +91,31 @@ void main() async {
       expect(settingsService.dateFormat, expected);
     });
   });
+
+  group("unsplash slideshow", () {
+    test("stays disabled without an access key", () async {
+      await settingsService.setUnsplashSlideshowEnabled(true);
+
+      expect(settingsService.unsplashSlideshowEnabled, isFalse);
+    });
+
+    test("runs once a key is set, and clearing the key disables it", () async {
+      await settingsService.setUnsplashAccessKey("  abc  ");
+      await settingsService.setUnsplashSlideshowEnabled(true);
+
+      expect(settingsService.unsplashAccessKey, "abc");
+      expect(settingsService.unsplashSlideshowEnabled, isTrue);
+
+      await settingsService.setUnsplashAccessKey("");
+      await settingsService.setUnsplashAccessKey("abc");
+
+      expect(settingsService.unsplashSlideshowEnabled, isFalse);
+    });
+
+    test("has defaults for interval and keywords", () {
+      expect(settingsService.unsplashIntervalMinutes, 10);
+      expect(settingsService.unsplashDayQuery, "nature landscape");
+      expect(settingsService.unsplashNightQuery, "galaxy nebula");
+    });
+  });
 }

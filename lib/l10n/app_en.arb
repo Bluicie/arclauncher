@@ -146,6 +146,30 @@
     "wallpaper": "Wallpaper",
     "withEllipsisAddTo": "Add to...",
     "timeBasedWallpaper": "Time based wallpaper",
+    "unsplashSlideshow": "Unsplash slideshow",
+    "unsplashEnable": "Show Unsplash photos",
+    "unsplashAccessKey": "Unsplash access key",
+    "unsplashAccessKeyHelp": "Create a free app at unsplash.com/developers and paste its Access Key.",
+    "unsplashNotSet": "Not set",
+    "unsplashInterval": "Change every",
+    "unsplashIntervalMinutes": "{minutes} min",
+    "@unsplashIntervalMinutes": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "unsplashDayKeywords": "Daytime keywords",
+    "unsplashNightKeywords": "Night keywords",
+    "unsplashPhotoCredit": "Photo: {author} / Unsplash",
+    "@unsplashPhotoCredit": {
+        "placeholders": {
+            "author": {
+                "type": "String"
+            }
+        }
+    },
     "pickDayWallpaper": "Pick day wallpaper",
     "pickNightWallpaper": "Pick night wallpaper",
     "video": "Video",

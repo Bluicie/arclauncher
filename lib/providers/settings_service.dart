@@ -238,4 +238,52 @@ class SettingsService extends ChangeNotifier {
     await _sharedPreferences.setBool("time_based_wallpaper_enabled", enabled);
     notifyListeners();
   }
+
+  /// Each user brings their own Unsplash API access key (Demo apps are limited to 50 requests/hour).
+  String get unsplashAccessKey => _sharedPreferences.getString("unsplash_access_key") ?? "";
+
+  Future<void> setUnsplashAccessKey(String key) async {
+    await _sharedPreferences.setString("unsplash_access_key", key.trim());
+    if (key.trim().isEmpty) {
+      await _sharedPreferences.setBool("unsplash_slideshow_enabled", false);
+    }
+    notifyListeners();
+  }
+
+  /// The slideshow only runs with an access key.
+  bool get unsplashSlideshowEnabled =>
+      unsplashAccessKey.isNotEmpty && (_sharedPreferences.getBool("unsplash_slideshow_enabled") ?? false);
+
+  static const List<int> unsplashIntervalChoices = [5, 10, 30, 60];
+
+  int get unsplashIntervalMinutes => _sharedPreferences.getInt("unsplash_interval_minutes") ?? 10;
+
+  Future<void> setUnsplashIntervalMinutes(int minutes) async {
+    await _sharedPreferences.setInt("unsplash_interval_minutes", minutes);
+    notifyListeners();
+  }
+
+  String get unsplashDayQuery => _sharedPreferences.getString("unsplash_day_query") ?? "nature landscape";
+
+  Future<void> setUnsplashDayQuery(String query) async {
+    await _sharedPreferences.setString("unsplash_day_query", query.trim());
+    notifyListeners();
+  }
+
+  String get unsplashNightQuery => _sharedPreferences.getString("unsplash_night_query") ?? "galaxy nebula";
+
+  Future<void> setUnsplashNightQuery(String query) async {
+    await _sharedPreferences.setString("unsplash_night_query", query.trim());
+    notifyListeners();
+  }
+
+  Future<void> setUnsplashSlideshowEnabled(bool enabled) async {
+    await _sharedPreferences.setBool("unsplash_slideshow_enabled", enabled);
+    notifyListeners();
+  }
+
+  /// Photographer of the slideshow image on screen, kept across restarts for attribution.
+  String? get unsplashAuthor => _sharedPreferences.getString("unsplash_author");
+
+  Future<void> setUnsplashAuthor(String author) => _sharedPreferences.setString("unsplash_author", author);
 }

@@ -22,6 +22,7 @@ import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
+import 'package:flauncher/widgets/settings/unsplash_slideshow_panel_page.dart';
 import 'package:flauncher/widgets/tv_media_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,11 @@ class WallpaperPanelPage extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         Divider(),
+        FocusableSettingsTile(
+          leading: Icon(Icons.slideshow),
+          title: Text(localizations.unsplashSlideshow),
+          onPressed: () => Navigator.of(context).pushNamed(UnsplashSlideshowPanelPage.routeName),
+        ),
         Consumer<SettingsService>(
           builder: (_, settings, __) {
             return RoundedSwitchListTile(

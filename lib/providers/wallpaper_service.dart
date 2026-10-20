@@ -18,6 +18,7 @@
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flauncher/flauncher_channel.dart';
@@ -43,6 +44,7 @@ class WallpaperService extends ChangeNotifier {
 
   late UnsplashSlideshow _slideshow;
   Timer? _slideshowTimer;
+  final Random _random = Random();
   File? _slideshowFile;
 
   /// Photographer credit to display while the Unsplash slideshow is on screen.
@@ -134,7 +136,9 @@ class WallpaperService extends ChangeNotifier {
     // Same 6h-18h day/night split as the time-based wallpaper.
     final isDay = hour >= 6 && hour < 18;
     final result = await _slideshow.next(
-      isDay ? _settingsService.unsplashDaySource : _settingsService.unsplashNightSource,
+      isDay
+          ? pickSlideshowFilter(_settingsService.unsplashDaySources, defaultDaySlideshowSources, _random)
+          : pickSlideshowFilter(_settingsService.unsplashNightSources, defaultNightSlideshowSources, _random),
       _settingsService.unsplashAccessKey,
     );
     if (result == null || !_settingsService.unsplashSlideshowEnabled) return;

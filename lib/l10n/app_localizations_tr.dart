@@ -325,14 +325,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get unsplashDaySource => 'Gündüz fotoğrafları';
+  String get slideshowCategories => 'Kategoriler';
 
   @override
-  String get unsplashNightSource => 'Gece fotoğrafları';
+  String get slideshowDay => 'Gündüz (6:00 - 18:00)';
 
   @override
-  String get unsplashSourceHelp =>
-      'Arama kelimeleri (ör. nature landscape) ya da topics:ID,ID veya collections:ID,ID. ID\'ler Unsplash konu ve koleksiyon adreslerinde bulunur.';
+  String get slideshowNight => 'Gece (18:00 - 6:00)';
 
   @override
   String unsplashPhotoCredit(String author) {

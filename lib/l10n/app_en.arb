@@ -160,9 +160,9 @@
             }
         }
     },
-    "unsplashDaySource": "Daytime photos",
-    "unsplashNightSource": "Night photos",
-    "unsplashSourceHelp": "Search keywords (e.g. nature landscape), or topics:ID,ID, or collections:ID,ID. IDs are in Unsplash topic and collection URLs.",
+    "slideshowCategories": "Categories",
+    "slideshowDay": "Day (6:00 - 18:00)",
+    "slideshowNight": "Night (18:00 - 6:00)",
     "unsplashPhotoCredit": "Photo: {author} / Unsplash",
     "@unsplashPhotoCredit": {
         "placeholders": {

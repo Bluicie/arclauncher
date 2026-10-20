@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,7 +51,7 @@ void main() {
   });
 
   test("next returns null without an access key (nothing written)", () async {
-    expect(await UnsplashSlideshow(dir).next("nature", ""), isNull);
+    expect(await UnsplashSlideshow(dir).next({'topics': 't1'}, ""), isNull);
     expect(dir.listSync(), isEmpty);
   });
 
@@ -60,7 +61,7 @@ void main() {
       requested.add(req.url.toString());
       if (req.url.path == "/photos/random") {
         expect(req.headers['Authorization'], "Client-ID k");
-        expect(req.url.queryParameters['query'], "nature");
+        expect(req.url.queryParameters['topics'], "t1");
         return http.Response(
             '{"id":"p1","urls":{"raw":"https://img.test/p1?a=1"},"user":{"name":"Ann"},'
             '"links":{"download_location":"https://api.unsplash.com/photos/p1/download"}}',
@@ -72,7 +73,7 @@ void main() {
     await image("older1.jpg", 30);
     await image("older2.jpg", 20);
 
-    final result = await UnsplashSlideshow(dir, client: client).next("nature", "k");
+    final result = await UnsplashSlideshow(dir, client: client).next({'topics': 't1'}, "k");
     await Future<void>.delayed(Duration.zero); // let the fire-and-forget download ping run
 
     final (file, author) = result!;
@@ -82,11 +83,13 @@ void main() {
     expect(requested, contains("https://api.unsplash.com/photos/p1/download"));
   });
 
-  test("unsplashSourceParams maps keywords, topics and collections", () {
-    expect(unsplashSourceParams(" nature landscape "), {'query': 'nature landscape'});
-    expect(unsplashSourceParams("topics:6sMVjTLSkeQ, bo8jQKTaE0Y"), {'topics': '6sMVjTLSkeQ,bo8jQKTaE0Y'});
-    expect(unsplashSourceParams("collections:2286207"), {'collections': '2286207'});
-    expect(unsplashSourceParams(""), isEmpty);
+  test("pickSlideshowFilter only picks selected categories, falls back to defaults", () {
+    final random = Random(1);
+    final picked = {for (var i = 0; i < 50; i++) pickSlideshowFilter(['nature', 'milkyway'], ['wallpapers'], random)['topics'] ?? 'c'};
+    expect(picked, {'6sMVjTLSkeQ', 'c'}); // nature topic + milky way collection, nothing else
+
+    expect(pickSlideshowFilter([], ['wallpapers'], random), {'topics': 'bo8jQKTaE0Y'});
+    expect(pickSlideshowFilter(['removed-key'], ['milkyway'], random), {'collections': '2286207'});
   });
 
   test("next filters by collection without sending a query", () async {
@@ -95,24 +98,14 @@ void main() {
       random ??= req.url;
       return http.Response("{}", 500);
     });
-    await UnsplashSlideshow(dir, client: client).next("collections:2286207", "k");
+    await UnsplashSlideshow(dir, client: client).next({'collections': '2286207'}, "k");
     expect(random!.queryParameters['collections'], '2286207');
-    expect(random!.queryParameters.containsKey('query'), isFalse);
-  });
-
-  test("next sends no query when keywords are empty", () async {
-    Uri? random;
-    final client = MockClient((req) async {
-      random ??= req.url;
-      return http.Response("{}", 500);
-    });
-    await UnsplashSlideshow(dir, client: client).next("", "k");
     expect(random!.queryParameters.containsKey('query'), isFalse);
   });
 
   test("next keeps the current wallpaper when the API fails", () async {
     final client = MockClient((_) async => http.Response("rate limited", 403));
-    expect(await UnsplashSlideshow(dir, client: client).next("nature", "k"), isNull);
+    expect(await UnsplashSlideshow(dir, client: client).next({'topics': 't1'}, "k"), isNull);
     expect(dir.listSync(), isEmpty);
   });
 }

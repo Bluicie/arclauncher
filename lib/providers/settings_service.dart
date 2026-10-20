@@ -18,6 +18,7 @@
 
 import 'dart:async';
 
+import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flauncher/widgets/settings/back_button_actions.dart';
 import 'package:flutter/material.dart';
 
@@ -264,17 +265,15 @@ class SettingsService extends ChangeNotifier {
   }
 
   /// Slideshow sources: search keywords, "topics:ID,ID" or "collections:ID,ID".
-  String get unsplashDaySource => _sharedPreferences.getString("unsplash_day_source") ?? "nature landscape";
+  /// Slideshow category keys (see slideshowSources) used from 6h to 18h, and the rest of the time.
+  List<String> get unsplashDaySources =>
+      _sharedPreferences.getStringList("unsplash_day_sources") ?? defaultDaySlideshowSources;
 
-  Future<void> setUnsplashDaySource(String source) async {
-    await _sharedPreferences.setString("unsplash_day_source", source.trim());
-    notifyListeners();
-  }
+  List<String> get unsplashNightSources =>
+      _sharedPreferences.getStringList("unsplash_night_sources") ?? defaultNightSlideshowSources;
 
-  String get unsplashNightSource => _sharedPreferences.getString("unsplash_night_source") ?? "galaxy nebula";
-
-  Future<void> setUnsplashNightSource(String source) async {
-    await _sharedPreferences.setString("unsplash_night_source", source.trim());
+  Future<void> setUnsplashSources({required bool day, required List<String> keys}) async {
+    await _sharedPreferences.setStringList(day ? "unsplash_day_sources" : "unsplash_night_sources", keys);
     notifyListeners();
   }
 

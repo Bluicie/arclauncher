@@ -114,8 +114,8 @@ void main() async {
 
     test("has defaults for interval and sources", () {
       expect(settingsService.unsplashIntervalMinutes, 10);
-      expect(settingsService.unsplashDaySource, "nature landscape");
-      expect(settingsService.unsplashNightSource, "galaxy nebula");
+      expect(settingsService.unsplashDaySources, ['nature', 'wallpapers', '3d-renders']);
+      expect(settingsService.unsplashNightSources, ['milkyway']);
     });
   });
 }

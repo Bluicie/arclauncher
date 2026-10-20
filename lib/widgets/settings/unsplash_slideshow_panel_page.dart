@@ -20,6 +20,7 @@ import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
+import 'package:flauncher/widgets/settings/slideshow_sources_panel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -63,24 +64,9 @@ class UnsplashSlideshowPanelPage extends StatelessWidget {
               onPressed: () => settings.setUnsplashIntervalMinutes(_nextInterval(settings.unsplashIntervalMinutes)),
             ),
             FocusableSettingsTile(
-              leading: const Icon(Icons.wb_sunny),
-              title: Text(localizations.unsplashDaySource),
-              trailing: _sourceLabel(settings.unsplashDaySource),
-              onPressed: () async {
-                final source = await _askText(context, localizations.unsplashDaySource, settings.unsplashDaySource,
-                    help: localizations.unsplashSourceHelp);
-                if (source != null) await settings.setUnsplashDaySource(source);
-              },
-            ),
-            FocusableSettingsTile(
-              leading: const Icon(Icons.nights_stay),
-              title: Text(localizations.unsplashNightSource),
-              trailing: _sourceLabel(settings.unsplashNightSource),
-              onPressed: () async {
-                final source = await _askText(context, localizations.unsplashNightSource, settings.unsplashNightSource,
-                    help: localizations.unsplashSourceHelp);
-                if (source != null) await settings.setUnsplashNightSource(source);
-              },
+              leading: const Icon(Icons.category_outlined),
+              title: Text(localizations.slideshowCategories),
+              onPressed: () => Navigator.of(context).pushNamed(SlideshowSourcesPanelPage.routeName),
             ),
           ],
         );
@@ -88,11 +74,6 @@ class UnsplashSlideshowPanelPage extends StatelessWidget {
     );
   }
 
-  // Long topic/collection lists would push the tile title off the side panel.
-  static Widget _sourceLabel(String source) => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 120),
-        child: Text(source, overflow: TextOverflow.ellipsis),
-      );
 
   static String _tail(String key) => key.length <= 4 ? "" : key.substring(key.length - 4);
 

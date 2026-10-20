@@ -1718,22 +1718,16 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as int);
 
   @override
-  String get unsplashDaySource => (super.noSuchMethod(
-        Invocation.getter(#unsplashDaySource),
-        returnValue: _i19.dummyValue<String>(
-          this,
-          Invocation.getter(#unsplashDaySource),
-        ),
-      ) as String);
+  List<String> get unsplashDaySources => (super.noSuchMethod(
+        Invocation.getter(#unsplashDaySources),
+        returnValue: <String>[],
+      ) as List<String>);
 
   @override
-  String get unsplashNightSource => (super.noSuchMethod(
-        Invocation.getter(#unsplashNightSource),
-        returnValue: _i19.dummyValue<String>(
-          this,
-          Invocation.getter(#unsplashNightSource),
-        ),
-      ) as String);
+  List<String> get unsplashNightSources => (super.noSuchMethod(
+        Invocation.getter(#unsplashNightSources),
+        returnValue: <String>[],
+      ) as List<String>);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -2014,21 +2008,18 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setUnsplashDaySource(String? source) => (super.noSuchMethod(
-        Invocation.method(
-          #setUnsplashDaySource,
-          [source],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
-
-  @override
-  _i9.Future<void> setUnsplashNightSource(String? source) =>
+  _i9.Future<void> setUnsplashSources({
+    required bool? day,
+    required List<String>? keys,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
-          #setUnsplashNightSource,
-          [source],
+          #setUnsplashSources,
+          [],
+          {
+            #day: day,
+            #keys: keys,
+          },
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),

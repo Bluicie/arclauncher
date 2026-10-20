@@ -328,14 +328,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get unsplashDaySource => 'Fotos de día';
+  String get slideshowCategories => 'Categorías';
 
   @override
-  String get unsplashNightSource => 'Fotos de noche';
+  String get slideshowDay => 'Día (6:00 - 18:00)';
 
   @override
-  String get unsplashSourceHelp =>
-      'Palabras clave (p. ej. nature landscape), o topics:ID,ID, o collections:ID,ID. Los ID aparecen en las URL de temas y colecciones de Unsplash.';
+  String get slideshowNight => 'Noche (18:00 - 6:00)';
 
   @override
   String unsplashPhotoCredit(String author) {

@@ -18,8 +18,10 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 /// How many slideshow images stay on disk: the one on screen + the previous one
@@ -43,17 +45,37 @@ class UnsplashPhoto {
       );
 }
 
-/// Turns a slideshow source setting into /photos/random filters:
-/// "topics:ID,ID", "collections:ID,ID", or plain search keywords (empty = any photo).
-/// The API does not allow combining `query` with topics or collections.
-Map<String, String> unsplashSourceParams(String source) {
-  final s = source.trim();
-  for (final kind in const ['topics', 'collections']) {
-    if (s.startsWith('$kind:')) {
-      return {kind: s.substring(kind.length + 1).replaceAll(' ', '')};
-    }
-  }
-  return s.isEmpty ? {} : {'query': s};
+/// A selectable slideshow category, mapped to an Unsplash /photos/random filter.
+class SlideshowSource {
+  final String key;
+  final String label;
+  final IconData icon;
+  final Map<String, String> filter;
+
+  const SlideshowSource(this.key, this.label, this.icon, this.filter);
+}
+
+/// Unsplash editorial topics (curated by Unsplash) plus one space collection,
+/// since there is no space topic.
+const List<SlideshowSource> slideshowSources = [
+  SlideshowSource('wallpapers', 'Wallpapers', Icons.wallpaper, {'topics': 'bo8jQKTaE0Y'}),
+  SlideshowSource('nature', 'Nature', Icons.landscape, {'topics': '6sMVjTLSkeQ'}),
+  SlideshowSource('travel', 'Travel', Icons.flight, {'topics': 'Fzo3zuOHN6w'}),
+  SlideshowSource('architecture', 'Architecture', Icons.apartment, {'topics': 'M8jVbLbTRws'}),
+  SlideshowSource('3d-renders', '3D Renders', Icons.view_in_ar, {'topics': 'CDwuwXJAbEw'}),
+  SlideshowSource('textures', 'Textures', Icons.texture, {'topics': 'iUIsnVtjB0Y'}),
+  SlideshowSource('milkyway', 'Milky Way', Icons.auto_awesome, {'collections': '2286207'}),
+];
+
+const List<String> defaultDaySlideshowSources = ['nature', 'wallpapers', '3d-renders'];
+const List<String> defaultNightSlideshowSources = ['milkyway'];
+
+/// Picks one of the selected categories at random (equal weight per category);
+/// falls back to [defaults] when nothing valid is selected.
+Map<String, String> pickSlideshowFilter(List<String> selected, List<String> defaults, Random random) {
+  var sources = slideshowSources.where((s) => selected.contains(s.key)).toList();
+  if (sources.isEmpty) sources = slideshowSources.where((s) => defaults.contains(s.key)).toList();
+  return sources[random.nextInt(sources.length)].filter;
 }
 
 class UnsplashSlideshow {
@@ -62,16 +84,16 @@ class UnsplashSlideshow {
 
   UnsplashSlideshow(this.cacheDir, {http.Client? client}) : _client = client ?? http.Client();
 
-  /// Downloads a random landscape photo from [source] (see [unsplashSourceParams])
+  /// Downloads a random landscape photo matching [filter] (see [pickSlideshowFilter])
   /// into [cacheDir] and prunes older files. Returns the saved file and its
   /// author, or null on any failure (the caller keeps the current wallpaper).
-  Future<(File, String)?> next(String source, String accessKey) async {
+  Future<(File, String)?> next(Map<String, String> filter, String accessKey) async {
     if (accessKey.isEmpty) return null;
     try {
       final headers = {'Authorization': 'Client-ID $accessKey', 'Accept-Version': 'v1'};
       final meta = await _client.get(
         Uri.https('api.unsplash.com', '/photos/random', {
-          ...unsplashSourceParams(source),
+          ...filter,
           'orientation': 'landscape',
           'content_filter': 'high',
         }),

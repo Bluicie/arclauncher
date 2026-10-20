@@ -682,23 +682,23 @@ abstract class AppLocalizations {
   /// **'{minutes} min'**
   String unsplashIntervalMinutes(int minutes);
 
-  /// No description provided for @unsplashDaySource.
+  /// No description provided for @slideshowCategories.
   ///
   /// In en, this message translates to:
-  /// **'Daytime photos'**
-  String get unsplashDaySource;
+  /// **'Categories'**
+  String get slideshowCategories;
 
-  /// No description provided for @unsplashNightSource.
+  /// No description provided for @slideshowDay.
   ///
   /// In en, this message translates to:
-  /// **'Night photos'**
-  String get unsplashNightSource;
+  /// **'Day (6:00 - 18:00)'**
+  String get slideshowDay;
 
-  /// No description provided for @unsplashSourceHelp.
+  /// No description provided for @slideshowNight.
   ///
   /// In en, this message translates to:
-  /// **'Search keywords (e.g. nature landscape), or topics:ID,ID, or collections:ID,ID. IDs are in Unsplash topic and collection URLs.'**
-  String get unsplashSourceHelp;
+  /// **'Night (18:00 - 6:00)'**
+  String get slideshowNight;
 
   /// No description provided for @unsplashPhotoCredit.
   ///

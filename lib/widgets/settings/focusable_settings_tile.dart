@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FocusableSettingsTile extends StatefulWidget {
   final Widget title;
+  final Widget? subtitle;
   final Widget? leading;
   final Widget? trailing;
   final VoidCallback? onPressed;
@@ -10,6 +11,7 @@ class FocusableSettingsTile extends StatefulWidget {
   const FocusableSettingsTile({
     Key? key,
     required this.title,
+    this.subtitle,
     this.leading,
     this.trailing,
     this.onPressed,
@@ -55,7 +57,19 @@ class _FocusableSettingsTileState extends State<FocusableSettingsTile> {
                       widget.leading!,
                       const SizedBox(width: 16),
                     ],
-                    Expanded(child: widget.title),
+                    Expanded(
+                      child: widget.subtitle != null
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                widget.title,
+                                const SizedBox(height: 2),
+                                widget.subtitle!,
+                              ],
+                            )
+                          : widget.title,
+                    ),
                     if (widget.trailing != null) ...[
                       const SizedBox(width: 16),
                       widget.trailing!,

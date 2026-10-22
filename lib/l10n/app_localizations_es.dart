@@ -304,6 +304,44 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timeBasedWallpaper => 'Fondo de pantalla según la hora';
 
   @override
+  String get unsplashSlideshow => 'Presentación de Unsplash';
+
+  @override
+  String get unsplashEnable => 'Mostrar fotos de Unsplash';
+
+  @override
+  String get unsplashAccessKey => 'Clave de acceso de Unsplash';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'Crea una app gratuita en unsplash.com/developers y pega su Access Key.';
+
+  @override
+  String get unsplashNotSet => 'Sin configurar';
+
+  @override
+  String get unsplashInterval => 'Cambiar cada';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get slideshowCategories => 'Categorías';
+
+  @override
+  String get slideshowDay => 'Día (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Noche (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Foto: $author / Unsplash';
+  }
+
+  @override
   String get pickDayWallpaper => 'Elegir fondo de día';
 
   @override

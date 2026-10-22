@@ -301,6 +301,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String get timeBasedWallpaper => 'Zamana dayalı duvar kağıdı';
 
   @override
+  String get unsplashSlideshow => 'Unsplash slayt gösterisi';
+
+  @override
+  String get unsplashEnable => 'Unsplash fotoğraflarını göster';
+
+  @override
+  String get unsplashAccessKey => 'Unsplash erişim anahtarı';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'unsplash.com/developers adresinde ücretsiz bir uygulama oluşturun ve Access Key\'i yapıştırın.';
+
+  @override
+  String get unsplashNotSet => 'Ayarlanmadı';
+
+  @override
+  String get unsplashInterval => 'Değiştirme sıklığı';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes dk';
+  }
+
+  @override
+  String get slideshowCategories => 'Kategoriler';
+
+  @override
+  String get slideshowDay => 'Gündüz (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Gece (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Fotoğraf: $author / Unsplash';
+  }
+
+  @override
   String get pickDayWallpaper => 'Gündüz duvar kağıdını seç';
 
   @override

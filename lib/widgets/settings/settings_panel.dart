@@ -20,6 +20,7 @@ import 'package:flauncher/widgets/side_panel_dialog.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
+import 'package:flauncher/widgets/settings/unsplash_slideshow_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_section_panel_page.dart';
 import 'package:flauncher/widgets/settings/settings_panel_page.dart';
 import 'package:flauncher/widgets/settings/status_bar_panel_page.dart';
@@ -36,6 +37,7 @@ import 'package:flauncher/widgets/settings/interface_settings_page.dart';
 import 'package:flauncher/widgets/settings/general_settings_page.dart';
 import 'package:flauncher/widgets/settings/screensaver_clock_style_page.dart';
 import 'package:flauncher/models/app.dart';
+import 'package:flauncher/widgets/settings/slideshow_sources_panel_page.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPanel extends StatefulWidget {
@@ -84,6 +86,10 @@ class _SettingsPanelState extends State<SettingsPanel> {
                       return _FastPageRoute(builder: (_) => StatusBarPanelPage());
                     case GradientPanelPage.routeName:
                       return _FastPageRoute(builder: (_) => GradientPanelPage());
+                    case SlideshowSourcesPanelPage.routeName:
+                      return _FastPageRoute(builder: (_) => SlideshowSourcesPanelPage());
+                    case UnsplashSlideshowPanelPage.routeName:
+                      return _FastPageRoute(builder: (_) => UnsplashSlideshowPanelPage());
                     case ApplicationsPanelPage.routeName:
                       return _FastPageRoute(builder: (_) => ApplicationsPanelPage());
                     case LauncherSectionsPanelPage.routeName:

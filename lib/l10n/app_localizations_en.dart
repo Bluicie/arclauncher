@@ -299,6 +299,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeBasedWallpaper => 'Time based wallpaper';
 
   @override
+  String get unsplashSlideshow => 'Unsplash slideshow';
+
+  @override
+  String get unsplashEnable => 'Show Unsplash photos';
+
+  @override
+  String get unsplashAccessKey => 'Unsplash access key';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'Create a free app at unsplash.com/developers and paste its Access Key.';
+
+  @override
+  String get unsplashNotSet => 'Not set';
+
+  @override
+  String get unsplashInterval => 'Change every';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get slideshowCategories => 'Categories';
+
+  @override
+  String get slideshowDay => 'Day (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Night (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Photo: $author / Unsplash';
+  }
+
+  @override
   String get pickDayWallpaper => 'Pick day wallpaper';
 
   @override

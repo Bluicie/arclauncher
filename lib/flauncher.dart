@@ -95,7 +95,34 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         children: [
           RepaintBoundary(
             child: Consumer<WallpaperService>(
-              builder: (_, wallpaperService, __) => _wallpaper(context, wallpaperService),
+              builder: (_, wallpaperService, __) {
+                final author = wallpaperService.slideshowAuthor;
+                return Stack(
+                  children: [
+                    // Crossfade between wallpapers (each one has a revision-based key).
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 1500),
+                      child: _wallpaper(context, wallpaperService),
+                    ),
+                    if (author != null)
+                      Positioned(
+                        right: 24,
+                        top: 64,
+                        // Material gives the text the app font instead of the debug fallback style.
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Text(
+                            AppLocalizations.of(context)!.unsplashPhotoCredit(author),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.white70,
+                              shadows: const [Shadow(blurRadius: 4)],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
           ),
           Selector3<LauncherState, SettingsService, WallpaperService, (bool, bool, bool)>(

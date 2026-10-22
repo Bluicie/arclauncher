@@ -18,6 +18,7 @@
 
 import 'dart:async';
 
+import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flauncher/widgets/settings/back_button_actions.dart';
 import 'package:flutter/material.dart';
 
@@ -238,4 +239,51 @@ class SettingsService extends ChangeNotifier {
     await _sharedPreferences.setBool("time_based_wallpaper_enabled", enabled);
     notifyListeners();
   }
+
+  /// Each user brings their own Unsplash API access key (Demo apps are limited to 50 requests/hour).
+  String get unsplashAccessKey => _sharedPreferences.getString("unsplash_access_key") ?? "";
+
+  Future<void> setUnsplashAccessKey(String key) async {
+    await _sharedPreferences.setString("unsplash_access_key", key.trim());
+    if (key.trim().isEmpty) {
+      await _sharedPreferences.setBool("unsplash_slideshow_enabled", false);
+    }
+    notifyListeners();
+  }
+
+  /// The slideshow only runs with an access key.
+  bool get unsplashSlideshowEnabled =>
+      unsplashAccessKey.isNotEmpty && (_sharedPreferences.getBool("unsplash_slideshow_enabled") ?? false);
+
+  static const List<int> unsplashIntervalChoices = [5, 10, 30, 60];
+
+  int get unsplashIntervalMinutes => _sharedPreferences.getInt("unsplash_interval_minutes") ?? 10;
+
+  Future<void> setUnsplashIntervalMinutes(int minutes) async {
+    await _sharedPreferences.setInt("unsplash_interval_minutes", minutes);
+    notifyListeners();
+  }
+
+  /// Slideshow sources: search keywords, "topics:ID,ID" or "collections:ID,ID".
+  /// Slideshow category keys (see slideshowSources) used from 6h to 18h, and the rest of the time.
+  List<String> get unsplashDaySources =>
+      _sharedPreferences.getStringList("unsplash_day_sources") ?? defaultDaySlideshowSources;
+
+  List<String> get unsplashNightSources =>
+      _sharedPreferences.getStringList("unsplash_night_sources") ?? defaultNightSlideshowSources;
+
+  Future<void> setUnsplashSources({required bool day, required List<String> keys}) async {
+    await _sharedPreferences.setStringList(day ? "unsplash_day_sources" : "unsplash_night_sources", keys);
+    notifyListeners();
+  }
+
+  Future<void> setUnsplashSlideshowEnabled(bool enabled) async {
+    await _sharedPreferences.setBool("unsplash_slideshow_enabled", enabled);
+    notifyListeners();
+  }
+
+  /// Photographer of the slideshow image on screen, kept across restarts for attribution.
+  String? get unsplashAuthor => _sharedPreferences.getString("unsplash_author");
+
+  Future<void> setUnsplashAuthor(String author) => _sharedPreferences.setString("unsplash_author", author);
 }

@@ -640,6 +640,72 @@ abstract class AppLocalizations {
   /// **'Time based wallpaper'**
   String get timeBasedWallpaper;
 
+  /// No description provided for @unsplashSlideshow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsplash slideshow'**
+  String get unsplashSlideshow;
+
+  /// No description provided for @unsplashEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Unsplash photos'**
+  String get unsplashEnable;
+
+  /// No description provided for @unsplashAccessKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsplash access key'**
+  String get unsplashAccessKey;
+
+  /// No description provided for @unsplashAccessKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a free app at unsplash.com/developers and paste its Access Key.'**
+  String get unsplashAccessKeyHelp;
+
+  /// No description provided for @unsplashNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get unsplashNotSet;
+
+  /// No description provided for @unsplashInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Change every'**
+  String get unsplashInterval;
+
+  /// No description provided for @unsplashIntervalMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String unsplashIntervalMinutes(int minutes);
+
+  /// No description provided for @slideshowCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get slideshowCategories;
+
+  /// No description provided for @slideshowDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day (6:00 - 18:00)'**
+  String get slideshowDay;
+
+  /// No description provided for @slideshowNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night (18:00 - 6:00)'**
+  String get slideshowNight;
+
+  /// No description provided for @unsplashPhotoCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo: {author} / Unsplash'**
+  String unsplashPhotoCredit(String author);
+
   /// No description provided for @pickDayWallpaper.
   ///
   /// In en, this message translates to:

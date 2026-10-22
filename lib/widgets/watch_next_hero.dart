@@ -189,7 +189,7 @@ class WatchNextHero extends StatelessWidget {
                 totalItems: items.length,
               ),
               if (items.length > 1) ...[
-                const SizedBox(width: 20),
+                const SizedBox(width: 26),
                 _HeroPaginationIndicator(
                   currentIndex: activeIndex,
                   totalItems: items.length,
@@ -199,6 +199,7 @@ class WatchNextHero extends StatelessWidget {
               ],
             ],
           ),
+          const SizedBox(height: 8),
         ],
       ),
     );
@@ -304,10 +305,6 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
     final isResume = widget.item.progressPercent != null && widget.item.progressPercent! > 0;
     final label = isResume ? localizations.watchNextResume : localizations.watchNextWatch;
 
-    final (bool showFocusBorders, double borderThickness) = context.select<SettingsService, (bool, double)>(
-      (s) => (s.showFocusBorders, s.focusBorderThickness),
-    );
-
     final double scale = _clicked ? 0.96 : (_isHovered ? 1.08 : 1.0);
 
     return RepaintBoundary(
@@ -332,64 +329,53 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 11),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: ShapeDecoration(
-                shape: const StadiumBorder(),
+                shape: StadiumBorder(
+                  side: _isHovered
+                      ? BorderSide.none
+                      : BorderSide(
+                          color: Colors.white.withValues(alpha: 0.35),
+                          width: 1.0,
+                        ),
+                ),
                 color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.22),
                 shadows: _isHovered
-                    ? [
+                    ? const [
                         BoxShadow(
-                          color: Colors.white.withValues(alpha: 0.55),
-                          blurRadius: 18,
-                          spreadRadius: 2,
-                        ),
-                        const BoxShadow(
-                          color: Colors.black45,
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
+                          color: Colors.black38,
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
                         ),
                       ]
                     : const [
                         BoxShadow(
                           color: Colors.black26,
-                          blurRadius: 6,
+                          blurRadius: 4,
                           offset: Offset(0, 2),
                         ),
                       ],
               ),
-              child: Container(
-                decoration: ShapeDecoration(
-                  shape: StadiumBorder(
-                    side: _isHovered
-                        ? (showFocusBorders
-                            ? BorderSide(color: Colors.white, width: borderThickness)
-                            : BorderSide.none)
-                        : BorderSide(
-                            color: Colors.white.withValues(alpha: 0.35),
-                            width: 1.0,
-                          ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.play_arrow_rounded,
+                    size: 24,
+                    color: _isHovered ? Colors.black87 : Colors.white,
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.play_arrow_rounded,
-                      size: 24,
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: _isHovered ? FontWeight.w800 : FontWeight.w600,
+                      letterSpacing: 0.3,
                       color: _isHovered ? Colors.black87 : Colors.white,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: _isHovered ? FontWeight.w800 : FontWeight.w600,
-                        letterSpacing: 0.3,
-                        color: _isHovered ? Colors.black87 : Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

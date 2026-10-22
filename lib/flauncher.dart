@@ -273,7 +273,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
 
     if (favoriteApps.isEmpty && otherSections.isEmpty) return _emptyState(context);
 
-    final watchNextSpace = watchNextBigPicture ? 370 : 410;
+    final watchNextSpace = watchNextBigPicture ? 385 : 410;
 
     return CustomScrollView(
       controller: _scrollController,

@@ -116,7 +116,7 @@ class WatchNextRow extends StatelessWidget {
                 handleUpNavigationToSettings: isAboveDock,
                 onItemFocused: onItemFocused,
               ),
-            const SizedBox(height: 12),
+            SizedBox(height: isBigPicture ? 16 : 12),
           ],
         );
       },

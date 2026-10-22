@@ -127,6 +127,7 @@ Future<void> _checkForUpdates(BuildContext context) async {
       localizations,
       latestVersion: update.latestVersion,
       currentVersion: update.currentVersion,
+      changelog: update.releaseNotes,
     );
 
     if (!download) {

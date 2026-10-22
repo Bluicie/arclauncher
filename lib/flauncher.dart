@@ -114,15 +114,13 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                           ? const SizedBox.shrink(key: ValueKey('occluded_wallpaper'))
                           : _wallpaper(context, wallpaperService),
                     ),
-                    // Watch Next Big Picture Hero Backdrop with smooth crossfade
+                    // Hero items crossfade inside _CachedHeroBackground once baked.
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 600),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
+                      duration: _kHeroFadeDuration,
                       child: hasHeroBackdrop
-                          ? KeyedSubtree(
-                              key: ValueKey('hero_bg_${activeItem!.id}_$heroUri'),
-                              child: RepaintBoundary(child: _CachedHeroBackground(bytes: heroBytes)),
+                          ? RepaintBoundary(
+                              key: const ValueKey('hero_bg'),
+                              child: _CachedHeroBackground(bytes: heroBytes),
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
                     ),
@@ -652,7 +650,7 @@ class _CachedGradientBackgroundState extends State<_CachedGradientBackground> {
     final rect = Offset.zero & size;
     Canvas(recorder).drawRect(rect, Paint()..shader = widget.gradient.createShader(rect));
     final picture = recorder.endRecording();
-    final image = await picture.toImage(size.width.round(), size.height.round());
+    final image = picture.toImageSync(size.width.round(), size.height.round());
     picture.dispose();
     _rendering = false;
     if (!mounted) {
@@ -703,9 +701,12 @@ class _CachedHeroBackground extends StatefulWidget {
   State<_CachedHeroBackground> createState() => _CachedHeroBackgroundState();
 }
 
+const _kHeroFadeDuration = Duration(milliseconds: 600);
+
 class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
   ui.Image? _image;
   Size _renderedSize = Size.zero;
+  Uint8List? _renderedBytes;
   bool _rendering = false;
 
   @override
@@ -719,10 +720,11 @@ class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
       return;
     }
     _rendering = true;
+    final bytes = widget.bytes;
     try {
       final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
       final codec = await ui.instantiateImageCodecWithSize(
-        await ui.ImmutableBuffer.fromUint8List(widget.bytes),
+        await ui.ImmutableBuffer.fromUint8List(bytes),
         getTargetSize: (w, h) {
           final scale = min(1.0, max(pxSize.width / w, pxSize.height / h));
           return ui.TargetImageSize(width: (w * scale).round(), height: (h * scale).round());
@@ -735,17 +737,24 @@ class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
       paintImage(canvas: canvas, rect: Offset.zero & pxSize, image: source, fit: BoxFit.cover);
       const _CinematicScrimPainter().paint(canvas, pxSize);
       final picture = recorder.endRecording();
-      final image = await picture.toImage(pxSize.width.toInt(), pxSize.height.toInt());
+      final image = picture.toImageSync(pxSize.width.toInt(), pxSize.height.toInt());
       picture.dispose();
       source.dispose();
       if (!mounted) {
         image.dispose();
         return;
       }
+      // Hero changed mid-bake (fast scrolling): drop this one, build() re-bakes the latest.
+      if (!identical(bytes, widget.bytes)) {
+        image.dispose();
+        setState(() {});
+        return;
+      }
       setState(() {
         _image?.dispose();
         _image = image;
         _renderedSize = size;
+        _renderedBytes = bytes;
       });
     } finally {
       _rendering = false;
@@ -756,18 +765,28 @@ class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final dpr = MediaQuery.devicePixelRatioOf(context);
-    final needsRender = size != _renderedSize;
-    if (needsRender && size.width > 0 && size.height > 0) {
+    if ((size != _renderedSize || !identical(widget.bytes, _renderedBytes)) && size.width > 0 && size.height > 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && size != _renderedSize) _render(size, dpr);
+        if (mounted) _render(size, dpr);
       });
     }
     final image = _image;
-    if (image != null && !needsRender) {
-      return RawImage(image: image, width: size.width, height: size.height, fit: BoxFit.fill);
-    }
-    // ponytail: empty until baked (a few frames); a live fallback would decode the image twice.
-    return const SizedBox.expand();
+    // Previous hero stays up until the next one is baked, then they crossfade
+    // (RawImage holds its own clone, so the outgoing one survives disposal).
+    return AnimatedSwitcher(
+      duration: _kHeroFadeDuration,
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      child: image == null
+          ? const SizedBox.expand()
+          : RawImage(
+              key: ObjectKey(image),
+              image: image,
+              width: size.width,
+              height: size.height,
+              fit: BoxFit.fill,
+            ),
+    );
   }
 }
 

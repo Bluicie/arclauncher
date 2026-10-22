@@ -177,7 +177,8 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
       }
       canvas.restore();
 
-      final image = await recorder.endRecording().toImage(pxWidth, pxHeight);
+      // toImageSync keeps the snapshot GPU-resident; toImage reads it back to the CPU (~40ms on a Fire TV stick).
+      final image = recorder.endRecording().toImageSync(pxWidth, pxHeight);
       source?.dispose();
 
       if (!mounted) {
@@ -228,7 +229,7 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
       builder: (context, constraints) {
         final screen = MediaQuery.sizeOf(context);
         final dpr = MediaQuery.devicePixelRatioOf(context);
-        final gradientId = service.wallpaper == null ? service.gradient.uuid : null;
+        final gradientId = (customImageProvider ?? service.wallpaper) == null ? service.gradient.uuid : null;
         final stale =
             _blurred == null ||
             _builtSize != screen ||

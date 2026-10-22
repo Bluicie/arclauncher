@@ -186,11 +186,8 @@ box, which exposes a debugging interface on your network.
 Use this only if Methods 2 and 3 do not work on your device. It is more invasive: it disables the stock
 launcher, and it is the cause of the "YouTube" remote button issue described below.
 
-**:warning: Disclaimer :warning:**
-
-**You are doing this at your own risk, and you'll be responsible in any case of malfunction on your device.**
-
-The following commands have been tested on Chromecast with Google TV only. This may be different on other devices.
+> [!WARNING]
+> **Disclaimer:** You are doing this at your own risk, and you'll be responsible in any case of malfunction on your device. The following commands have been tested on Chromecast with Google TV only and may differ on other devices.
 
 Once the default launcher is disabled, press the Home button on the remote, and you'll be prompted by the system to choose which app to set as default.
 

@@ -743,6 +743,16 @@ class MockWallpaperService extends _i1.Mock implements _i14.WallpaperService {
       );
 
   @override
+  _i9.Future<void> advanceRedditWallpaper() => (super.noSuchMethod(
+        Invocation.method(
+          #advanceRedditWallpaper,
+          [],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
   _i9.Future<void> pickWallpaper(_i15.File? sourceFile) => (super.noSuchMethod(
         Invocation.method(
           #pickWallpaper,
@@ -1690,7 +1700,7 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
   @override
   double get focusBorderThickness => (super.noSuchMethod(
         Invocation.getter(#focusBorderThickness),
-        returnValue: 1.5,
+        returnValue: 0.0,
       ) as double);
 
   @override
@@ -1740,6 +1750,51 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
         Invocation.getter(#unsplashNightSources),
         returnValue: <String>[],
       ) as List<String>);
+
+  @override
+  bool get redditWallpaperEnabled => (super.noSuchMethod(
+        Invocation.getter(#redditWallpaperEnabled),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  int get redditIntervalMinutes => (super.noSuchMethod(
+        Invocation.getter(#redditIntervalMinutes),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  List<String> get redditSubreddits => (super.noSuchMethod(
+        Invocation.getter(#redditSubreddits),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
+  String get redditSort => (super.noSuchMethod(
+        Invocation.getter(#redditSort),
+        returnValue: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#redditSort),
+        ),
+      ) as String);
+
+  @override
+  String get redditClientId => (super.noSuchMethod(
+        Invocation.getter(#redditClientId),
+        returnValue: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#redditClientId),
+        ),
+      ) as String);
+
+  @override
+  String get redditClientSecret => (super.noSuchMethod(
+        Invocation.getter(#redditClientSecret),
+        returnValue: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#redditClientSecret),
+        ),
+      ) as String);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -2074,6 +2129,89 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
         Invocation.method(
           #setUnsplashAuthor,
           [author],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditWallpaperEnabled(bool? enabled) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setRedditWallpaperEnabled,
+          [enabled],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditIntervalMinutes(int? minutes) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setRedditIntervalMinutes,
+          [minutes],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditSubreddits(List<String>? subreddits) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setRedditSubreddits,
+          [subreddits],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditSort(String? sort) => (super.noSuchMethod(
+        Invocation.method(
+          #setRedditSort,
+          [sort],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditClientId(String? clientId) => (super.noSuchMethod(
+        Invocation.method(
+          #setRedditClientId,
+          [clientId],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditClientSecret(String? secret) => (super.noSuchMethod(
+        Invocation.method(
+          #setRedditClientSecret,
+          [secret],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setRedditWallpaperInfo({
+    required String? title,
+    required String? author,
+    required String? subreddit,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setRedditWallpaperInfo,
+          [],
+          {
+            #title: title,
+            #author: author,
+            #subreddit: subreddit,
+          },
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),

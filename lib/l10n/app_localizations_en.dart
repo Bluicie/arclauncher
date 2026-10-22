@@ -444,4 +444,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkStatus => 'Check Status';
+
+  @override
+  String get redditWallpaper => 'Reddit wallpaper';
+
+  @override
+  String get redditWallpaperEnable => 'Show Reddit wallpapers';
+
+  @override
+  String get redditSubreddits => 'Subreddits';
+
+  @override
+  String get redditSort => 'Sort by';
+
+  @override
+  String get redditSortHot => 'Hot';
+
+  @override
+  String get redditSortTopDay => 'Top (Today)';
+
+  @override
+  String get redditSortTopWeek => 'Top (This week)';
+
+  @override
+  String get redditSortTopMonth => 'Top (This month)';
+
+  @override
+  String get redditSortTopAll => 'Top (All time)';
+
+  @override
+  String get redditSortNew => 'New';
+
+  @override
+  String get redditInterval => 'Change every';
+
+  @override
+  String redditIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get redditInterval1Hour => '1 hour';
+
+  @override
+  String redditIntervalHours(int hours) {
+    return '$hours hours';
+  }
+
+  @override
+  String get redditInterval1Day => '1 day';
+
+  @override
+  String redditIntervalDays(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get redditClientId => 'Reddit Client ID (Optional)';
+
+  @override
+  String get redditClientIdHelp =>
+      'Optional. Create an installed app at reddit.com/prefs/apps and paste its ID if your network requires it.';
+
+  @override
+  String get redditChangeNow => 'Change wallpaper now';
+
+  @override
+  String get redditAddSubreddit => 'Add custom subreddit';
+
+  @override
+  String get redditSubredditName => 'Subreddit name (without r/)';
+
+  @override
+  String get redditSubredditAdded => 'Subreddit added';
+
+  @override
+  String get redditSubredditInvalid => 'Please enter a valid subreddit name';
+
+  @override
+  String get redditWallpaperUpdated => 'Wallpaper updated successfully';
+
+  @override
+  String get redditWallpaperFailed =>
+      'Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings.';
 }

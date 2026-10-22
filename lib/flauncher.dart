@@ -98,6 +98,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
             child: Consumer<WallpaperService>(
               builder: (_, wallpaperService, __) {
                 final author = wallpaperService.slideshowAuthor;
+                final redditCredit = wallpaperService.redditWallpaperCredit;
                 return Stack(
                   children: [
                     // Crossfade between wallpapers (each one has a revision-based key).
@@ -105,7 +106,22 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       duration: const Duration(milliseconds: 1500),
                       child: _wallpaper(context, wallpaperService),
                     ),
-                    if (author != null)
+                    if (redditCredit != null)
+                      Positioned(
+                        right: 24,
+                        top: 64,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Text(
+                            redditCredit,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.white70,
+                              shadows: const [Shadow(blurRadius: 4)],
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (author != null)
                       Positioned(
                         right: 24,
                         top: 64,

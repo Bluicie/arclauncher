@@ -305,7 +305,7 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
     final isResume = widget.item.progressPercent != null && widget.item.progressPercent! > 0;
     final label = isResume ? localizations.watchNextResume : localizations.watchNextWatch;
 
-    final double scale = _clicked ? 0.96 : (_isHovered ? 1.08 : 1.0);
+    final double scale = _clicked ? 0.96 : 1.0;
 
     return RepaintBoundary(
       child: Focus(
@@ -329,15 +329,17 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              height: 48,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               decoration: ShapeDecoration(
                 shape: StadiumBorder(
-                  side: _isHovered
-                      ? BorderSide.none
-                      : BorderSide(
-                          color: Colors.white.withValues(alpha: 0.35),
-                          width: 1.0,
-                        ),
+                  side: BorderSide(
+                    color: _isHovered
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.35),
+                    width: 1.0,
+                  ),
                 ),
                 color: _isHovered ? Colors.white : Colors.white.withValues(alpha: 0.22),
                 shadows: _isHovered
@@ -370,7 +372,7 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
                     label,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: _isHovered ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       letterSpacing: 0.3,
                       color: _isHovered ? Colors.black87 : Colors.white,
                     ),

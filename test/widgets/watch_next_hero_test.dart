@@ -207,5 +207,42 @@ void main() {
 
       expect(find.text('Severance'), findsOneWidget);
     });
+
+    testWidgets('Watch button does not change size on focus/hover', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      final buttonFinder = find.byType(AnimatedContainer);
+      expect(buttonFinder, findsWidgets);
+
+      // Find the AnimatedContainer corresponding to the button (the one with height 48)
+      final watchButtonContainer = tester.widget<AnimatedContainer>(
+        find.ancestor(
+          of: find.text('Resume'),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+      expect(watchButtonContainer.constraints?.maxHeight ?? 48.0, 48.0);
+
+      final initialSize = tester.getSize(
+        find.ancestor(
+          of: find.text('Resume'),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+
+      // Focus another node or unfocus
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+
+      final unfocusedSize = tester.getSize(
+        find.ancestor(
+          of: find.text('Resume'),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+
+      expect(unfocusedSize, equals(initialSize));
+    });
   });
 }

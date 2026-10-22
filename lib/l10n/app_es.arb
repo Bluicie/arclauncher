@@ -192,5 +192,51 @@
     "weekly": "Semanal",
     "monthly": "Mensual",
     "grantPermission": "Conceder permiso",
-    "checkStatus": "Comprobar estado"
+    "checkStatus": "Comprobar estado",
+    "redditWallpaper": "Fondo de Reddit",
+    "redditWallpaperEnable": "Mostrar fotos de Reddit",
+    "redditSubreddits": "Subreddits",
+    "redditSort": "Ordenar por",
+    "redditSortHot": "Popular",
+    "redditSortTopDay": "Destacados (Hoy)",
+    "redditSortTopWeek": "Destacados (Semana)",
+    "redditSortTopMonth": "Destacados (Mes)",
+    "redditSortTopAll": "Destacados (Siempre)",
+    "redditSortNew": "Nuevos",
+    "redditInterval": "Cambiar cada",
+    "redditIntervalMinutes": "{minutes} min",
+    "@redditIntervalMinutes": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Hour": "1 hora",
+    "redditIntervalHours": "{hours} horas",
+    "@redditIntervalHours": {
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Day": "1 día",
+    "redditIntervalDays": "{days} días",
+    "@redditIntervalDays": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "redditClientId": "ID de cliente de Reddit (opcional)",
+    "redditClientIdHelp": "Opcional. Crea una app instalada en reddit.com/prefs/apps y pega su ID.",
+    "redditChangeNow": "Cambiar fondo ahora",
+    "redditAddSubreddit": "Añadir subreddit personalizado",
+    "redditSubredditName": "Nombre del subreddit (sin r/)",
+    "redditSubredditAdded": "Subreddit añadido",
+    "redditSubredditInvalid": "Introduce un nombre de subreddit válido",
+    "redditWallpaperUpdated": "Fondo de pantalla actualizado con éxito",
+    "redditWallpaperFailed": "Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes."
 }

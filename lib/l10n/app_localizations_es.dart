@@ -449,4 +449,89 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get checkStatus => 'Comprobar estado';
+
+  @override
+  String get redditWallpaper => 'Fondo de Reddit';
+
+  @override
+  String get redditWallpaperEnable => 'Mostrar fotos de Reddit';
+
+  @override
+  String get redditSubreddits => 'Subreddits';
+
+  @override
+  String get redditSort => 'Ordenar por';
+
+  @override
+  String get redditSortHot => 'Popular';
+
+  @override
+  String get redditSortTopDay => 'Destacados (Hoy)';
+
+  @override
+  String get redditSortTopWeek => 'Destacados (Semana)';
+
+  @override
+  String get redditSortTopMonth => 'Destacados (Mes)';
+
+  @override
+  String get redditSortTopAll => 'Destacados (Siempre)';
+
+  @override
+  String get redditSortNew => 'Nuevos';
+
+  @override
+  String get redditInterval => 'Cambiar cada';
+
+  @override
+  String redditIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get redditInterval1Hour => '1 hora';
+
+  @override
+  String redditIntervalHours(int hours) {
+    return '$hours horas';
+  }
+
+  @override
+  String get redditInterval1Day => '1 día';
+
+  @override
+  String redditIntervalDays(int days) {
+    return '$days días';
+  }
+
+  @override
+  String get redditClientId => 'ID de cliente de Reddit (opcional)';
+
+  @override
+  String get redditClientIdHelp =>
+      'Opcional. Crea una app instalada en reddit.com/prefs/apps y pega su ID.';
+
+  @override
+  String get redditChangeNow => 'Cambiar fondo ahora';
+
+  @override
+  String get redditAddSubreddit => 'Añadir subreddit personalizado';
+
+  @override
+  String get redditSubredditName => 'Nombre del subreddit (sin r/)';
+
+  @override
+  String get redditSubredditAdded => 'Subreddit añadido';
+
+  @override
+  String get redditSubredditInvalid =>
+      'Introduce un nombre de subreddit válido';
+
+  @override
+  String get redditWallpaperUpdated =>
+      'Fondo de pantalla actualizado con éxito';
+
+  @override
+  String get redditWallpaperFailed =>
+      'Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes.';
 }

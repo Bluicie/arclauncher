@@ -75,6 +75,7 @@
     "updateNoUpdateBody": "Zaten en son sürümü ({currentVersion}) kullanıyorsunuz.",
     "updateAvailableTitle": "Güncelleme mevcut",
     "updateAvailableBody": "{latestVersion} sürümü mevcut (geçerli: {currentVersion}).",
+    "updateChangelog": "Yenilikler",
     "updateDownloadButton": "İndir",
     "updateReadyToInstallTitle": "Yüklemeye hazır",
     "updateReadyToInstallBody": "{latestVersion} sürümünün APK'si indirildi. Yükleme şimdi başlatılsın mı?",

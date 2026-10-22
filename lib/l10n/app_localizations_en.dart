@@ -251,6 +251,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get updateChangelog => 'What\'s new';
+
+  @override
   String get updateDownloadButton => 'Download';
 
   @override

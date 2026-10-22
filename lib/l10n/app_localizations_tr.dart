@@ -252,6 +252,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get updateChangelog => 'Yenilikler';
+
+  @override
   String get updateDownloadButton => 'İndir';
 
   @override

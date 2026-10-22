@@ -118,6 +118,7 @@
             }
         }
     },
+    "updateChangelog": "What's new",
     "updateDownloadButton": "Download",
     "updateReadyToInstallTitle": "Ready to install",
     "updateReadyToInstallBody": "The APK for version {latestVersion} is downloaded. Start installation now?",

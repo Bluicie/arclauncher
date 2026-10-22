@@ -556,6 +556,12 @@ abstract class AppLocalizations {
   /// **'Version {latestVersion} is available (current: {currentVersion}).'**
   String updateAvailableBody(String latestVersion, String currentVersion);
 
+  /// No description provided for @updateChangelog.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get updateChangelog;
+
   /// No description provided for @updateDownloadButton.
   ///
   /// In en, this message translates to:

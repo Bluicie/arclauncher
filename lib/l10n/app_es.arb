@@ -118,6 +118,7 @@
             }
         }
     },
+    "updateChangelog": "Novedades",
     "updateDownloadButton": "Descargar",
     "updateReadyToInstallTitle": "Lista para instalar",
     "updateReadyToInstallBody": "El APK de la versión {latestVersion} ya se descargó. ¿Instalar ahora?",

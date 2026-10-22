@@ -311,7 +311,13 @@ public class MainActivity extends FlutterActivity {
         PackageManager packageManager = getPackageManager();
         try {
             ApplicationInfo info = packageManager.getApplicationInfo(packageName, 0);
-            Drawable drawable = info.loadBanner(packageManager);
+            // Many TV apps (e.g. Free TV, S0undTV) declare android:banner on their leanback activity
+            // only; getActivityBanner falls back to the application banner when the activity has none.
+            Intent leanbackIntent = packageManager.getLeanbackLaunchIntentForPackage(packageName);
+            Drawable drawable = leanbackIntent != null ? packageManager.getActivityBanner(leanbackIntent) : null;
+            if (drawable == null) {
+                drawable = info.loadBanner(packageManager);
+            }
 
             if (drawable != null) {
                 imageBytes = drawableToByteArray(drawable);

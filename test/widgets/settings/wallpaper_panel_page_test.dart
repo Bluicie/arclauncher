@@ -16,57 +16,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
-import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
 import 'package:flauncher/widgets/settings/wallpaper_panel_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../mocks.mocks.dart';
 
 void main() {
-  setUpAll(() async {
-    final binding = TestWidgetsFlutterBinding.ensureInitialized();
-    binding.window.physicalSizeTestValue = Size(1280, 720);
-    binding.window.devicePixelRatioTestValue = 1.0;
-    // Scale-down the font size because the font 'Ahem' used when running tests is much wider than Roboto
-    binding.platformDispatcher.textScaleFactorTestValue = 0.8;
-  });
-
-  testWidgets("'Gradient' navigates to GradientPanelPage", (tester) async {
+  testWidgets("renders Unsplash slideshow tile below wallpaper options", (tester) async {
     final settingsService = MockSettingsService();
     final wallpaperService = MockWallpaperService();
+    when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
 
-    await _pumpWidgetWithProviders(tester, settingsService, wallpaperService);
-
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle();
-    expect(find.byKey(Key("GradientPanelPage")), findsOneWidget);
-  }, skip: true);
-}
-
-Future<void> _pumpWidgetWithProviders(
-  WidgetTester tester,
-  SettingsService settingsService,
-  WallpaperService wallpaperService,
-) async {
-  await tester.pumpWidget(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<SettingsService>.value(value: settingsService),
-        ChangeNotifierProvider<WallpaperService>.value(value: wallpaperService),
-      ],
-      builder: (_, __) => MaterialApp(
-        routes: {
-          GradientPanelPage.routeName: (_) => Container(key: Key("GradientPanelPage")),
-        },
-        home: Scaffold(body: WallpaperPanelPage()),
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<SettingsService>.value(value: settingsService),
+          ChangeNotifierProvider<WallpaperService>.value(value: wallpaperService),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(body: WallpaperPanelPage()),
+        ),
       ),
-    ),
-  );
-  await tester.pumpAndSettle();
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Unsplash slideshow'), findsOneWidget);
+    expect(find.text('Gradient'), findsOneWidget);
+
+    final gradientTop = tester.getTopLeft(find.text('Gradient')).dy;
+    final unsplashTop = tester.getTopLeft(find.text('Unsplash slideshow')).dy;
+
+    expect(unsplashTop, greaterThan(gradientTop));
+  });
 }

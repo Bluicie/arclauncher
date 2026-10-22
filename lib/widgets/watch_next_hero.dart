@@ -17,7 +17,6 @@
  */
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flauncher/actions.dart';
 import 'package:flauncher/l10n/app_localizations.dart';
@@ -189,12 +188,10 @@ class WatchNextHero extends StatelessWidget {
                 totalItems: items.length,
               ),
               if (items.length > 1) ...[
-                const SizedBox(width: 26),
+                const SizedBox(width: 20),
                 _HeroPaginationIndicator(
                   currentIndex: activeIndex,
                   totalItems: items.length,
-                  onPrev: watchNextService.prevHeroItem,
-                  onNext: watchNextService.nextHeroItem,
                 ),
               ],
             ],
@@ -390,14 +387,10 @@ class _HeroWatchButtonState extends State<_HeroWatchButton> {
 class _HeroPaginationIndicator extends StatelessWidget {
   final int currentIndex;
   final int totalItems;
-  final VoidCallback onPrev;
-  final VoidCallback onNext;
 
   const _HeroPaginationIndicator({
     required this.currentIndex,
     required this.totalItems,
-    required this.onPrev,
-    required this.onNext,
   });
 
   @override
@@ -405,65 +398,28 @@ class _HeroPaginationIndicator extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Focus(
-          canRequestFocus: false,
-          skipTraversal: true,
-          child: IconButton(
-            icon: const Icon(Icons.chevron_left_rounded, color: Colors.white70, size: 24),
-            onPressed: () {
-              onPrev();
-              _playFocusSound(context);
-            },
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-            visualDensity: VisualDensity.compact,
-            tooltip: 'Previous',
+      children: List.generate(totalItems, (i) {
+        final isActive = i == currentIndex;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: isActive ? 18 : 6,
+          height: 5,
+          decoration: BoxDecoration(
+            color: isActive ? Colors.white : Colors.white38,
+            borderRadius: BorderRadius.circular(3),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      blurRadius: 6,
+                    ),
+                  ]
+                : null,
           ),
-        ),
-        const SizedBox(width: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(min(totalItems, 8), (i) {
-            final isActive = i == currentIndex;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              width: isActive ? 18 : 6,
-              height: 5,
-              decoration: BoxDecoration(
-                color: isActive ? Colors.white : Colors.white38,
-                borderRadius: BorderRadius.circular(3),
-                boxShadow: isActive
-                    ? [
-                        BoxShadow(
-                          color: Colors.white.withValues(alpha: 0.6),
-                          blurRadius: 6,
-                        ),
-                      ]
-                    : null,
-              ),
-            );
-          }),
-        ),
-        const SizedBox(width: 4),
-        Focus(
-          canRequestFocus: false,
-          skipTraversal: true,
-          child: IconButton(
-            icon: const Icon(Icons.chevron_right_rounded, color: Colors.white70, size: 24),
-            onPressed: () {
-              onNext();
-              _playFocusSound(context);
-            },
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-            visualDensity: VisualDensity.compact,
-            tooltip: 'Next',
-          ),
-        ),
-      ],
+        );
+      }),
     );
   }
 }

@@ -8,13 +8,13 @@
 
 **Arc Launcher** is a fork of [LTvLauncher](https://github.com/LeanBitLab/LtvLauncher) (originally by [etienn01](https://gitlab.com/flauncher/flauncher)) - an open-source alternative launcher for Android TV.
 
-This customized version introduces a modern smart TV-style grid layout, usability enhancements, and UX improvements by [meddouribadis](https://github.com/meddouribadis/LtvLauncher).
+This customized version introduces a modern smart TV-style grid layout, usability enhancements, and UX improvements by [meddouribadis](https://github.com/meddouribadis).
 
 <a href="https://github.com/meddouribadis/arclauncher/releases/latest">
   <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" height="50">
 </a>
 
-### Downloader code : 6330120
+### Downloader code: 6330120
 
 ## Join the Google Play Store beta
 
@@ -157,13 +157,13 @@ $ adb shell cmd package query-activities -c android.intent.category.HOME -a andr
 $ adb shell cmd package set-home-activity <package>/<activity>
 ```
 
-> **Note**
+> [!NOTE]
 > `set-home-activity` requires Android 8.1 or newer, and what it accepts differs by version. On Android 10 and
 > above it assigns the `HOME` role through `RoleManager` and the package name alone is enough. On Android 8.1 to
 > 9 it sets a preferred activity directly and needs the full `<package>/<activity>` form. On older systems, use
 > Method 1 or the fallback below.
 
-> **Tip**
+> [!TIP]
 > On Android 15 and newer you can also clear the assignment entirely with
 > `adb shell cmd package clear-package-preferred-activities`, which makes the system ask again on the next
 > Home press.
@@ -214,7 +214,7 @@ On Chromecast with Google TV (maybe others), the "YouTube" remote button will st
 
 ## Wallpaper
 
-Because Android's `WallpaperManager` is not available on some Android TV devices, FLauncher implements its own wallpaper management method.
+Because Android's `WallpaperManager` is not available on some Android TV devices, Arc Launcher implements its own wallpaper management method.
 
 Please note that changing wallpaper requires a file explorer to be installed on the device in order to pick a file.
 

@@ -46,6 +46,20 @@ const String _showWatchNextSection = "show_watch_next_section";
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
 const String _showFocusBorders = "show_focus_borders";
+const String _focusBorderThickness = "focus_border_thickness";
+
+// Focus border thickness options (in dp)
+const double FOCUS_BORDER_THIN = 1.0;
+const double FOCUS_BORDER_DEFAULT = 1.5;
+const double FOCUS_BORDER_MEDIUM = 2.0;
+const double FOCUS_BORDER_BOLD = 3.0;
+
+const List<double> FOCUS_BORDER_THICKNESS_OPTIONS = [
+  FOCUS_BORDER_THIN,
+  FOCUS_BORDER_DEFAULT,
+  FOCUS_BORDER_MEDIUM,
+  FOCUS_BORDER_BOLD,
+];
 
 // WiFi usage period options
 const String WIFI_USAGE_DAILY = "daily";
@@ -119,6 +133,14 @@ class SettingsService extends ChangeNotifier {
   bool get dockShadowEnabled => _sharedPreferences.getBool(_dockShadowEnabled) ?? false;
 
   bool get showFocusBorders => _sharedPreferences.getBool(_showFocusBorders) ?? true;
+
+  double get focusBorderThickness =>
+      _sharedPreferences.getDouble(_focusBorderThickness) ?? FOCUS_BORDER_DEFAULT;
+
+  Future<void> setFocusBorderThickness(double value) async {
+    await _sharedPreferences.setDouble(_focusBorderThickness, value);
+    notifyListeners();
+  }
 
   Color get accentColor {
     final hex = accentColorHex;

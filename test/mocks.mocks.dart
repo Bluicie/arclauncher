@@ -1682,6 +1682,23 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as bool);
 
   @override
+  double get focusBorderThickness => (super.noSuchMethod(
+        Invocation.getter(#focusBorderThickness),
+        returnValue: 1.5,
+      ) as double);
+
+  @override
+  _i9.Future<void> setFocusBorderThickness(double? value) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setFocusBorderThickness,
+          [value],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
   _i4.Color get accentColor => (super.noSuchMethod(
         Invocation.getter(#accentColor),
         returnValue: _FakeColor_2(

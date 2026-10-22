@@ -27,6 +27,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get showFocusBorders => 'Mostrar bordes de enfoque';
 
   @override
+  String get focusBorderThickness => 'Grosor del borde de enfoque';
+
+  @override
+  String get focusBorderThin => 'Sutil (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Por defecto (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Medio (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Grueso (3.0 dp)';
+
+  @override
   String get appInfo => 'Datos de la aplicación';
 
   @override

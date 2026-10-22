@@ -27,6 +27,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get showFocusBorders => 'Odak kenarlıklarını göster';
 
   @override
+  String get focusBorderThickness => 'Odak kenarlık kalınlığı';
+
+  @override
+  String get focusBorderThin => 'İnce (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Varsayılan (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Orta (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Kalın (3.0 dp)';
+
+  @override
   String get appInfo => 'Uygulama bilgisi';
 
   @override

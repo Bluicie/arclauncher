@@ -17,6 +17,7 @@
  */
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flauncher/actions.dart';
 import 'package:flauncher/app_image_type.dart';
@@ -177,8 +178,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final bool showAppNames = context.select<SettingsService, bool>((s) => s.showAppNamesBelowIcons);
-    final (bool animationEnabled, String accentColorHex, bool showFocusBorders) = context.select<SettingsService, (bool, String, bool)>(
-      (s) => (s.appHighlightAnimationEnabled, s.accentColorHex, s.showFocusBorders),
+    final (bool animationEnabled, String accentColorHex, bool showFocusBorders, double borderThickness) = context.select<SettingsService, (bool, String, bool, double)>(
+      (s) => (s.appHighlightAnimationEnabled, s.accentColorHex, s.showFocusBorders, s.focusBorderThickness),
     );
     if (accentColorHex != _accentColorHex) {
       _accentColorHex = accentColorHex;
@@ -259,6 +260,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                       return _HighlightOutline(
                                         accentColor: _accentColor,
                                         alpha: alpha,
+                                        strokeWidth: borderThickness,
                                       );
                                     },
                                   ),
@@ -270,6 +272,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   child: _HighlightOutline(
                                     accentColor: _accentColor,
                                     isMoving: _moving,
+                                    strokeWidth: borderThickness,
                                   ),
                                 ),
                               ),
@@ -633,11 +636,13 @@ class _HighlightOutline extends StatelessWidget {
   final Color accentColor;
   final double alpha;
   final bool isMoving;
+  final double strokeWidth;
 
   const _HighlightOutline({
     required this.accentColor,
     this.alpha = 1.0,
     this.isMoving = false,
+    this.strokeWidth = 1.5,
   });
 
   @override
@@ -645,7 +650,7 @@ class _HighlightOutline extends StatelessWidget {
     return CustomPaint(
       foregroundPainter: AppCardContourPainter(
         radius: 12.0,
-        strokeWidth: isMoving ? 2.0 : 1.5,
+        strokeWidth: isMoving ? max(2.0, strokeWidth + 0.5) : strokeWidth,
         accentColor: accentColor,
         alpha: alpha,
         isMoving: isMoving,

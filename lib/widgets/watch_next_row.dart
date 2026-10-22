@@ -431,7 +431,9 @@ class _WatchNextCardState extends State<_WatchNextCard> {
     );
     final targetScale = _clicked ? 0.97 : (_isHovered ? _focusedScale : 1.0);
     final targetLift = _isHovered && !_clicked ? _focusedLift : 0.0;
-    final showFocusBorders = context.select<SettingsService, bool>((s) => s.showFocusBorders);
+    final (bool showFocusBorders, double borderThickness) = context.select<SettingsService, (bool, double)>(
+      (s) => (s.showFocusBorders, s.focusBorderThickness),
+    );
 
 
     return Padding(
@@ -488,7 +490,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                             child: CustomPaint(
                               foregroundPainter: AppCardContourPainter(
                                 radius: 8,
-                                strokeWidth: 1.5,
+                                strokeWidth: borderThickness,
                                 accentColor: Theme.of(context).colorScheme.primary,
                               ),
                               child: const SizedBox.expand(),

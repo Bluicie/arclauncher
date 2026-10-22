@@ -38,14 +38,18 @@ Once you're in the group, you can enrol in the beta either way:
 - **Easy WiFi Access** - Network indicator doubles as a shortcut to system WiFi settings.
 - **Quick Presets** - Select Time/Date formats and Category names from a list (No keyboard required).
 - **Video Wallpaper** - Set animated video files as your home screen background for a dynamic visual experience.
-- **Dynamic & Time-Based Wallpaper** - Switch between day/night backgrounds or enable automatic dark mode based on time.
+- **Reddit Wallpaper Slideshow** - Rotate wallpapers from custom or default subreddits with configurable intervals (5 min to 24 hr), sort orders, and author credit display.
 - **Unsplash Slideshow** - Rotate the wallpaper with random Unsplash photos (pick categories for day and night among Unsplash topics and a Milky Way collection; 5–60 min interval, cross-fade, photographer credit). Requires your own free Unsplash access key.
+- **Dynamic & Time-Based Wallpaper** - Switch between day/night backgrounds or enable automatic dark mode based on time.
 - **Watch Next Section** - Continue watching your shows with a dedicated "Watch Next" row at the top.
+- **Hide Status Bar in Grid** - Automatically hide the status bar when scrolling into the app grid to free vertical screen space, restoring it when moving back to the dock.
 - **Pitch Black Wallpaper** - A true black gradient background option for OLED optimization.
-- **Enhanced Focus Indicator** - New double-border design ensures perfect visibility on any background.
+- **Enhanced Focus Indicator** - Double-border design ensures visibility on any background, with adjustable border thickness in Appearance settings.
 - **Smart Navigation** - Fixed "bounce back" issues and optimized focus traversal for a smoother experience.
+- **In-App Updater with Changelogs** - Check for updates and read release notes directly within the app.
 - **Refined Settings** - Reorganized menus with a new "Miscellaneous" section and unified focus styles.
 - **Accent Color Support** - Personalize the UI with multiple color presets.
+- **Multilingual Support** - Interface available in English, Spanish, and Turkish.
 - **Improved Sorting** - Easily reorder categories using Left/Right arrow keys instead of finicky gestures.
 - **Left Side Settings** - Reorganized settings panel now opens on the left for better reach.
 - **Brightness Scheduler (Experimental)** - Automatically adjust system brightness based on time of day (Requires `WRITE_SETTINGS` permission via ADB).
@@ -65,6 +69,9 @@ Once you're in the group, you can enrol in the beta either way:
 
 > [!TIP]
 > **Unsplash Slideshow:** create a free app at [unsplash.com/developers](https://unsplash.com/developers) and paste its *Access Key* in Settings → Interface → Wallpaper → Unsplash slideshow. Tick the categories to use by day and by night under *Categories*; one of them is picked at random for each photo. Demo keys allow 50 requests per hour; the slideshow uses at most 12. Only the two most recent photos are kept on disk.
+
+> [!TIP]
+> **Reddit Slideshow:** choose subreddits, sort orders, and intervals (5 minutes to 24 hours) under Settings → Wallpaper → Reddit. Works without an account using public feeds, with optional client credentials for authenticated access.
 
 ## Screenshots
 

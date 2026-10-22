@@ -113,8 +113,9 @@ class _CachedBlurBackdropState extends _CachedBlurBackgroundState<CachedBlurBack
     );
   }
 
+  // Same tree shape as [buildBlurContent] so the child isn't remounted when the snapshot swaps in.
   @override
-  Widget buildLiveBlur() => widget.child;
+  Widget buildLiveBlur() => buildBlurContent(const SizedBox.shrink());
 }
 
 abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends State<T> {
@@ -241,7 +242,8 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
           });
         }
         final image = _blurred;
-        if (image == null || (stale && !hidden)) {
+        // Keep the previous snapshot while a new one is built to avoid a blur-less flash.
+        if (image == null) {
           return buildLiveBlur();
         }
         return buildBlurContent(_BlurBlit(image: image, screenSize: screen));

@@ -69,6 +69,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoHideAppBar => 'Automatically hide status bar';
 
   @override
+  String get hideStatusBarInGrid => 'Hide status bar in grid';
+
+  @override
   String get backButtonAction => 'Back button action';
 
   @override

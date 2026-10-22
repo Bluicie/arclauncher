@@ -1556,6 +1556,12 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as bool);
 
   @override
+  bool get hideStatusBarInGrid => (super.noSuchMethod(
+        Invocation.getter(#hideStatusBarInGrid),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get showCategoryTitles => (super.noSuchMethod(
         Invocation.getter(#showCategoryTitles),
         returnValue: false,
@@ -1688,17 +1694,6 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as double);
 
   @override
-  _i9.Future<void> setFocusBorderThickness(double? value) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #setFocusBorderThickness,
-          [value],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
-
-  @override
   _i4.Color get accentColor => (super.noSuchMethod(
         Invocation.getter(#accentColor),
         returnValue: _FakeColor_2(
@@ -1753,6 +1748,17 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as bool);
 
   @override
+  _i9.Future<void> setFocusBorderThickness(double? value) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setFocusBorderThickness,
+          [value],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
   _i9.Future<void> set(
     String? key,
     bool? value,
@@ -1794,6 +1800,16 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
   _i9.Future<void> setAutoHideAppBarEnabled(bool? value) => (super.noSuchMethod(
         Invocation.method(
           #setAutoHideAppBarEnabled,
+          [value],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setHideStatusBarInGrid(bool? value) => (super.noSuchMethod(
+        Invocation.method(
+          #setHideStatusBarInGrid,
           [value],
         ),
         returnValue: _i9.Future<void>.value(),

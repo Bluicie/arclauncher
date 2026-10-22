@@ -19,6 +19,7 @@
     "dockShadow": "Dock shadow",
     "applications": "Applications",
     "autoHideAppBar": "Automatically hide status bar",
+    "hideStatusBarInGrid": "Hide status bar in grid",
     "backButtonAction": "Back button action",
     "category": "Category",
     "categories": "Categories",

@@ -122,22 +122,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       child: hasHeroBackdrop
                           ? KeyedSubtree(
                               key: ValueKey('hero_bg_${activeItem!.id}_$heroUri'),
-                              child: RepaintBoundary(
-                                child: Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Image.memory(
-                                      heroBytes!,
-                                      cacheWidth: 1920,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      gaplessPlayback: true,
-                                    ),
-                                    const CustomPaint(painter: _CinematicScrimPainter()),
-                                  ],
-                                ),
-                              ),
+                              child: RepaintBoundary(child: _CachedHeroBackground(bytes: heroBytes)),
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
                     ),
@@ -182,7 +167,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               if (hasVideoWallpaper && !hasHeroBackdrop) {
                 return const SizedBox.shrink();
               }
-              final ImageProvider? imageProvider = hasHeroBackdrop ? MemoryImage(heroBytes!) : null;
+              final ImageProvider? imageProvider = hasHeroBackdrop ? ResizeImage(MemoryImage(heroBytes!), width: 960) : null;
               final Object? imageKey = hasHeroBackdrop ? heroUri : null;
               return Positioned.fill(
                 child: IgnorePointer(
@@ -683,6 +668,86 @@ class _CachedGradientBackgroundState extends State<_CachedGradientBackground> {
         // First frame (and while re-rendering): paint the gradient live once to avoid a flash.
         return DecoratedBox(decoration: BoxDecoration(gradient: widget.gradient));
       },
+    );
+  }
+}
+
+/// Bakes the hero image and its cinematic scrim into one screen-sized texture,
+/// so the immersive background costs a single image draw per frame like a
+/// static wallpaper instead of an image plus two full-screen gradients.
+class _CachedHeroBackground extends StatefulWidget {
+  final Uint8List bytes;
+
+  const _CachedHeroBackground({required this.bytes});
+
+  @override
+  State<_CachedHeroBackground> createState() => _CachedHeroBackgroundState();
+}
+
+class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
+  ui.Image? _image;
+  Size _renderedSize = Size.zero;
+  bool _rendering = false;
+
+  @override
+  void dispose() {
+    _image?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _render(Size size, double dpr) async {
+    if (_rendering) {
+      return;
+    }
+    _rendering = true;
+    try {
+      final codec = await ui.instantiateImageCodec(widget.bytes);
+      final source = (await codec.getNextFrame()).image;
+      codec.dispose();
+      final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      paintImage(canvas: canvas, rect: Offset.zero & pxSize, image: source, fit: BoxFit.cover);
+      const _CinematicScrimPainter().paint(canvas, pxSize);
+      final picture = recorder.endRecording();
+      final image = await picture.toImage(pxSize.width.toInt(), pxSize.height.toInt());
+      picture.dispose();
+      source.dispose();
+      if (!mounted) {
+        image.dispose();
+        return;
+      }
+      setState(() {
+        _image?.dispose();
+        _image = image;
+        _renderedSize = size;
+      });
+    } finally {
+      _rendering = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final needsRender = size != _renderedSize;
+    if (needsRender && size.width > 0 && size.height > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && size != _renderedSize) _render(size, dpr);
+      });
+    }
+    final image = _image;
+    if (image != null && !needsRender) {
+      return RawImage(image: image, width: size.width, height: size.height, fit: BoxFit.fill);
+    }
+    // Until the texture is ready, paint live so the crossfade has content.
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.memory(widget.bytes, cacheWidth: 1920, fit: BoxFit.cover, gaplessPlayback: true),
+        const CustomPaint(painter: _CinematicScrimPainter()),
+      ],
     );
   }
 }

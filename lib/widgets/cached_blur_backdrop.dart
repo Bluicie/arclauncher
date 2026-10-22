@@ -42,11 +42,15 @@ class CachedBlurLayer extends StatefulWidget {
   final ImageProvider? imageProvider;
   final Object? imageKey;
 
+  /// While hidden, skip re-snapshotting; the stale snapshot is refreshed once shown.
+  final bool hidden;
+
   const CachedBlurLayer({
     super.key,
     required this.sigma,
     this.imageProvider,
     this.imageKey,
+    this.hidden = false,
   });
 
   @override
@@ -62,6 +66,9 @@ class _CachedBlurLayerState extends _CachedBlurBackgroundState<CachedBlurLayer> 
 
   @override
   Object? get customImageKey => widget.imageKey;
+
+  @override
+  bool get hidden => widget.hidden;
 
   @override
   Widget buildBlurContent(Widget blurBackground) => blurBackground;
@@ -129,6 +136,7 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
 
   ImageProvider? get customImageProvider => null;
   Object? get customImageKey => null;
+  bool get hidden => false;
 
   Widget buildBlurContent(Widget blurBackground);
 
@@ -227,13 +235,13 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
             _builtGradientId != gradientId ||
             _builtSigma != sigma ||
             _builtCustomKey != customImageKey;
-        if (stale && screen.width > 0 && screen.height > 0) {
+        if (stale && !hidden && screen.width > 0 && screen.height > 0) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) _build(service, screen, dpr);
           });
         }
         final image = _blurred;
-        if (image == null || stale) {
+        if (image == null || (stale && !hidden)) {
           return buildLiveBlur();
         }
         return buildBlurContent(_BlurBlit(image: image, screenSize: screen));

@@ -179,6 +179,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       sigma: 10,
                       imageProvider: imageProvider,
                       imageKey: imageKey,
+                      hidden: !appGridFocused || blurDisabled,
                     ),
                   ),
                 ),
@@ -549,7 +550,25 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         child: ClipRRect(
           borderRadius: borderRadius,
           clipBehavior: Clip.antiAlias,
-          child: (backdropDisabled || isBigPicture) ? content : CachedBlurBackdrop(sigma: 5, child: content),
+          child: backdropDisabled
+              ? content
+              : Selector<WatchNextService, (Uint8List?, String?)>(
+                  selector: (_, watchNextService) {
+                    final item = isBigPicture ? watchNextService.activeHeroItem : null;
+                    final heroUri = item?.backdropUri ?? item?.posterUri;
+                    return (watchNextService.getCachedPoster(heroUri), heroUri);
+                  },
+                  child: content,
+                  builder: (_, hero, child) {
+                    final (heroBytes, heroUri) = hero;
+                    return CachedBlurBackdrop(
+                      sigma: 5,
+                      imageProvider: heroBytes != null ? ResizeImage(MemoryImage(heroBytes), width: 960) : null,
+                      imageKey: heroBytes != null ? heroUri : null,
+                      child: child!,
+                    );
+                  },
+                ),
         ),
       ),
     );
@@ -701,10 +720,16 @@ class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
     }
     _rendering = true;
     try {
-      final codec = await ui.instantiateImageCodec(widget.bytes);
+      final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
+      final codec = await ui.instantiateImageCodecWithSize(
+        await ui.ImmutableBuffer.fromUint8List(widget.bytes),
+        getTargetSize: (w, h) {
+          final scale = min(1.0, max(pxSize.width / w, pxSize.height / h));
+          return ui.TargetImageSize(width: (w * scale).round(), height: (h * scale).round());
+        },
+      );
       final source = (await codec.getNextFrame()).image;
       codec.dispose();
-      final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
       paintImage(canvas: canvas, rect: Offset.zero & pxSize, image: source, fit: BoxFit.cover);
@@ -741,14 +766,8 @@ class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
     if (image != null && !needsRender) {
       return RawImage(image: image, width: size.width, height: size.height, fit: BoxFit.fill);
     }
-    // Until the texture is ready, paint live so the crossfade has content.
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.memory(widget.bytes, cacheWidth: 1920, fit: BoxFit.cover, gaplessPlayback: true),
-        const CustomPaint(painter: _CinematicScrimPainter()),
-      ],
-    );
+    // ponytail: empty until baked (a few frames); a live fallback would decode the image twice.
+    return const SizedBox.expand();
   }
 }
 

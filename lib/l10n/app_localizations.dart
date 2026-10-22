@@ -136,6 +136,36 @@ abstract class AppLocalizations {
   /// **'Show focus borders'**
   String get showFocusBorders;
 
+  /// No description provided for @focusBorderThickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus border thickness'**
+  String get focusBorderThickness;
+
+  /// No description provided for @focusBorderThin.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtle (1.0 dp)'**
+  String get focusBorderThin;
+
+  /// No description provided for @focusBorderDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default (1.5 dp)'**
+  String get focusBorderDefault;
+
+  /// No description provided for @focusBorderMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium (2.0 dp)'**
+  String get focusBorderMedium;
+
+  /// No description provided for @focusBorderBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold (3.0 dp)'**
+  String get focusBorderBold;
+
   /// No description provided for @appInfo.
   ///
   /// In en, this message translates to:

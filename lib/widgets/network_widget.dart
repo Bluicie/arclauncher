@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 class NetworkWidget extends StatelessWidget
 {
-  const NetworkWidget({super.key});
+  final bool interactive;
+
+  const NetworkWidget({super.key, this.interactive = false});
 
   @override
   Widget build(BuildContext context) {
@@ -65,24 +67,32 @@ class NetworkWidget extends StatelessWidget
             break;
         }
 
+        final iconWidget = Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Icon(
+            iconData,
+            size: 20,
+            color: iconColor,
+            shadows: const [
+              Shadow(
+                color: Colors.black54,
+                offset: Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        );
+
+        if (!interactive) {
+          return iconWidget;
+        }
+
         return InkWell(
           onTap: () => networkService.openWifiSettings(),
           borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Icon(iconData,
-              color: iconColor,
-              shadows: const [
-               Shadow(
-                 color: Colors.black54,
-                 offset: Offset(0, 2),
-                 blurRadius: 8
-               )
-              ]
-            ),
-          ),
+          child: iconWidget,
         );
-      }
+      },
     );
   }
 }

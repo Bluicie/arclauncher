@@ -27,6 +27,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showFocusBorders => 'Show focus borders';
 
   @override
+  String get focusBorderThickness => 'Focus border thickness';
+
+  @override
+  String get focusBorderThin => 'Subtle (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Default (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Medium (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Bold (3.0 dp)';
+
+  @override
   String get appInfo => 'Application info';
 
   @override

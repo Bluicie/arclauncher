@@ -31,6 +31,7 @@ import 'package:flauncher/widgets/app_card.dart';
 import 'package:flauncher/widgets/cached_blur_backdrop.dart';
 import 'package:flauncher/widgets/category_clean_row.dart';
 import 'package:flauncher/widgets/category_row.dart';
+import 'package:flauncher/widgets/dock_contour_painter.dart';
 import 'package:flauncher/widgets/launcher_alternative_view.dart';
 import 'package:flauncher/widgets/focus_aware_app_bar.dart';
 import 'package:flauncher/widgets/wallpaper_video_background.dart';
@@ -475,22 +476,21 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
     const dockBorderRadius = 24.0;
     final borderRadius = BorderRadius.circular(dockBorderRadius);
 
-    final content = Container(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        color: darkBackground ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.1),
-        borderRadius: borderRadius,
-        border: Border.all(
-          color: darkBackground ? Colors.black.withOpacity(0.15) : Colors.white.withOpacity(0.15),
-          width: 1.5,
+    final content = CustomPaint(
+      foregroundPainter: const DockContourPainter(radius: dockBorderRadius, strokeWidth: 1.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          color: darkBackground ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.1),
+          borderRadius: borderRadius,
         ),
-      ),
-      child: CategoryCleanRow(
-        category: category,
-        applications: apps,
-        isFirstSection: handleUpNavigationToSettings,
-        scrollAlignment: 1.0,
-        onAppFocused: _onHomeSectionFocused,
+        child: CategoryCleanRow(
+          category: category,
+          applications: apps,
+          isFirstSection: handleUpNavigationToSettings,
+          scrollAlignment: 1.0,
+          onAppFocused: _onHomeSectionFocused,
+        ),
       ),
     );
 
@@ -499,7 +499,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         decoration: BoxDecoration(
           borderRadius: borderRadius,
           boxShadow: shadowEnabled
-              ? [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)]
+              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 2)]
               : null,
         ),
         child: ClipRRect(

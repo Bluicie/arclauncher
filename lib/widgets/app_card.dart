@@ -17,11 +17,13 @@
  */
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flauncher/actions.dart';
 import 'package:flauncher/app_image_type.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/app_card_contour_painter.dart';
 import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/focus_keyboard_listener.dart';
 import 'package:flutter/material.dart';
@@ -176,8 +178,8 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final bool showAppNames = context.select<SettingsService, bool>((s) => s.showAppNamesBelowIcons);
-    final (bool animationEnabled, String accentColorHex, bool showFocusBorders) = context.select<SettingsService, (bool, String, bool)>(
-      (s) => (s.appHighlightAnimationEnabled, s.accentColorHex, s.showFocusBorders),
+    final (bool animationEnabled, String accentColorHex, bool showFocusBorders, double borderThickness) = context.select<SettingsService, (bool, String, bool, double)>(
+      (s) => (s.appHighlightAnimationEnabled, s.accentColorHex, s.showFocusBorders, s.focusBorderThickness),
     );
     if (accentColorHex != _accentColorHex) {
       _accentColorHex = accentColorHex;
@@ -247,21 +249,33 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                               ],
                             ),
                           ),
-                          if (shouldHighlight && showFocusBorders)
-                            if (animationEnabled)
+                          if ((shouldHighlight && showFocusBorders) || _moving)
+                            if (animationEnabled && !_moving)
                               IgnorePointer(
                                 child: RepaintBoundary(
                                   child: AnimatedBuilder(
                                     animation: _curvedAnimation,
                                     builder: (context, _) {
-                                      final alpha = 0.4 + (_animation.value * 0.6);
-                                      return _HighlightOutline(color: _accentColor.withValues(alpha: alpha));
+                                      final alpha = 0.65 + (_animation.value * 0.35);
+                                      return _HighlightOutline(
+                                        accentColor: _accentColor,
+                                        alpha: alpha,
+                                        strokeWidth: borderThickness,
+                                      );
                                     },
                                   ),
                                 ),
                               )
                             else
-                              IgnorePointer(child: RepaintBoundary(child: _HighlightOutline(color: _accentColor))),
+                              IgnorePointer(
+                                child: RepaintBoundary(
+                                  child: _HighlightOutline(
+                                    accentColor: _accentColor,
+                                    isMoving: _moving,
+                                    strokeWidth: borderThickness,
+                                  ),
+                                ),
+                              ),
                         ],
                       ),
                     ),
@@ -619,22 +633,29 @@ class _AppNameLabel extends StatelessWidget {
 }
 
 class _HighlightOutline extends StatelessWidget {
-  final Color color;
+  final Color accentColor;
+  final double alpha;
+  final bool isMoving;
+  final double strokeWidth;
 
-  const _HighlightOutline({required this.color});
+  const _HighlightOutline({
+    required this.accentColor,
+    this.alpha = 1.0,
+    this.isMoving = false,
+    this.strokeWidth = 1.5,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color, width: 1),
-          ),
-        ),
-      ],
+    return CustomPaint(
+      foregroundPainter: AppCardContourPainter(
+        radius: 12.0,
+        strokeWidth: isMoving ? max(2.0, strokeWidth + 0.5) : strokeWidth,
+        accentColor: accentColor,
+        alpha: alpha,
+        isMoving: isMoving,
+      ),
+      child: const SizedBox.expand(),
     );
   }
 }

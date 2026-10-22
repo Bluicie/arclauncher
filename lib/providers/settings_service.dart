@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _appHighlightAnimationEnabledKey = "app_highlight_animation_enabled";
 const _appKeyClickEnabledKey = "app_key_click_enabled";
 const _autoHideAppBar = "auto_hide_app_bar";
+const _hideStatusBarInGrid = "hide_status_bar_in_grid";
 const _gradientUuidKey = "gradient_uuid";
 const _backButtonAction = "back_button_action";
 const _dateFormat = "date_format";
@@ -95,6 +96,8 @@ class SettingsService extends ChangeNotifier {
   bool get appKeyClickEnabled => _sharedPreferences.getBool(_appKeyClickEnabledKey) ?? true;
 
   bool get autoHideAppBarEnabled => _sharedPreferences.getBool(_autoHideAppBar) ?? false;
+
+  bool get hideStatusBarInGrid => _sharedPreferences.getBool(_hideStatusBarInGrid) ?? false;
 
   bool get showCategoryTitles => _sharedPreferences.getBool(_showCategoryTitles) ?? false;
 
@@ -169,6 +172,10 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setAutoHideAppBarEnabled(bool value) async {
     return set(_autoHideAppBar, value);
+  }
+
+  Future<void> setHideStatusBarInGrid(bool value) async {
+    return set(_hideStatusBarInGrid, value);
   }
 
   Future<void> setGradientUuid(String value) async {

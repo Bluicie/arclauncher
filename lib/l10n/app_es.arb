@@ -19,6 +19,7 @@
     "dockShadow": "Sombra del dock",
     "applications": "Aplicaciones",
     "autoHideAppBar": "Ocultar barra de estado automáticamente",
+    "hideStatusBarInGrid": "Ocultar barra de estado en la cuadrícula",
     "backButtonAction": "Acción del botón 'Atrás'",
     "category": "Categoría",
     "categories": "Categorías",

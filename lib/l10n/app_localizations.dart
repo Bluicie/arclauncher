@@ -220,6 +220,12 @@ abstract class AppLocalizations {
   /// **'Automatically hide status bar'**
   String get autoHideAppBar;
 
+  /// No description provided for @hideStatusBarInGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide status bar in grid'**
+  String get hideStatusBarInGrid;
+
   /// No description provided for @backButtonAction.
   ///
   /// In en, this message translates to:

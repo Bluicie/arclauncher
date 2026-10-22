@@ -69,6 +69,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get autoHideAppBar => 'Durum çubuğunu otomatik gizle';
 
   @override
+  String get hideStatusBarInGrid => 'Durum çubuğunu ızgarada gizle';
+
+  @override
   String get backButtonAction => 'Geri tuşu eylemi';
 
   @override

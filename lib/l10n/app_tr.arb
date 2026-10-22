@@ -19,6 +19,7 @@
     "dockShadow": "Dock gölgesi",
     "applications": "Uygulamalar",
     "autoHideAppBar": "Durum çubuğunu otomatik gizle",
+    "hideStatusBarInGrid": "Durum çubuğunu ızgarada gizle",
     "backButtonAction": "Geri tuşu eylemi",
     "category": "Kategori",
     "categories": "Kategoriler",

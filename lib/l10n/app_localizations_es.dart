@@ -69,6 +69,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get autoHideAppBar => 'Ocultar barra de estado automáticamente';
 
   @override
+  String get hideStatusBarInGrid => 'Ocultar barra de estado en la cuadrícula';
+
+  @override
   String get backButtonAction => 'Acción del botón \'Atrás\'';
 
   @override

@@ -34,6 +34,19 @@ void main() async {
     await sharedPreferences.clear();
   });
 
+  test("watchNextBigPictureMode default and update", () async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final settingsService = SettingsService(sharedPreferences);
+
+    expect(settingsService.watchNextBigPictureMode, isFalse);
+
+    await settingsService.setWatchNextBigPictureMode(true);
+    expect(settingsService.watchNextBigPictureMode, isTrue);
+
+    await settingsService.setWatchNextBigPictureMode(false);
+    expect(settingsService.watchNextBigPictureMode, isFalse);
+  });
+
 
   test("setUse24HourTimeFormat", () async {
     final sharedPreferences = await SharedPreferences.getInstance();

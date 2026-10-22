@@ -29,6 +29,7 @@ class WatchNextService extends ChangeNotifier {
   List<WatchNextItem> _items = [];
   bool _isLoading = false;
   bool _hasPermission = false;
+  int _activeHeroIndex = 0;
   final Map<String, Uint8List> _posterCache = {};
   final Set<String> _loadingPosters = {};
   final Set<String> _failedPosters = {};
@@ -41,6 +42,39 @@ class WatchNextService extends ChangeNotifier {
   bool get hasPermission => _hasPermission;
   bool get hasItems => _items.isNotEmpty;
   bool get hasVisibleSection => !_isLoading && (!_hasPermission || _items.isNotEmpty);
+  int get activeHeroIndex => _activeHeroIndex;
+  WatchNextItem? get activeHeroItem =>
+      _items.isNotEmpty && _activeHeroIndex < _items.length ? _items[_activeHeroIndex] : null;
+
+  void setActiveHeroIndex(int index) {
+    if (_items.isEmpty) return;
+    final clamped = index.clamp(0, _items.length - 1);
+    if (_activeHeroIndex != clamped) {
+      _activeHeroIndex = clamped;
+      _ensureActiveHeroImageLoaded();
+      notifyListeners();
+    }
+  }
+
+  void nextHeroItem() {
+    if (_items.isEmpty) return;
+    final next = (_activeHeroIndex + 1) % _items.length;
+    setActiveHeroIndex(next);
+  }
+
+  void prevHeroItem() {
+    if (_items.isEmpty) return;
+    final prev = (_activeHeroIndex - 1 + _items.length) % _items.length;
+    setActiveHeroIndex(prev);
+  }
+
+  void _ensureActiveHeroImageLoaded() {
+    final item = activeHeroItem;
+    if (item != null) {
+      if (item.backdropUri != null) ensurePosterLoaded(item.backdropUri);
+      if (item.posterUri != null) ensurePosterLoaded(item.posterUri);
+    }
+  }
 
   WatchNextService(this._fLauncherChannel) {
     _init();
@@ -107,6 +141,11 @@ class WatchNextService extends ChangeNotifier {
       final results = await _fLauncherChannel.getWatchNextItems();
       _items = results.map((map) => WatchNextItem.fromMap(map)).toList();
 
+      if (_activeHeroIndex >= _items.length) {
+        _activeHeroIndex = 0;
+      }
+      _ensureActiveHeroImageLoaded();
+
       unawaited(_preloadInitialPosters());
     } catch (e) {
       debugPrint('WatchNext: Error loading items: $e');
@@ -119,10 +158,11 @@ class WatchNextService extends ChangeNotifier {
 
   Future<void> _preloadInitialPosters() async {
     final pendingUris = _items
-        .take(3)
-        .map((item) => item.posterUri)
+        .take(4)
+        .expand((item) => [item.backdropUri, item.posterUri])
         .whereType<String>()
         .where((uri) => !_posterCache.containsKey(uri))
+        .toSet()
         .toList(growable: false);
 
     if (pendingUris.isEmpty) {

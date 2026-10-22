@@ -95,9 +95,15 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
       child: Stack(
         children: [
           RepaintBoundary(
-            child: Consumer<WallpaperService>(
-              builder: (_, wallpaperService, __) {
+            child: Consumer3<WallpaperService, SettingsService, WatchNextService>(
+              builder: (_, wallpaperService, settingsService, watchNextService, __) {
                 final author = wallpaperService.slideshowAuthor;
+                final isBigPicture = settingsService.showWatchNextSection && settingsService.watchNextBigPictureMode;
+                final activeItem = isBigPicture ? watchNextService.activeHeroItem : null;
+                final heroUri = activeItem?.backdropUri ?? activeItem?.posterUri;
+                final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
+                final hasHeroBackdrop = isBigPicture && heroBytes != null;
+
                 return Stack(
                   children: [
                     // Crossfade between wallpapers (each one has a revision-based key).
@@ -105,7 +111,60 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       duration: const Duration(milliseconds: 1500),
                       child: _wallpaper(context, wallpaperService),
                     ),
-                    if (author != null)
+                    // Watch Next Big Picture Hero Backdrop with smooth crossfade
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 600),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      child: hasHeroBackdrop
+                          ? KeyedSubtree(
+                              key: ValueKey('hero_bg_${activeItem!.id}_$heroUri'),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.memory(
+                                    heroBytes!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    gaplessPlayback: true,
+                                  ),
+                                  // Cinematic scrim overlays
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0.35),
+                                          Colors.transparent,
+                                          Colors.black.withValues(alpha: 0.5),
+                                          Colors.black.withValues(alpha: 0.88),
+                                        ],
+                                        stops: const [0.0, 0.25, 0.65, 1.0],
+                                      ),
+                                    ),
+                                  ),
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0.65),
+                                          Colors.black.withValues(alpha: 0.25),
+                                          Colors.transparent,
+                                        ],
+                                        stops: const [0.0, 0.35, 0.7],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
+                    ),
+                    if (author != null && !hasHeroBackdrop)
                       Positioned(
                         right: 24,
                         top: 64,
@@ -126,15 +185,21 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               },
             ),
           ),
-          Selector3<LauncherState, SettingsService, WallpaperService, (bool, bool, bool)>(
-            selector: (_, launcherState, settings, wallpaperService) => (
-              launcherState.appGridFocused,
-              settings.backgroundBlurDisabled,
-              wallpaperService.wallpaperVideoFile != null,
-            ),
+          Selector4<LauncherState, SettingsService, WallpaperService, WatchNextService, (bool, bool, bool, bool)>(
+            selector: (_, launcherState, settings, wallpaperService, watchNextService) {
+              final isBigPicture = settings.showWatchNextSection && settings.watchNextBigPictureMode;
+              final heroUri = watchNextService.activeHeroItem?.backdropUri ?? watchNextService.activeHeroItem?.posterUri;
+              final hasHeroBackdrop = isBigPicture && watchNextService.getCachedPoster(heroUri) != null;
+              return (
+                launcherState.appGridFocused,
+                settings.backgroundBlurDisabled,
+                wallpaperService.wallpaperVideoFile != null,
+                hasHeroBackdrop,
+              );
+            },
             builder: (_, data, __) {
-              final (appGridFocused, blurDisabled, hasVideoWallpaper) = data;
-              if (hasVideoWallpaper) {
+              final (appGridFocused, blurDisabled, hasVideoWallpaper, hasHeroBackdrop) = data;
+              if (hasVideoWallpaper && !hasHeroBackdrop) {
                 return const SizedBox.shrink();
               }
               return Positioned.fill(
@@ -202,10 +267,13 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         }).toList();
 
     final showWatchNextSection = context.select<SettingsService, bool>((s) => s.showWatchNextSection);
+    final watchNextBigPicture = context.select<SettingsService, bool>((s) => s.watchNextBigPictureMode);
     final watchNextVisible = context.select<WatchNextService, bool>((s) => s.hasVisibleSection);
     final reserveWatchNextSpace = showWatchNextSection && watchNextVisible;
 
     if (favoriteApps.isEmpty && otherSections.isEmpty) return _emptyState(context);
+
+    final watchNextSpace = watchNextBigPicture ? 370 : 410;
 
     return CustomScrollView(
       controller: _scrollController,
@@ -217,7 +285,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                   MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top -
                   kToolbarHeight -
-                  (reserveWatchNextSpace ? 410 : 150),
+                  (reserveWatchNextSpace ? watchNextSpace : 150),
             ),
           ),
           if (showWatchNextSection)

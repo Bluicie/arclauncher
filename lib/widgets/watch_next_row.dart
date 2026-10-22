@@ -22,6 +22,7 @@ import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/app_card.dart';
 import 'package:flauncher/widgets/app_card_contour_painter.dart';
+import 'package:flauncher/widgets/watch_next_hero.dart';
 import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -96,15 +97,25 @@ class WatchNextRow extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
+        final isBigPicture = context.select<SettingsService, bool>((s) => s.watchNextBigPictureMode);
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _WatchNextCleanRow(
-              items: data.items,
-              isFirstSection: isFirstSection,
-              handleUpNavigationToSettings: isAboveDock,
-              onItemFocused: onItemFocused,
-            ),
+            if (isBigPicture)
+              WatchNextHero(
+                items: data.items,
+                isFirstSection: isFirstSection,
+                handleUpNavigationToSettings: isAboveDock,
+                onItemFocused: onItemFocused,
+              )
+            else
+              _WatchNextCleanRow(
+                items: data.items,
+                isFirstSection: isFirstSection,
+                handleUpNavigationToSettings: isAboveDock,
+                onItemFocused: onItemFocused,
+              ),
             const SizedBox(height: 12),
           ],
         );

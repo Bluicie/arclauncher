@@ -909,6 +909,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check Status'**
   String get checkStatus;
+
+  /// No description provided for @watchNextBigPictureMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Immersive mode'**
+  String get watchNextBigPictureMode;
+
+  /// No description provided for @watchNextBigPictureModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show full-width hero backdrop with an action watch button'**
+  String get watchNextBigPictureModeDescription;
+
+  /// No description provided for @watchNextWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get watchNextWatch;
+
+  /// No description provided for @watchNextResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get watchNextResume;
 }
 
 class _AppLocalizationsDelegate

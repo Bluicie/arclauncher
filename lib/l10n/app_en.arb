@@ -204,5 +204,9 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "grantPermission": "Grant Permission",
-    "checkStatus": "Check Status"
+    "checkStatus": "Check Status",
+    "watchNextBigPictureMode": "Immersive mode",
+    "watchNextBigPictureModeDescription": "Show full-width hero backdrop with an action watch button",
+    "watchNextWatch": "Watch",
+    "watchNextResume": "Resume"
 }

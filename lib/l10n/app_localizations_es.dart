@@ -443,4 +443,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get checkStatus => 'Comprobar estado';
+
+  @override
+  String get watchNextBigPictureMode => 'Modo inmersivo';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Mostrar fondo de pantalla completa con un botón de ver';
+
+  @override
+  String get watchNextWatch => 'Ver';
+
+  @override
+  String get watchNextResume => 'Reanudar';
 }

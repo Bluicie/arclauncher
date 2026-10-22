@@ -70,6 +70,13 @@ class MiscPanelPage extends StatelessWidget {
                 secondary: Icon(Icons.play_circle_outline),
               ),
               if (settingsService.showWatchNextSection)
+                RoundedSwitchListTile(
+                  value: settingsService.watchNextBigPictureMode,
+                  onChanged: (value) => settingsService.setWatchNextBigPictureMode(value),
+                  title: Text(localizations.watchNextBigPictureMode, style: Theme.of(context).textTheme.bodyMedium),
+                  secondary: const Icon(Icons.photo_size_select_actual_outlined),
+                ),
+              if (settingsService.showWatchNextSection)
                 Consumer<WatchNextService>(
                   builder: (context, watchNextService, _) {
                     if (watchNextService.hasPermission) {

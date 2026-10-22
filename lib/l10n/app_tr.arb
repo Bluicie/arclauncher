@@ -133,5 +133,9 @@
     "weekly": "Haftalık",
     "monthly": "Aylık",
     "grantPermission": "İzin ver",
-    "checkStatus": "Durumu denetle"
+    "checkStatus": "Durumu denetle",
+    "watchNextBigPictureMode": "Sürükleyici mod",
+    "watchNextBigPictureModeDescription": "İzle düğmeli tam ekran arka plan olarak göster",
+    "watchNextWatch": "İzle",
+    "watchNextResume": "Devam Et"
 }

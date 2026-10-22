@@ -43,6 +43,7 @@ const String _screensaverClockStyle = "screensaver_clock_style";
 const String _dockBackdropFilterDisabled = "dock_backdrop_filter_disabled";
 const String _backgroundBlurDisabled = "background_blur_disabled";
 const String _showWatchNextSection = "show_watch_next_section";
+const String _watchNextBigPictureMode = "watch_next_big_picture_mode";
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
 const String _showFocusBorders = "show_focus_borders";
@@ -127,6 +128,8 @@ class SettingsService extends ChangeNotifier {
   bool get backgroundBlurDisabled => _sharedPreferences.getBool(_backgroundBlurDisabled) ?? false;
 
   bool get showWatchNextSection => _sharedPreferences.getBool(_showWatchNextSection) ?? false;
+
+  bool get watchNextBigPictureMode => _sharedPreferences.getBool(_watchNextBigPictureMode) ?? false;
 
   bool get dockDarkBackground => _sharedPreferences.getBool(_dockDarkBackground) ?? false;
 
@@ -238,6 +241,10 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setShowWatchNextSection(bool value) async {
     return set(_showWatchNextSection, value);
+  }
+
+  Future<void> setWatchNextBigPictureMode(bool value) async {
+    return set(_watchNextBigPictureMode, value);
   }
 
   Future<void> setDockDarkBackground(bool value) async {

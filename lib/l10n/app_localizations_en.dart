@@ -438,4 +438,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkStatus => 'Check Status';
+
+  @override
+  String get watchNextBigPictureMode => 'Immersive mode';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Show full-width hero backdrop with an action watch button';
+
+  @override
+  String get watchNextWatch => 'Watch';
+
+  @override
+  String get watchNextResume => 'Resume';
 }

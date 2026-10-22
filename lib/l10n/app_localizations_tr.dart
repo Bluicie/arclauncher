@@ -440,4 +440,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get checkStatus => 'Durumu denetle';
+
+  @override
+  String get watchNextBigPictureMode => 'Sürükleyici mod';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'İzle düğmeli tam ekran arka plan olarak göster';
+
+  @override
+  String get watchNextWatch => 'İzle';
+
+  @override
+  String get watchNextResume => 'Devam Et';
 }

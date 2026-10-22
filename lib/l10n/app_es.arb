@@ -190,5 +190,9 @@
     "weekly": "Semanal",
     "monthly": "Mensual",
     "grantPermission": "Conceder permiso",
-    "checkStatus": "Comprobar estado"
+    "checkStatus": "Comprobar estado",
+    "watchNextBigPictureMode": "Modo inmersivo",
+    "watchNextBigPictureModeDescription": "Mostrar fondo de pantalla completa con un botón de ver",
+    "watchNextWatch": "Ver",
+    "watchNextResume": "Reanudar"
 }

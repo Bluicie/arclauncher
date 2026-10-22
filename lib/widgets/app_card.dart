@@ -22,6 +22,7 @@ import 'package:flauncher/actions.dart';
 import 'package:flauncher/app_image_type.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/widgets/app_card_contour_painter.dart';
 import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/focus_keyboard_listener.dart';
 import 'package:flutter/material.dart';
@@ -247,21 +248,31 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                               ],
                             ),
                           ),
-                          if (shouldHighlight && showFocusBorders)
-                            if (animationEnabled)
+                          if ((shouldHighlight && showFocusBorders) || _moving)
+                            if (animationEnabled && !_moving)
                               IgnorePointer(
                                 child: RepaintBoundary(
                                   child: AnimatedBuilder(
                                     animation: _curvedAnimation,
                                     builder: (context, _) {
                                       final alpha = 0.4 + (_animation.value * 0.6);
-                                      return _HighlightOutline(color: _accentColor.withValues(alpha: alpha));
+                                      return _HighlightOutline(
+                                        accentColor: _accentColor,
+                                        alpha: alpha,
+                                      );
                                     },
                                   ),
                                 ),
                               )
                             else
-                              IgnorePointer(child: RepaintBoundary(child: _HighlightOutline(color: _accentColor))),
+                              IgnorePointer(
+                                child: RepaintBoundary(
+                                  child: _HighlightOutline(
+                                    accentColor: _accentColor,
+                                    isMoving: _moving,
+                                  ),
+                                ),
+                              ),
                         ],
                       ),
                     ),
@@ -619,22 +630,27 @@ class _AppNameLabel extends StatelessWidget {
 }
 
 class _HighlightOutline extends StatelessWidget {
-  final Color color;
+  final Color accentColor;
+  final double alpha;
+  final bool isMoving;
 
-  const _HighlightOutline({required this.color});
+  const _HighlightOutline({
+    required this.accentColor,
+    this.alpha = 1.0,
+    this.isMoving = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color, width: 1),
-          ),
-        ),
-      ],
+    return CustomPaint(
+      foregroundPainter: AppCardContourPainter(
+        radius: 12.0,
+        strokeWidth: isMoving ? 2.0 : 1.0,
+        accentColor: accentColor,
+        alpha: alpha,
+        isMoving: isMoving,
+      ),
+      child: const SizedBox.expand(),
     );
   }
 }

@@ -21,6 +21,7 @@ import 'package:flauncher/actions.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/app_card.dart';
+import 'package:flauncher/widgets/app_card_contour_painter.dart';
 import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -484,14 +485,13 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                         if (_isHovered) _buildProgressIndicator(),
                         if (_isHovered && showFocusBorders)
                           IgnorePointer(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
-                                ),
+                            child: CustomPaint(
+                              foregroundPainter: AppCardContourPainter(
+                                radius: 8,
+                                strokeWidth: 1.0,
+                                accentColor: Theme.of(context).colorScheme.primary,
                               ),
+                              child: const SizedBox.expand(),
                             ),
                           ),
                         if (!_isHovered) const IgnorePointer(child: ColoredBox(color: Color(0x1A000000))),

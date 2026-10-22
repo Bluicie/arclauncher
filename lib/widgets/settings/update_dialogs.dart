@@ -29,14 +29,41 @@ Future<void> showNoUpdateDialog(
   BuildContext context,
   AppLocalizations localizations, {
   required String currentVersion,
+  String? changelog,
 }) {
+  final hasChangelog = changelog != null && changelog.trim().isNotEmpty;
+
   return showDialog<void>(
     context: context,
     builder: (dialogContext) => AlertDialog(
       title: Text(localizations.updateNoUpdateTitle),
-      content: Text(localizations.updateNoUpdateBody(currentVersion)),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 540,
+          minWidth: hasChangelog ? 420 : 0,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(localizations.updateNoUpdateBody(currentVersion)),
+            if (hasChangelog) ...[
+              const SizedBox(height: 14),
+              Text(
+                localizations.updateChangelog,
+                style: Theme.of(dialogContext).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              _ChangelogWidget(changelog: changelog),
+            ],
+          ],
+        ),
+      ),
       actions: [
         TextButton(
+          autofocus: true,
           onPressed: () => Navigator.of(dialogContext).pop(),
           child: Text(MaterialLocalizations.of(dialogContext).okButtonLabel),
         ),

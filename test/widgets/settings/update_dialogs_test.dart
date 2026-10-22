@@ -127,4 +127,73 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.pumpAndSettle();
   });
+
+  testWidgets("showNoUpdateDialog displays changelog when provided", (tester) async {
+    await tester.pumpWidget(
+      buildApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await showNoUpdateDialog(
+                  context,
+                  AppLocalizations.of(context)!,
+                  currentVersion: "1.0.10",
+                  changelog: "## What's Changed\n* Added video wallpaper support",
+                );
+              },
+              child: const Text("Open Dialog"),
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.text("Open Dialog"));
+    await tester.pumpAndSettle();
+
+    expect(find.text("No updates available"), findsOneWidget);
+    expect(find.text("You are already on the latest version (1.0.10)."), findsOneWidget);
+    expect(find.text("What's new"), findsOneWidget);
+    expect(find.text("What's Changed"), findsOneWidget);
+    expect(find.text("Added video wallpaper support"), findsOneWidget);
+
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+
+    expect(find.text("No updates available"), findsNothing);
+  });
+
+  testWidgets("showNoUpdateDialog omits changelog section when null", (tester) async {
+    await tester.pumpWidget(
+      buildApp(
+        Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await showNoUpdateDialog(
+                  context,
+                  AppLocalizations.of(context)!,
+                  currentVersion: "1.0.10",
+                  changelog: null,
+                );
+              },
+              child: const Text("Open Dialog"),
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.text("Open Dialog"));
+    await tester.pumpAndSettle();
+
+    expect(find.text("No updates available"), findsOneWidget);
+    expect(find.text("What's new"), findsNothing);
+
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+
+    expect(find.text("No updates available"), findsNothing);
+  });
 }

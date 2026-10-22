@@ -118,6 +118,7 @@ Future<void> _checkForUpdates(BuildContext context) async {
         context,
         localizations,
         currentVersion: update.currentVersion,
+        changelog: update.releaseNotes,
       );
       return;
     }

@@ -22,6 +22,7 @@ import 'dart:ui' as ui;
 
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 /// Replaces a live [BackdropFilter] over the (static) wallpaper with a
@@ -247,7 +248,20 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
         if (image == null) {
           return buildLiveBlur();
         }
-        return buildBlurContent(_BlurBlit(image: image, screenSize: screen));
+        // Crossfade snapshots in step with the immersive hero background (600ms in flauncher.dart).
+        return buildBlurContent(
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 600),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            child: _BlurBlit(
+              key: ObjectKey(image),
+              image: image,
+              screenSize: screen,
+              scrollPosition: Scrollable.maybeOf(context)?.position,
+            ),
+          ),
+        );
       },
     );
   }
@@ -260,30 +274,40 @@ class _BlurBlit extends LeafRenderObjectWidget {
   final ui.Image image;
   final Size screenSize;
 
-  const _BlurBlit({required this.image, required this.screenSize});
+  /// Repaints on scroll: an ancestor repaint boundary (e.g. a FadeTransition)
+  /// would otherwise just be moved, leaving a stale crop.
+  final ScrollPosition? scrollPosition;
 
+  const _BlurBlit({super.key, required this.image, required this.screenSize, this.scrollPosition});
+
+  // Clones (like RawImage) so an outgoing blit can keep painting after the owner disposes its handle.
   @override
-  RenderObject createRenderObject(BuildContext context) => _BlurBlitRender(image, screenSize);
+  RenderObject createRenderObject(BuildContext context) => _BlurBlitRender(image.clone(), screenSize, scrollPosition);
 
   @override
   void updateRenderObject(BuildContext context, _BlurBlitRender renderObject) {
     renderObject
-      ..image = image
-      ..screenSize = screenSize;
+      ..image = image.clone()
+      ..screenSize = screenSize
+      ..scrollPosition = scrollPosition;
   }
 }
 
 class _BlurBlitRender extends RenderBox {
   ui.Image _image;
   Size _screenSize;
+  ScrollPosition? _scrollPosition;
 
-  _BlurBlitRender(this._image, this._screenSize);
+  _BlurBlitRender(this._image, this._screenSize, this._scrollPosition);
 
   set image(ui.Image value) {
-    if (value != _image) {
-      _image = value;
-      markNeedsPaint();
+    if (value.isCloneOf(_image)) {
+      value.dispose();
+      return;
     }
+    _image.dispose();
+    _image = value;
+    markNeedsPaint();
   }
 
   set screenSize(Size value) {
@@ -291,6 +315,31 @@ class _BlurBlitRender extends RenderBox {
       _screenSize = value;
       markNeedsPaint();
     }
+  }
+
+  set scrollPosition(ScrollPosition? value) {
+    if (value == _scrollPosition) return;
+    if (attached) _scrollPosition?.removeListener(markNeedsPaint);
+    _scrollPosition = value;
+    if (attached) _scrollPosition?.addListener(markNeedsPaint);
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _scrollPosition?.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    _scrollPosition?.removeListener(markNeedsPaint);
+    super.detach();
+  }
+
+  @override
+  void dispose() {
+    _image.dispose();
+    super.dispose();
   }
 
   @override

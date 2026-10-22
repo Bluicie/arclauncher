@@ -50,7 +50,10 @@ class WallpaperService extends ChangeNotifier {
 
   late RedditSlideshow _redditSlideshow;
   Timer? _redditTimer;
+  Timer? _redditDebounce;
   File? _redditFile;
+
+  static const Duration redditConfigDebounce = Duration(seconds: 3);
 
   /// Credit to display while the Reddit wallpaper is on screen.
   String? get redditWallpaperCredit {
@@ -121,7 +124,14 @@ class WallpaperService extends ChangeNotifier {
     }
     if (_initialized && _redditConfig != _lastRedditConfig) {
       _lastRedditConfig = _redditConfig;
-      _updateRedditState();
+      // Debounce while enabled so toggling several subreddits in a row triggers
+      // a single fetch instead of one per change.
+      _redditDebounce?.cancel();
+      if (_settingsService.redditWallpaperEnabled) {
+        _redditDebounce = Timer(redditConfigDebounce, _updateRedditState);
+      } else {
+        _updateRedditState();
+      }
       _updateWallpaper(force: true);
     }
   }
@@ -132,6 +142,7 @@ class WallpaperService extends ChangeNotifier {
     _timer?.cancel();
     _slideshowTimer?.cancel();
     _redditTimer?.cancel();
+    _redditDebounce?.cancel();
     super.dispose();
   }
 

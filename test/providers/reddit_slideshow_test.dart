@@ -245,5 +245,45 @@ void main() {
       final result = await slideshow.next(subreddits: ['wallpapers']);
       expect(result, isNull);
     });
+
+    test("stops after a 429 and pauses requests until the limit resets", () async {
+      var requests = 0;
+      final client = MockClient((_) async {
+        requests++;
+        return http.Response('Too Many Requests', 429, headers: {'x-ratelimit-reset': '30'});
+      });
+      final slideshow = RedditSlideshow(dir, client: client);
+
+      expect(await slideshow.fetchWallpapers(subreddit: 'wallpapers'), isEmpty);
+      expect(requests, 1, reason: 'must not fall back to .json after a 429');
+
+      expect(await slideshow.fetchWallpapers(subreddit: 'wallpaper'), isEmpty);
+      expect(requests, 1, reason: 'must not send requests while rate limited');
+    });
+
+    test("reuses cached posts for the same subreddit and sort", () async {
+      var requests = 0;
+      final client = MockClient((_) async {
+        requests++;
+        return http.Response('''<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <author><name>/u/nature_fan</name></author>
+    <content type="html">&lt;span&gt;&lt;a href=&quot;https://i.redd.it/forest.jpg&quot;&gt;[link]&lt;/a&gt;&lt;/span&gt;</content>
+    <id>t3_p1</id>
+    <title>Forest path</title>
+  </entry>
+</feed>''', 200);
+      });
+      final slideshow = RedditSlideshow(dir, client: client);
+
+      await slideshow.fetchWallpapers(subreddit: 'wallpapers');
+      final again = await slideshow.fetchWallpapers(subreddit: 'r/Wallpapers');
+      expect(again.length, 1);
+      expect(requests, 1);
+
+      await slideshow.fetchWallpapers(subreddit: 'wallpapers', sort: RedditSort.newPosts);
+      expect(requests, 2);
+    });
   });
 }

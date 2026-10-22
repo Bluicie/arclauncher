@@ -260,12 +260,26 @@ class RedditSlideshow {
   final http.Client _client;
   String? _accessToken;
   DateTime? _tokenExpiration;
+  DateTime? _rateLimitedUntil;
+  final Map<String, ({DateTime fetchedAt, List<RedditWallpaper> posts})> _postCache = {};
+
+  /// How long a fetched post list is reused before asking Reddit again.
+  static const Duration postCacheTtl = Duration(minutes: 20);
+
+  /// Pause applied after a 429 that doesn't say when to retry.
+  static const Duration defaultRateLimitBackoff = Duration(seconds: 60);
 
   static const String userAgent = 'android:com.omeda.arc:v1.0.0 (by /u/ArcLauncherApp)';
+  static const String rssUserAgent = 'Feedly/1.0 (+http://www.feedly.com/fetcher.html; like FeedFetcher-Google)';
   static const String browserUserAgent =
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+
+  final Map<String, List<RedditWallpaper>> _pool = {};
 
   RedditSlideshow(this.cacheDir, {http.Client? client}) : _client = client ?? http.Client();
+
+  /// Clears the in-memory pool of fetched wallpaper candidates.
+  void clearPool() => _pool.clear();
 
   /// Obtains an application-only access token if a client ID is provided.
   Future<String?> getAccessToken(String clientId, {String? clientSecret}) async {
@@ -366,7 +380,23 @@ class RedditSlideshow {
         .replaceAll('&amp;', '&');
   }
 
+  /// Records a Reddit 429 so no further requests are sent until the limit resets.
+  /// Returns true if [response] was a rate-limit response.
+  bool _noteRateLimit(http.Response response) {
+    if (response.statusCode != 429) return false;
+    final seconds =
+        int.tryParse(response.headers['retry-after'] ?? '') ??
+        double.tryParse(response.headers['x-ratelimit-reset'] ?? '')?.ceil() ??
+        defaultRateLimitBackoff.inSeconds;
+    _rateLimitedUntil = DateTime.now().add(Duration(seconds: max(1, seconds)));
+    debugPrint('Reddit rate limited, pausing requests for ${max(1, seconds)}s');
+    return true;
+  }
+
   /// Fetches a list of wallpaper posts from a subreddit.
+  ///
+  /// Results are cached for [postCacheTtl] and nothing is sent while Reddit is
+  /// rate limiting us, to avoid hammering the API.
   Future<List<RedditWallpaper>> fetchWallpapers({
     required String subreddit,
     RedditSort sort = RedditSort.hot,
@@ -377,6 +407,36 @@ class RedditSlideshow {
     final cleanSubreddit = subreddit.replaceAll(RegExp(r'^r/'), '').trim();
     if (cleanSubreddit.isEmpty) return [];
 
+    final cacheKey = '${cleanSubreddit.toLowerCase()}|${sort.key}';
+    final cached = _postCache[cacheKey];
+    if (cached != null && DateTime.now().difference(cached.fetchedAt) < postCacheTtl) {
+      return cached.posts;
+    }
+
+    final blockedUntil = _rateLimitedUntil;
+    if (blockedUntil != null && DateTime.now().isBefore(blockedUntil)) {
+      debugPrint('Reddit: rate limited until $blockedUntil, skipping request');
+      return [];
+    }
+
+    final posts = await _fetchFromNetwork(
+      cleanSubreddit,
+      sort: sort,
+      clientId: clientId,
+      clientSecret: clientSecret,
+      limit: limit,
+    );
+    if (posts.isNotEmpty) _postCache[cacheKey] = (fetchedAt: DateTime.now(), posts: posts);
+    return posts;
+  }
+
+  Future<List<RedditWallpaper>> _fetchFromNetwork(
+    String cleanSubreddit, {
+    required RedditSort sort,
+    String? clientId,
+    String? clientSecret,
+    required int limit,
+  }) async {
     final token = clientId != null && clientId.trim().isNotEmpty
         ? await getAccessToken(clientId.trim(), clientSecret: clientSecret)
         : null;
@@ -390,6 +450,7 @@ class RedditSlideshow {
 
       try {
         final response = await _client.get(uri, headers: headers);
+        if (_noteRateLimit(response)) return [];
         if (response.statusCode == 200) {
           final wallpapers = _parseJsonListing(response.body);
           if (wallpapers.isNotEmpty) return wallpapers;
@@ -401,16 +462,26 @@ class RedditSlideshow {
       }
     }
 
-    // 2. Unauthenticated: Try RSS feed first (which is not blocked like .json)
+    // 2. Unauthenticated: Try RSS feed first with rssUserAgent (avoiding edge rate-limit 429)
     try {
       final rssParam = sort.rssEndpointPath;
       final separator = rssParam.contains('?') ? '&' : '?';
       final rssUri = Uri.parse('https://www.reddit.com/r/$cleanSubreddit/$rssParam${separator}limit=$limit');
-      final rssResponse = await _client.get(
+      var rssResponse = await _client.get(
         rssUri,
-        headers: {'User-Agent': browserUserAgent, 'Accept': 'application/atom+xml,application/xml,text/xml'},
+        headers: {'User-Agent': rssUserAgent, 'Accept': 'application/atom+xml,application/xml,text/xml'},
       );
 
+      if (_noteRateLimit(rssResponse)) return [];
+      if (rssResponse.statusCode != 200) {
+        debugPrint('Reddit RSS status with rssUserAgent: ${rssResponse.statusCode}, falling back to browserUserAgent');
+        rssResponse = await _client.get(
+          rssUri,
+          headers: {'User-Agent': browserUserAgent, 'Accept': 'application/atom+xml,application/xml,text/xml'},
+        );
+      }
+
+      if (_noteRateLimit(rssResponse)) return [];
       if (rssResponse.statusCode == 200 && rssResponse.body.contains('<feed')) {
         final wallpapers = parseRss(rssResponse.body, cleanSubreddit);
         if (wallpapers.isNotEmpty) return wallpapers;
@@ -431,6 +502,7 @@ class RedditSlideshow {
         headers: {'User-Agent': browserUserAgent, 'Accept': 'application/json'},
       );
 
+      if (_noteRateLimit(jsonResponse)) return [];
       if (jsonResponse.statusCode == 200) {
         final wallpapers = _parseJsonListing(jsonResponse.body);
         if (wallpapers.isNotEmpty) return wallpapers;

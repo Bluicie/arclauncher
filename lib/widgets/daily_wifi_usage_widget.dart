@@ -3,6 +3,8 @@ import 'package:flauncher/providers/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'app_bar_focus_ring.dart';
+
 class DailyWifiUsageWidget extends StatelessWidget {
   const DailyWifiUsageWidget({super.key});
 
@@ -11,10 +13,25 @@ class DailyWifiUsageWidget extends StatelessWidget {
     return Consumer2<NetworkService, SettingsService>(
       builder: (context, networkService, settingsService, _) {
         if (!networkService.hasUsageStatsPermission) {
-          return TextButton.icon(
-             icon: const Icon(Icons.data_usage, size: 20),
-             label: const Text("Grant Usage Permission"),
-             onPressed: () => networkService.requestPermission(),
+          return AppBarFocusRing(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            onPressed: () => networkService.requestPermission(),
+            semanticLabel: 'Grant usage access',
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.data_usage, size: 20, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  "Grant Usage Permission",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           );
         }
 

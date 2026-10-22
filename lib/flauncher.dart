@@ -17,6 +17,7 @@
  */
 
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
@@ -109,7 +110,9 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                     // Crossfade between wallpapers (each one has a revision-based key).
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 1500),
-                      child: _wallpaper(context, wallpaperService),
+                      child: hasHeroBackdrop
+                          ? const SizedBox.shrink(key: ValueKey('occluded_wallpaper'))
+                          : _wallpaper(context, wallpaperService),
                     ),
                     // Watch Next Big Picture Hero Backdrop with smooth crossfade
                     AnimatedSwitcher(
@@ -119,47 +122,21 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       child: hasHeroBackdrop
                           ? KeyedSubtree(
                               key: ValueKey('hero_bg_${activeItem!.id}_$heroUri'),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.memory(
-                                    heroBytes!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    gaplessPlayback: true,
-                                  ),
-                                  // Cinematic scrim overlays
-                                  DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.black.withValues(alpha: 0.35),
-                                          Colors.transparent,
-                                          Colors.black.withValues(alpha: 0.5),
-                                          Colors.black.withValues(alpha: 0.88),
-                                        ],
-                                        stops: const [0.0, 0.25, 0.65, 1.0],
-                                      ),
+                              child: RepaintBoundary(
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.memory(
+                                      heroBytes!,
+                                      cacheWidth: 1920,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      gaplessPlayback: true,
                                     ),
-                                  ),
-                                  DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Colors.black.withValues(alpha: 0.65),
-                                          Colors.black.withValues(alpha: 0.25),
-                                          Colors.transparent,
-                                        ],
-                                        stops: const [0.0, 0.35, 0.7],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                    const CustomPaint(painter: _CinematicScrimPainter()),
+                                  ],
+                                ),
                               ),
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
@@ -185,30 +162,39 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               },
             ),
           ),
-          Selector4<LauncherState, SettingsService, WallpaperService, WatchNextService, (bool, bool, bool, bool)>(
+          Selector4<LauncherState, SettingsService, WallpaperService, WatchNextService, (bool, bool, bool, bool, Uint8List?, String?)>(
             selector: (_, launcherState, settings, wallpaperService, watchNextService) {
               final isBigPicture = settings.showWatchNextSection && settings.watchNextBigPictureMode;
               final heroUri = watchNextService.activeHeroItem?.backdropUri ?? watchNextService.activeHeroItem?.posterUri;
-              final hasHeroBackdrop = isBigPicture && watchNextService.getCachedPoster(heroUri) != null;
+              final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
+              final hasHeroBackdrop = isBigPicture && heroBytes != null;
               return (
                 launcherState.appGridFocused,
                 settings.backgroundBlurDisabled,
                 wallpaperService.wallpaperVideoFile != null,
                 hasHeroBackdrop,
+                heroBytes,
+                heroUri,
               );
             },
             builder: (_, data, __) {
-              final (appGridFocused, blurDisabled, hasVideoWallpaper, hasHeroBackdrop) = data;
+              final (appGridFocused, blurDisabled, hasVideoWallpaper, hasHeroBackdrop, heroBytes, heroUri) = data;
               if (hasVideoWallpaper && !hasHeroBackdrop) {
                 return const SizedBox.shrink();
               }
+              final ImageProvider? imageProvider = hasHeroBackdrop ? MemoryImage(heroBytes!) : null;
+              final Object? imageKey = hasHeroBackdrop ? heroUri : null;
               return Positioned.fill(
                 child: IgnorePointer(
                   child: AnimatedOpacity(
                     opacity: appGridFocused && !blurDisabled ? 1 : 0,
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.easeInOut,
-                    child: const CachedBlurLayer(sigma: 10),
+                    child: CachedBlurLayer(
+                      sigma: 10,
+                      imageProvider: imageProvider,
+                      imageKey: imageKey,
+                    ),
                   ),
                 ),
               );
@@ -290,10 +276,12 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
           ),
           if (showWatchNextSection)
             SliverToBoxAdapter(
-              child: WatchNextRow(
-                isFirstSection: false,
-                isAboveDock: true,
-                onItemFocused: _onHomeSectionFocused,
+              child: RepaintBoundary(
+                child: WatchNextRow(
+                  isFirstSection: false,
+                  isAboveDock: true,
+                  onItemFocused: _onHomeSectionFocused,
+                ),
               ),
             ),
           if (favoriteApps.isNotEmpty)
@@ -540,6 +528,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
     final backdropDisabled = context.select<SettingsService, bool>((s) => s.dockBackdropFilterDisabled);
     final darkBackground = context.select<SettingsService, bool>((s) => s.dockDarkBackground);
     final shadowEnabled = context.select<SettingsService, bool>((s) => s.dockShadowEnabled);
+    final isBigPicture = context.select<SettingsService, bool>((s) => s.showWatchNextSection && s.watchNextBigPictureMode);
 
     const dockBorderRadius = 24.0;
     final borderRadius = BorderRadius.circular(dockBorderRadius);
@@ -549,7 +538,9 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: darkBackground ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.1),
+          color: darkBackground
+              ? Colors.black.withValues(alpha: 0.35)
+              : (isBigPicture ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.1)),
           borderRadius: borderRadius,
         ),
         child: CategoryCleanRow(
@@ -573,7 +564,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         child: ClipRRect(
           borderRadius: borderRadius,
           clipBehavior: Clip.antiAlias,
-          child: backdropDisabled ? content : CachedBlurBackdrop(sigma: 5, child: content),
+          child: (backdropDisabled || isBigPicture) ? content : CachedBlurBackdrop(sigma: 5, child: content),
         ),
       ),
     );
@@ -695,3 +686,44 @@ class _CachedGradientBackgroundState extends State<_CachedGradientBackground> {
     );
   }
 }
+
+class _CinematicScrimPainter extends CustomPainter {
+  const _CinematicScrimPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    // Top-to-bottom cinematic scrim
+    final vPaint = Paint()
+      ..shader = ui.Gradient.linear(
+        Offset.zero,
+        Offset(0, size.height),
+        const [
+          Color(0x59000000), // 0.35
+          Colors.transparent,
+          Color(0x80000000), // 0.50
+          Color(0xE0000000), // 0.88
+        ],
+        const [0.0, 0.25, 0.65, 1.0],
+      );
+    canvas.drawRect(rect, vPaint);
+
+    // Left-to-right cinematic scrim
+    final hPaint = Paint()
+      ..shader = ui.Gradient.linear(
+        Offset(0, size.height / 2),
+        Offset(size.width, size.height / 2),
+        const [
+          Color(0xA6000000), // 0.65
+          Color(0x40000000), // 0.25
+          Colors.transparent,
+        ],
+        const [0.0, 0.35, 0.7],
+      );
+    canvas.drawRect(rect, hPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+

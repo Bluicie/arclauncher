@@ -18,13 +18,13 @@
 
 import 'package:flutter/material.dart';
 
-/// Paints the 1dp tvOS hairline specular gradient contour along an app card's perimeter.
+/// Paints the 1.5dp tvOS hairline specular gradient contour along an app card's perimeter.
 ///
 /// Ported from the native Arc TV app card (`ArcAppCard.kt`):
-/// - Focused: a 1dp hairline vertical gradient falling away from the top edge:
-///   `White @ 0.50` -> `Accent @ 0.25` -> `White @ 0.12`.
+/// - Focused: a 1.5dp hairline vertical gradient falling away from the top edge:
+///   `White @ 0.85` (top sheen) -> `Accent @ 0.75` (sides) -> `Accent/White rim @ 0.50` (bottom).
 /// - Moving / Reordering: a 2dp vertical gradient:
-///   `White @ 1.0` -> `Accent @ 1.0` -> `White @ 0.80`.
+///   `White @ 1.0` -> `Accent @ 1.0` -> `Accent/White rim @ 0.85`.
 class AppCardContourPainter extends CustomPainter {
   final double radius;
   final double strokeWidth;
@@ -34,7 +34,7 @@ class AppCardContourPainter extends CustomPainter {
 
   const AppCardContourPainter({
     this.radius = 12.0,
-    this.strokeWidth = 1.0,
+    this.strokeWidth = 1.5,
     required this.accentColor,
     this.alpha = 1.0,
     this.isMoving = false,
@@ -60,19 +60,22 @@ class AppCardContourPainter extends CustomPainter {
         ? LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            stops: const [0.0, 0.45, 1.0],
             colors: [
               Colors.white,
               accentColor,
-              Colors.white.withValues(alpha: 0.8),
+              Color.lerp(accentColor, Colors.white, 0.35)!.withValues(alpha: 0.85),
             ],
           )
         : LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            stops: const [0.0, 0.45, 1.0],
             colors: [
-              Colors.white.withValues(alpha: 0.50 * alpha),
-              accentColor.withValues(alpha: 0.25 * alpha),
-              Colors.white.withValues(alpha: 0.12 * alpha),
+              Colors.white.withValues(alpha: (0.85 * alpha).clamp(0.0, 1.0)),
+              accentColor.withValues(alpha: (0.75 * alpha).clamp(0.0, 1.0)),
+              Color.lerp(accentColor, Colors.white, 0.35)!
+                  .withValues(alpha: (0.50 * alpha).clamp(0.0, 1.0)),
             ],
           );
 

@@ -255,7 +255,7 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
                                   child: AnimatedBuilder(
                                     animation: _curvedAnimation,
                                     builder: (context, _) {
-                                      final alpha = 0.4 + (_animation.value * 0.6);
+                                      final alpha = 0.65 + (_animation.value * 0.35);
                                       return _HighlightOutline(
                                         accentColor: _accentColor,
                                         alpha: alpha,
@@ -645,7 +645,7 @@ class _HighlightOutline extends StatelessWidget {
     return CustomPaint(
       foregroundPainter: AppCardContourPainter(
         radius: 12.0,
-        strokeWidth: isMoving ? 2.0 : 1.0,
+        strokeWidth: isMoving ? 2.0 : 1.5,
         accentColor: accentColor,
         alpha: alpha,
         isMoving: isMoving,

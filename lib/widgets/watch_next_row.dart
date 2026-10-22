@@ -488,7 +488,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                             child: CustomPaint(
                               foregroundPainter: AppCardContourPainter(
                                 radius: 8,
-                                strokeWidth: 1.0,
+                                strokeWidth: 1.5,
                                 accentColor: Theme.of(context).colorScheme.primary,
                               ),
                               child: const SizedBox.expand(),

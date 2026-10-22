@@ -379,7 +379,8 @@ class _WatchNextCardState extends State<_WatchNextCard> {
   @override
   void initState() {
     super.initState();
-    context.read<WatchNextService>().ensurePosterLoaded(widget.item.posterUri);
+    final uri = context.read<WatchNextService>().getPosterUriForItem(widget.item);
+    context.read<WatchNextService>().ensurePosterLoaded(uri);
   }
 
   @override
@@ -388,8 +389,10 @@ class _WatchNextCardState extends State<_WatchNextCard> {
     if (oldWidget.focusNode != widget.focusNode) {
       _isHovered = widget.focusNode.hasFocus;
     }
-    if (oldWidget.item.posterUri != widget.item.posterUri) {
-      context.read<WatchNextService>().ensurePosterLoaded(widget.item.posterUri);
+    final oldUri = context.read<WatchNextService>().getPosterUriForItem(oldWidget.item);
+    final newUri = context.read<WatchNextService>().getPosterUriForItem(widget.item);
+    if (oldUri != newUri) {
+      context.read<WatchNextService>().ensurePosterLoaded(newUri);
     }
   }
 
@@ -435,10 +438,13 @@ class _WatchNextCardState extends State<_WatchNextCard> {
   @override
   Widget build(BuildContext context) {
     final (posterData, posterLoadFailed) = context.select<WatchNextService, (Uint8List?, bool)>(
-      (service) => (
-        service.getCachedPoster(widget.item.posterUri),
-        service.hasPosterLoadFailed(widget.item.posterUri),
-      ),
+      (service) {
+        final uri = service.getPosterUriForItem(widget.item);
+        return (
+          service.getCachedPoster(uri),
+          service.hasPosterLoadFailed(uri),
+        );
+      },
     );
     final targetScale = _clicked ? 0.97 : (_isHovered ? _focusedScale : 1.0);
     final targetLift = _isHovered && !_clicked ? _focusedLift : 0.0;

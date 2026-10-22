@@ -778,6 +778,7 @@ public class MainActivity extends FlutterActivity {
                 TvContract.WatchNextPrograms.COLUMN_TITLE,
                 TvContract.WatchNextPrograms.COLUMN_SHORT_DESCRIPTION,
                 TvContract.WatchNextPrograms.COLUMN_POSTER_ART_URI,
+                TvContract.WatchNextPrograms.COLUMN_THUMBNAIL_URI,
                 TvContract.WatchNextPrograms.COLUMN_PACKAGE_NAME,
                 TvContract.WatchNextPrograms.COLUMN_INTERNAL_PROVIDER_ID,
                 TvContract.WatchNextPrograms.COLUMN_DURATION_MILLIS,
@@ -807,6 +808,7 @@ public class MainActivity extends FlutterActivity {
                             int titleIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_TITLE);
                             int descIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_SHORT_DESCRIPTION);
                             int posterIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_POSTER_ART_URI);
+                            int thumbIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_THUMBNAIL_URI);
                             int pkgIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_PACKAGE_NAME);
                             int contentIdIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_INTERNAL_PROVIDER_ID);
                             int durationIndex = cursor.getColumnIndex(TvContract.WatchNextPrograms.COLUMN_DURATION_MILLIS);
@@ -821,12 +823,17 @@ public class MainActivity extends FlutterActivity {
                                 continue;
                             }
 
+                            String posterUri = (posterIndex >= 0 && !cursor.isNull(posterIndex))
+                                ? cursor.getString(posterIndex) : null;
+                            if ((posterUri == null || posterUri.trim().isEmpty()) && thumbIndex >= 0 && !cursor.isNull(thumbIndex)) {
+                                posterUri = cursor.getString(thumbIndex);
+                            }
+
                             item.put("id", idIndex >= 0 ? cursor.getLong(idIndex) : 0);
                             item.put("title", title);
                             item.put("description", (descIndex >= 0 && !cursor.isNull(descIndex))
                                 ? cursor.getString(descIndex) : null);
-                            item.put("posterUri", (posterIndex >= 0 && !cursor.isNull(posterIndex))
-                                ? cursor.getString(posterIndex) : null);
+                            item.put("posterUri", posterUri);
                             item.put("packageName", (pkgIndex >= 0 && !cursor.isNull(pkgIndex))
                                 ? cursor.getString(pkgIndex) : null);
                             item.put("contentId", (contentIdIndex >= 0 && !cursor.isNull(contentIdIndex))

@@ -101,7 +101,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                 final author = wallpaperService.slideshowAuthor;
                 final isBigPicture = settingsService.showWatchNextSection && settingsService.watchNextBigPictureMode;
                 final activeItem = isBigPicture ? watchNextService.activeHeroItem : null;
-                final heroUri = activeItem?.backdropUri ?? activeItem?.posterUri;
+                final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(activeItem) : null;
                 final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
                 final hasHeroBackdrop = isBigPicture && heroBytes != null;
 
@@ -148,7 +148,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
           Selector4<LauncherState, SettingsService, WallpaperService, WatchNextService, (bool, bool, bool, bool, Uint8List?, String?)>(
             selector: (_, launcherState, settings, wallpaperService, watchNextService) {
               final isBigPicture = settings.showWatchNextSection && settings.watchNextBigPictureMode;
-              final heroUri = watchNextService.activeHeroItem?.backdropUri ?? watchNextService.activeHeroItem?.posterUri;
+              final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(watchNextService.activeHeroItem) : null;
               final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
               final hasHeroBackdrop = isBigPicture && heroBytes != null;
               return (
@@ -553,7 +553,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               : Selector<WatchNextService, (Uint8List?, String?)>(
                   selector: (_, watchNextService) {
                     final item = isBigPicture ? watchNextService.activeHeroItem : null;
-                    final heroUri = item?.backdropUri ?? item?.posterUri;
+                    final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(item) : null;
                     return (watchNextService.getCachedPoster(heroUri), heroUri);
                   },
                   child: content,

@@ -75,6 +75,9 @@ class TestWatchNextService extends ChangeNotifier implements WatchNextService {
   Future<void> checkPermission() async {}
 
   @override
+  String? getPosterUriForItem(WatchNextItem? item) => item?.backdropUri ?? item?.posterUri;
+
+  @override
   void ensurePosterLoaded(String? uri) {}
 
   @override

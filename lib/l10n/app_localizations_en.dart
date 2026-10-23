@@ -490,6 +490,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only show programs that provide poster or backdrop artwork';
 
   @override
+  String get watchNextMaxItems => 'Maximum programs';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Limit the number of programs displayed in Watch Next';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Unlimited';
+
+  @override
   String get redditWallpaper => 'Reddit wallpaper';
 
   @override

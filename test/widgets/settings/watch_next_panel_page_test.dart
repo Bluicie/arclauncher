@@ -25,6 +25,7 @@ import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/settings/watch_next_panel_page.dart';
+import 'package:flauncher/widgets/settings/watch_next_max_items_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -170,6 +171,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Watch Next'), findsWidgets);
+    expect(find.text('Maximum programs'), findsOneWidget);
+    expect(find.text('Unlimited'), findsOneWidget);
     expect(find.text('Refresh content'), findsOneWidget);
     expect(find.text('Filter apps'), findsOneWidget);
     expect(find.text('Plex'), findsOneWidget);
@@ -194,7 +197,9 @@ void main() {
 
     expect(settingsService.isWatchNextPackageExcluded('com.plexapp.android'), isFalse);
 
-    // Tap Plex toggle
+    // Scroll to Plex toggle and tap
+    await tester.ensureVisible(find.text('Plex'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Plex'));
     await tester.pumpAndSettle();
 
@@ -222,5 +227,30 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(settingsService.watchNextHideProgramsWithoutImages, isFalse);
+  });
+
+  testWidgets('WatchNextMaxItemsPage displays options and changes selection', (tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<SettingsService>.value(value: settingsService),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(body: WatchNextMaxItemsPage()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Maximum programs'), findsOneWidget);
+    expect(find.text('Unlimited'), findsOneWidget);
+    expect(find.text('10'), findsOneWidget);
+
+    await tester.tap(find.text('10'));
+    await tester.pumpAndSettle();
+
+    expect(settingsService.watchNextMaxItems, equals(10));
   });
 }

@@ -25,6 +25,7 @@ import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
+import 'package:flauncher/widgets/settings/watch_next_max_items_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -163,6 +164,19 @@ class _WatchNextPanelPageState extends State<WatchNextPanelPage> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   secondary: const Icon(Icons.hide_image_outlined),
+                ),
+
+                FocusableSettingsTile(
+                  leading: const Icon(Icons.format_list_numbered),
+                  title: Text(localizations.watchNextMaxItems, style: Theme.of(context).textTheme.bodyMedium),
+                  subtitle: Text(
+                    settingsService.watchNextMaxItems == 0
+                        ? localizations.watchNextMaxItemsUnlimited
+                        : '${settingsService.watchNextMaxItems}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: const Icon(Icons.chevron_right, size: 20),
+                  onPressed: () => Navigator.of(context).pushNamed(WatchNextMaxItemsPage.routeName),
                 ),
 
                 FocusableSettingsTile(

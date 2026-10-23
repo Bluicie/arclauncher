@@ -47,6 +47,19 @@ void main() async {
     expect(settingsService.watchNextBigPictureMode, isFalse);
   });
 
+  test("watchNextMaxItems default and update", () async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final settingsService = SettingsService(sharedPreferences);
+
+    expect(settingsService.watchNextMaxItems, equals(0));
+
+    await settingsService.setWatchNextMaxItems(10);
+    expect(settingsService.watchNextMaxItems, equals(10));
+
+    await settingsService.setWatchNextMaxItems(0);
+    expect(settingsService.watchNextMaxItems, equals(0));
+  });
+
   test("watchNextExcludedPackages default and toggle", () async {
     final sharedPreferences = await SharedPreferences.getInstance();
     final settingsService = SettingsService(sharedPreferences);

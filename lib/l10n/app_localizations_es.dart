@@ -496,6 +496,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Mostrar solo programas que incluyan póster o imagen de fondo';
 
   @override
+  String get watchNextMaxItems => 'Máximo de programas';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Limitar el número de programas mostrados en Seguir viendo';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Ilimitado';
+
+  @override
   String get redditWallpaper => 'Fondo de Reddit';
 
   @override

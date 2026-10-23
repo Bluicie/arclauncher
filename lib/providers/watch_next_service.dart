@@ -199,7 +199,8 @@ class WatchNextService extends ChangeNotifier {
   void _applyFilterAndNotify() {
     final excluded = _settingsService?.watchNextExcludedPackages ?? const [];
     final hideWithoutImages = _settingsService?.watchNextHideProgramsWithoutImages ?? false;
-    _items = _allRawItems.where((item) {
+    final maxItems = _settingsService?.watchNextMaxItems ?? 0;
+    Iterable<WatchNextItem> filtered = _allRawItems.where((item) {
       final pkg = item.packageName;
       if (pkg != null && excluded.contains(pkg)) {
         return false;
@@ -208,7 +209,12 @@ class WatchNextService extends ChangeNotifier {
         return false;
       }
       return true;
-    }).toList();
+    });
+
+    if (maxItems > 0) {
+      filtered = filtered.take(maxItems);
+    }
+    _items = filtered.toList();
 
     if (_activeHeroIndex >= _items.length) {
       _activeHeroIndex = 0;

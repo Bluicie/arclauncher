@@ -1000,6 +1000,24 @@ abstract class AppLocalizations {
   /// **'Only show programs that provide poster or backdrop artwork'**
   String get watchNextHideWithoutImagesDescription;
 
+  /// No description provided for @watchNextMaxItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum programs'**
+  String get watchNextMaxItems;
+
+  /// No description provided for @watchNextMaxItemsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit the number of programs displayed in Watch Next'**
+  String get watchNextMaxItemsDescription;
+
+  /// No description provided for @watchNextMaxItemsUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get watchNextMaxItemsUnlimited;
+
   /// No description provided for @redditWallpaper.
   ///
   /// In en, this message translates to:

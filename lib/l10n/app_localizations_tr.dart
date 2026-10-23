@@ -492,6 +492,16 @@ class AppLocalizationsTr extends AppLocalizations {
       'Yalnızca afiş veya arka plan resmi olan programları göster';
 
   @override
+  String get watchNextMaxItems => 'Maksimum program sayısı';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Sıradakiler bölümünde gösterilen program sayısını sınırla';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Sınırsız';
+
+  @override
   String get redditWallpaper => 'Reddit duvar kağıdı';
 
   @override

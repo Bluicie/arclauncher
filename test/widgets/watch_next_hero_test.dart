@@ -247,5 +247,41 @@ void main() {
 
       expect(unfocusedSize, equals(initialSize));
     });
+
+    testWidgets('WatchNextHero maintains fixed height between items with and without synopsis', (tester) async {
+      final items = [
+        WatchNextItem(
+          id: 101,
+          title: 'Program With Full Synopsis',
+          description: 'This is a complete two-line synopsis that gives detailed information about the episode and plot.',
+          packageName: 'com.plexapp.android',
+          progressPercent: 55,
+        ),
+        WatchNextItem(
+          id: 102,
+          title: 'Program Without Any Synopsis',
+          description: null,
+          packageName: 'com.plexapp.android',
+          progressPercent: 0,
+        ),
+      ];
+
+      watchNextService.testItems = items;
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      final heroFinder = find.byType(WatchNextHero);
+      expect(heroFinder, findsOneWidget);
+
+      final sizeWithSynopsis = tester.getSize(heroFinder);
+
+      // Switch to program without synopsis
+      watchNextService.nextHeroItem();
+      await tester.pumpAndSettle();
+
+      final sizeWithoutSynopsis = tester.getSize(heroFinder);
+
+      expect(sizeWithoutSynopsis.height, equals(sizeWithSynopsis.height));
+    });
   });
 }

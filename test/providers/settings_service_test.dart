@@ -166,4 +166,20 @@ void main() async {
       expect(sharedPreferences.getBool("hide_status_bar_in_grid"), isFalse);
     });
   });
+
+  group("watchNextHideProgramsWithoutImages", () {
+    test("defaults to false", () {
+      expect(settingsService.watchNextHideProgramsWithoutImages, isFalse);
+    });
+
+    test("persists value", () async {
+      await settingsService.setWatchNextHideProgramsWithoutImages(true);
+      expect(settingsService.watchNextHideProgramsWithoutImages, isTrue);
+      expect(sharedPreferences.getBool("watch_next_hide_programs_without_images"), isTrue);
+
+      await settingsService.setWatchNextHideProgramsWithoutImages(false);
+      expect(settingsService.watchNextHideProgramsWithoutImages, isFalse);
+      expect(sharedPreferences.getBool("watch_next_hide_programs_without_images"), isFalse);
+    });
+  });
 }

@@ -147,6 +147,8 @@
     "watchNextFilterAppsDescription": "Hangi uygulamaların Sıradakiler bölümünde içerik göstereceğini seçin",
     "watchNextNoApps": "Şu anda Sıradakiler içeriği sağlayan medya uygulaması yok",
     "watchNextShowAllApps": "Yüklü tüm uygulamaları göster",
+    "watchNextHideWithoutImages": "Resimsiz programları gizle",
+    "watchNextHideWithoutImagesDescription": "Yalnızca afiş veya arka plan resmi olan programları göster",
     "redditWallpaper": "Reddit duvar kağıdı",
     "redditWallpaperEnable": "Reddit fotoğraflarını göster",
     "redditSubreddits": "Subreddit'ler",

@@ -46,6 +46,7 @@ const String _dockBackdropFilterDisabled = "dock_backdrop_filter_disabled";
 const String _backgroundBlurDisabled = "background_blur_disabled";
 const String _showWatchNextSection = "show_watch_next_section";
 const String _watchNextBigPictureMode = "watch_next_big_picture_mode";
+const String _watchNextHideProgramsWithoutImages = "watch_next_hide_programs_without_images";
 const String _watchNextExcludedPackages = "watch_next_excluded_packages";
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
@@ -134,6 +135,9 @@ class SettingsService extends ChangeNotifier {
   bool get showWatchNextSection => _sharedPreferences.getBool(_showWatchNextSection) ?? false;
 
   bool get watchNextBigPictureMode => _sharedPreferences.getBool(_watchNextBigPictureMode) ?? false;
+
+  bool get watchNextHideProgramsWithoutImages =>
+      _sharedPreferences.getBool(_watchNextHideProgramsWithoutImages) ?? false;
 
   bool get dockDarkBackground => _sharedPreferences.getBool(_dockDarkBackground) ?? false;
 
@@ -250,6 +254,10 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setWatchNextBigPictureMode(bool value) async {
     return set(_watchNextBigPictureMode, value);
+  }
+
+  Future<void> setWatchNextHideProgramsWithoutImages(bool value) async {
+    return set(_watchNextHideProgramsWithoutImages, value);
   }
 
   List<String> get watchNextExcludedPackages =>

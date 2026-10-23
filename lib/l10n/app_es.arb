@@ -204,6 +204,8 @@
     "watchNextFilterAppsDescription": "Selecciona qué aplicaciones pueden mostrar contenido en Seguir viendo",
     "watchNextNoApps": "Ninguna aplicación multimedia proporciona contenido actualmente",
     "watchNextShowAllApps": "Mostrar todas las aplicaciones instaladas",
+    "watchNextHideWithoutImages": "Ocultar programas sin imagen",
+    "watchNextHideWithoutImagesDescription": "Mostrar solo programas que incluyan póster o imagen de fondo",
     "redditWallpaper": "Fondo de Reddit",
     "redditWallpaperEnable": "Mostrar fotos de Reddit",
     "redditSubreddits": "Subreddits",

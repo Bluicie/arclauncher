@@ -68,6 +68,13 @@ class WatchNextService extends ChangeNotifier {
     return 'placeholder://${item.id}';
   }
 
+  bool itemHasImage(WatchNextItem item) {
+    final uri = item.backdropUri ?? item.posterUri;
+    if (uri == null || uri.trim().isEmpty) return false;
+    if (_failedPosters.contains(uri)) return false;
+    return true;
+  }
+
   void setActiveHeroIndex(int index) {
     if (_items.isEmpty) return;
     final clamped = index.clamp(0, _items.length - 1);
@@ -191,9 +198,13 @@ class WatchNextService extends ChangeNotifier {
 
   void _applyFilterAndNotify() {
     final excluded = _settingsService?.watchNextExcludedPackages ?? const [];
+    final hideWithoutImages = _settingsService?.watchNextHideProgramsWithoutImages ?? false;
     _items = _allRawItems.where((item) {
       final pkg = item.packageName;
       if (pkg != null && excluded.contains(pkg)) {
+        return false;
+      }
+      if (hideWithoutImages && !itemHasImage(item)) {
         return false;
       }
       return true;
@@ -292,13 +303,21 @@ class WatchNextService extends ChangeNotifier {
         _schedulePosterCacheNotification();
       } else {
         _failedPosters.add(uri);
-        _triggerPlaceholderForUri(uri);
-        _schedulePosterCacheNotification();
+        if (_settingsService?.watchNextHideProgramsWithoutImages ?? false) {
+          _applyFilterAndNotify();
+        } else {
+          _triggerPlaceholderForUri(uri);
+          _schedulePosterCacheNotification();
+        }
       }
     } catch (_) {
       _failedPosters.add(uri);
-      _triggerPlaceholderForUri(uri);
-      _schedulePosterCacheNotification();
+      if (_settingsService?.watchNextHideProgramsWithoutImages ?? false) {
+        _applyFilterAndNotify();
+      } else {
+        _triggerPlaceholderForUri(uri);
+        _schedulePosterCacheNotification();
+      }
     } finally {
       _loadingPosters.remove(uri);
     }

@@ -218,6 +218,8 @@
     "watchNextFilterAppsDescription": "Select which apps can display content in Watch Next",
     "watchNextNoApps": "No media apps currently providing Watch Next content",
     "watchNextShowAllApps": "Show all installed apps",
+    "watchNextHideWithoutImages": "Hide programs without image",
+    "watchNextHideWithoutImagesDescription": "Only show programs that provide poster or backdrop artwork",
     "redditWallpaper": "Reddit wallpaper",
     "redditWallpaperEnable": "Show Reddit wallpapers",
     "redditSubreddits": "Subreddits",

@@ -83,6 +83,9 @@ class MockWatchNextServiceForPanel extends ChangeNotifier implements WatchNextSe
   bool hasPosterLoadFailed(String? uri) => false;
 
   @override
+  bool itemHasImage(WatchNextItem item) => true;
+
+  @override
   Future<void> launchItem(WatchNextItem item) async {}
 
   @override
@@ -202,5 +205,22 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(settingsService.isWatchNextPackageExcluded('com.plexapp.android'), isFalse);
+  });
+
+  testWidgets('toggling hide programs without image updates settings', (tester) async {
+    await tester.pumpWidget(createTestWidget());
+    await tester.pumpAndSettle();
+
+    expect(settingsService.watchNextHideProgramsWithoutImages, isFalse);
+
+    await tester.tap(find.text('Hide programs without image'));
+    await tester.pumpAndSettle();
+
+    expect(settingsService.watchNextHideProgramsWithoutImages, isTrue);
+
+    await tester.tap(find.text('Hide programs without image'));
+    await tester.pumpAndSettle();
+
+    expect(settingsService.watchNextHideProgramsWithoutImages, isFalse);
   });
 }

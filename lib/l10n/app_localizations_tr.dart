@@ -485,6 +485,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get watchNextShowAllApps => 'Yüklü tüm uygulamaları göster';
 
   @override
+  String get watchNextHideWithoutImages => 'Resimsiz programları gizle';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Yalnızca afiş veya arka plan resmi olan programları göster';
+
+  @override
   String get redditWallpaper => 'Reddit duvar kağıdı';
 
   @override

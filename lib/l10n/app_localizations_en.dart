@@ -483,6 +483,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchNextShowAllApps => 'Show all installed apps';
 
   @override
+  String get watchNextHideWithoutImages => 'Hide programs without image';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Only show programs that provide poster or backdrop artwork';
+
+  @override
   String get redditWallpaper => 'Reddit wallpaper';
 
   @override

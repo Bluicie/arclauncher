@@ -489,6 +489,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Mostrar todas las aplicaciones instaladas';
 
   @override
+  String get watchNextHideWithoutImages => 'Ocultar programas sin imagen';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Mostrar solo programas que incluyan póster o imagen de fondo';
+
+  @override
   String get redditWallpaper => 'Fondo de Reddit';
 
   @override

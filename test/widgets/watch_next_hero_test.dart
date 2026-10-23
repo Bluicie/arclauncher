@@ -87,6 +87,9 @@ class TestWatchNextService extends ChangeNotifier implements WatchNextService {
   bool hasPosterLoadFailed(String? uri) => false;
 
   @override
+  bool itemHasImage(WatchNextItem item) => item.hasImage;
+
+  @override
   Future<void> refreshItems() async {}
 
   @override

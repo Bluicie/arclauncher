@@ -154,6 +154,17 @@ class _WatchNextPanelPageState extends State<WatchNextPanelPage> {
                   secondary: const Icon(Icons.photo_size_select_actual_outlined),
                 ),
 
+                RoundedSwitchListTile(
+                  value: settingsService.watchNextHideProgramsWithoutImages,
+                  onChanged: settingsService.setWatchNextHideProgramsWithoutImages,
+                  title: Text(localizations.watchNextHideWithoutImages, style: Theme.of(context).textTheme.bodyMedium),
+                  subtitle: Text(
+                    localizations.watchNextHideWithoutImagesDescription,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  secondary: const Icon(Icons.hide_image_outlined),
+                ),
+
                 FocusableSettingsTile(
                   leading: _isRefreshing
                       ? const SizedBox(

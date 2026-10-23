@@ -988,6 +988,18 @@ abstract class AppLocalizations {
   /// **'Show all installed apps'**
   String get watchNextShowAllApps;
 
+  /// No description provided for @watchNextHideWithoutImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide programs without image'**
+  String get watchNextHideWithoutImages;
+
+  /// No description provided for @watchNextHideWithoutImagesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Only show programs that provide poster or backdrop artwork'**
+  String get watchNextHideWithoutImagesDescription;
+
   /// No description provided for @redditWallpaper.
   ///
   /// In en, this message translates to:

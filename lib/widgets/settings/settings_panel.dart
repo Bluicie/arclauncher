@@ -20,6 +20,8 @@ import 'package:flauncher/widgets/side_panel_dialog.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
+import 'package:flauncher/widgets/settings/reddit_subreddits_panel_page.dart';
+import 'package:flauncher/widgets/settings/reddit_wallpaper_panel_page.dart';
 import 'package:flauncher/widgets/settings/unsplash_slideshow_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_section_panel_page.dart';
 import 'package:flauncher/widgets/settings/settings_panel_page.dart';
@@ -91,13 +93,18 @@ class _SettingsPanelState extends State<SettingsPanel> {
                       return _FastPageRoute(builder: (_) => SlideshowSourcesPanelPage());
                     case UnsplashSlideshowPanelPage.routeName:
                       return _FastPageRoute(builder: (_) => UnsplashSlideshowPanelPage());
+                    case RedditWallpaperPanelPage.routeName:
+                      return _FastPageRoute(builder: (_) => const RedditWallpaperPanelPage());
+                    case RedditSubredditsPanelPage.routeName:
+                      return _FastPageRoute(builder: (_) => const RedditSubredditsPanelPage());
                     case ApplicationsPanelPage.routeName:
                       return _FastPageRoute(builder: (_) => ApplicationsPanelPage());
                     case LauncherSectionsPanelPage.routeName:
                       return _FastPageRoute(builder: (_) => LauncherSectionsPanelPage());
                     case LauncherSectionPanelPage.routeName:
                       return _FastPageRoute(
-                          builder: (_) => LauncherSectionPanelPage(sectionIndex: settings.arguments as int?));
+                        builder: (_) => LauncherSectionPanelPage(sectionIndex: settings.arguments as int?),
+                      );
                     case WifiUsagePeriodPage.routeName:
                       return _FastPageRoute(builder: (_) => WifiUsagePeriodPage());
                     case BackButtonActionPage.routeName:
@@ -117,8 +124,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
                     case BrightnessSettingsPage.routeName:
                       return _FastPageRoute(builder: (_) => BrightnessSettingsPage());
                     case AppDetailsPage.routeName:
-                      return _FastPageRoute(
-                          builder: (_) => AppDetailsPage(application: settings.arguments as App));
+                      return _FastPageRoute(builder: (_) => AppDetailsPage(application: settings.arguments as App));
                     default:
                       throw ArgumentError.value(settings.name, "settings.name", "Route not supported.");
                   }

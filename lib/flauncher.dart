@@ -99,12 +99,12 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
             child: Consumer3<WallpaperService, SettingsService, WatchNextService>(
               builder: (_, wallpaperService, settingsService, watchNextService, __) {
                 final author = wallpaperService.slideshowAuthor;
+                final redditCredit = wallpaperService.redditWallpaperCredit;
                 final isBigPicture = settingsService.showWatchNextSection && settingsService.watchNextBigPictureMode;
                 final activeItem = isBigPicture ? watchNextService.activeHeroItem : null;
                 final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(activeItem) : null;
                 final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
                 final hasHeroBackdrop = isBigPicture && heroBytes != null;
-
                 return Stack(
                   children: [
                     // Crossfade between wallpapers (each one has a revision-based key).
@@ -124,7 +124,22 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
                     ),
-                    if (author != null && !hasHeroBackdrop)
+                    if (redditCredit != null && !hasHeroBackdrop)
+                      Positioned(
+                        right: 24,
+                        top: 64,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Text(
+                            redditCredit,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.white70,
+                              shadows: const [Shadow(blurRadius: 4)],
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (author != null && !hasHeroBackdrop)
                       Positioned(
                         right: 24,
                         top: 64,

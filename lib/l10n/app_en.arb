@@ -19,6 +19,7 @@
     "dockShadow": "Dock shadow",
     "applications": "Applications",
     "autoHideAppBar": "Automatically hide status bar",
+    "hideStatusBarInGrid": "Hide status bar in grid",
     "backButtonAction": "Back button action",
     "category": "Category",
     "categories": "Categories",
@@ -117,6 +118,7 @@
             }
         }
     },
+    "updateChangelog": "What's new",
     "updateDownloadButton": "Download",
     "updateReadyToInstallTitle": "Ready to install",
     "updateReadyToInstallBody": "The APK for version {latestVersion} is downloaded. Start installation now?",
@@ -208,5 +210,51 @@
     "watchNextBigPictureMode": "Immersive mode",
     "watchNextBigPictureModeDescription": "Show full-width hero backdrop with an action watch button",
     "watchNextWatch": "Watch",
-    "watchNextResume": "Resume"
+    "watchNextResume": "Resume",
+    "redditWallpaper": "Reddit wallpaper",
+    "redditWallpaperEnable": "Show Reddit wallpapers",
+    "redditSubreddits": "Subreddits",
+    "redditSort": "Sort by",
+    "redditSortHot": "Hot",
+    "redditSortTopDay": "Top (Today)",
+    "redditSortTopWeek": "Top (This week)",
+    "redditSortTopMonth": "Top (This month)",
+    "redditSortTopAll": "Top (All time)",
+    "redditSortNew": "New",
+    "redditInterval": "Change every",
+    "redditIntervalMinutes": "{minutes} min",
+    "@redditIntervalMinutes": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Hour": "1 hour",
+    "redditIntervalHours": "{hours} hours",
+    "@redditIntervalHours": {
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Day": "1 day",
+    "redditIntervalDays": "{days} days",
+    "@redditIntervalDays": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "redditClientId": "Reddit Client ID (Optional)",
+    "redditClientIdHelp": "Optional. Create an installed app at reddit.com/prefs/apps and paste its ID if your network requires it.",
+    "redditChangeNow": "Change wallpaper now",
+    "redditAddSubreddit": "Add custom subreddit",
+    "redditSubredditName": "Subreddit name (without r/)",
+    "redditSubredditAdded": "Subreddit added",
+    "redditSubredditInvalid": "Please enter a valid subreddit name",
+    "redditWallpaperUpdated": "Wallpaper updated successfully",
+    "redditWallpaperFailed": "Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings."
 }

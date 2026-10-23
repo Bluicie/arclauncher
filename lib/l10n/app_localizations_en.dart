@@ -27,6 +27,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showFocusBorders => 'Show focus borders';
 
   @override
+  String get focusBorderThickness => 'Focus border thickness';
+
+  @override
+  String get focusBorderThin => 'Subtle (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Default (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Medium (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Bold (3.0 dp)';
+
+  @override
   String get appInfo => 'Application info';
 
   @override
@@ -52,6 +67,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoHideAppBar => 'Automatically hide status bar';
+
+  @override
+  String get hideStatusBarInGrid => 'Hide status bar in grid';
 
   @override
   String get backButtonAction => 'Back button action';
@@ -233,6 +251,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get updateChangelog => 'What\'s new';
+
+  @override
   String get updateDownloadButton => 'Download';
 
   @override
@@ -297,6 +318,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeBasedWallpaper => 'Time based wallpaper';
+
+  @override
+  String get unsplashSlideshow => 'Unsplash slideshow';
+
+  @override
+  String get unsplashEnable => 'Show Unsplash photos';
+
+  @override
+  String get unsplashAccessKey => 'Unsplash access key';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'Create a free app at unsplash.com/developers and paste its Access Key.';
+
+  @override
+  String get unsplashNotSet => 'Not set';
+
+  @override
+  String get unsplashInterval => 'Change every';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get slideshowCategories => 'Categories';
+
+  @override
+  String get slideshowDay => 'Day (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Night (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Photo: $author / Unsplash';
+  }
 
   @override
   String get pickDayWallpaper => 'Pick day wallpaper';
@@ -385,4 +444,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkStatus => 'Check Status';
+
+  @override
+  String get redditWallpaper => 'Reddit wallpaper';
+
+  @override
+  String get redditWallpaperEnable => 'Show Reddit wallpapers';
+
+  @override
+  String get redditSubreddits => 'Subreddits';
+
+  @override
+  String get redditSort => 'Sort by';
+
+  @override
+  String get redditSortHot => 'Hot';
+
+  @override
+  String get redditSortTopDay => 'Top (Today)';
+
+  @override
+  String get redditSortTopWeek => 'Top (This week)';
+
+  @override
+  String get redditSortTopMonth => 'Top (This month)';
+
+  @override
+  String get redditSortTopAll => 'Top (All time)';
+
+  @override
+  String get redditSortNew => 'New';
+
+  @override
+  String get redditInterval => 'Change every';
+
+  @override
+  String redditIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get redditInterval1Hour => '1 hour';
+
+  @override
+  String redditIntervalHours(int hours) {
+    return '$hours hours';
+  }
+
+  @override
+  String get redditInterval1Day => '1 day';
+
+  @override
+  String redditIntervalDays(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get redditClientId => 'Reddit Client ID (Optional)';
+
+  @override
+  String get redditClientIdHelp =>
+      'Optional. Create an installed app at reddit.com/prefs/apps and paste its ID if your network requires it.';
+
+  @override
+  String get redditChangeNow => 'Change wallpaper now';
+
+  @override
+  String get redditAddSubreddit => 'Add custom subreddit';
+
+  @override
+  String get redditSubredditName => 'Subreddit name (without r/)';
+
+  @override
+  String get redditSubredditAdded => 'Subreddit added';
+
+  @override
+  String get redditSubredditInvalid => 'Please enter a valid subreddit name';
+
+  @override
+  String get redditWallpaperUpdated => 'Wallpaper updated successfully';
+
+  @override
+  String get redditWallpaperFailed =>
+      'Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings.';
 }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/launcher_state.dart';
+import '../providers/network_service.dart';
 import '../providers/settings_service.dart';
+import 'app_bar_focus_ring.dart';
 import 'daily_wifi_usage_widget.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
@@ -44,30 +46,47 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SettingsService, bool>(
-      selector: (_, settings) => settings.autoHideAppBarEnabled,
-      builder: (context, autoHide, widget) {
-        if (autoHide) {
-          return Focus(
-            canRequestFocus: false,
-            child: AnimatedContainer(
-              curve: Curves.decelerate,
-              duration: Duration(milliseconds: 150),
-              height: focused ? kToolbarHeight : 0,
-              child: widget!
-            ),
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                context.read<LauncherState>().setAppGridFocused(false);
-              }
-              this.setState(() {
-                focused = hasFocus;
-              });
-            }
-          );
-        }
+    return Selector2<SettingsService, LauncherState, ({bool autoHide, bool hideInGrid, bool appGridFocused})>(
+      selector: (_, settings, launcherState) => (
+        autoHide: settings.autoHideAppBarEnabled,
+        hideInGrid: settings.hideStatusBarInGrid,
+        appGridFocused: launcherState.appGridFocused,
+      ),
+      builder: (context, data, widget) {
+        final isVisible = focused || (!data.autoHide && !(data.hideInGrid && data.appGridFocused));
 
-        return widget!;
+        return Focus(
+          canRequestFocus: false,
+          onFocusChange: (hasFocus) {
+            if (hasFocus) {
+              context.read<LauncherState>().setAppGridFocused(false);
+            }
+            setState(() {
+              focused = hasFocus;
+            });
+          },
+          child: IgnorePointer(
+            ignoring: !isVisible,
+            child: AnimatedOpacity(
+              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 200),
+              opacity: isVisible ? 1.0 : 0.0,
+              child: ClipRect(
+                child: AnimatedContainer(
+                  curve: Curves.decelerate,
+                  duration: const Duration(milliseconds: 200),
+                  height: isVisible ? kToolbarHeight : 0,
+                  child: OverflowBox(
+                    minHeight: 0,
+                    maxHeight: kToolbarHeight,
+                    alignment: Alignment.topCenter,
+                    child: widget!,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
       },
       child: RepaintBoundary(
         child: AppBar(
@@ -78,20 +97,32 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Settings button (moved to left side)
-              _FocusableIconButton(
-                icon: Icons.settings_outlined,
+              // Settings button
+              AppBarFocusRing(
                 focusNode: _settingsFocusNode,
                 onPressed: () => showDialog(context: context, builder: (_) => const SettingsPanel()),
+                semanticLabel: 'Settings',
+                child: const Icon(
+                  Icons.settings_outlined,
+                  size: 20,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(color: Colors.black54, blurRadius: 8, offset: Offset(0, 2)),
+                  ],
+                ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               // Network indicator (conditionally shown)
               Selector<SettingsService, bool>(
                 selector: (_, settings) => settings.showNetworkIndicatorInStatusBar,
                 builder: (context, showNetwork, _) => showNetwork
                   ? Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: _FocusableNetworkWidget(),
+                      padding: const EdgeInsets.only(right: 8),
+                      child: AppBarFocusRing(
+                        onPressed: () => context.read<NetworkService>().openWifiSettings(),
+                        semanticLabel: 'Network',
+                        child: const NetworkWidget(),
+                      ),
                     )
                   : const SizedBox.shrink(),
               ),
@@ -165,92 +196,3 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
   }
 }
 
-/// Reusable focusable icon button with consistent outline focus indicator
-class _FocusableIconButton extends StatefulWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final FocusNode? focusNode;
-
-  const _FocusableIconButton({required this.icon, required this.onPressed, this.focusNode});
-
-  @override
-  State<_FocusableIconButton> createState() => _FocusableIconButtonState();
-}
-
-class _FocusableIconButtonState extends State<_FocusableIconButton> {
-  bool _focused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Actions(
-      actions: <Type, Action<Intent>>{
-        ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => widget.onPressed()),
-        ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(onInvoke: (_) => widget.onPressed()),
-      },
-      child: Focus(
-        focusNode: widget.focusNode,
-        onFocusChange: (hasFocus) {
-          if (hasFocus) {
-            context.read<LauncherState>().setAppGridFocused(false);
-          }
-          setState(() => _focused = hasFocus);
-        },
-        child: InkWell(
-          onTap: widget.onPressed,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.all(4),  // Match network indicator padding
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: _focused
-                ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2)
-                : null,
-              boxShadow: _focused
-                ? const [BoxShadow(color: Colors.black54, blurRadius: 8, spreadRadius: 1)]
-                : null,
-            ),
-            child: Icon(widget.icon,
-              shadows: const [
-                Shadow(color: Colors.black54, blurRadius: 8, offset: Offset(0, 2))
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Network widget with consistent focus indicator
-class _FocusableNetworkWidget extends StatefulWidget {
-  @override
-  State<_FocusableNetworkWidget> createState() => _FocusableNetworkWidgetState();
-}
-
-class _FocusableNetworkWidgetState extends State<_FocusableNetworkWidget> {
-  bool _focused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      onFocusChange: (hasFocus) {
-        if (hasFocus) {
-          context.read<LauncherState>().setAppGridFocused(false);
-        }
-        setState(() => _focused = hasFocus);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: _focused
-            ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2)
-            : null,
-          boxShadow: _focused
-            ? const [BoxShadow(color: Colors.black54, blurRadius: 8, spreadRadius: 1)]
-            : null,
-        ),
-        child: const NetworkWidget(),
-      ),
-    );
-  }
-}

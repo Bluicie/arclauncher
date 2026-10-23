@@ -5,6 +5,11 @@
     "alphabetical": "Alfabético",
     "appCardHighlightAnimation": "Resaltar aplicaciones",
     "showFocusBorders": "Mostrar bordes de enfoque",
+    "focusBorderThickness": "Grosor del borde de enfoque",
+    "focusBorderThin": "Sutil (1.0 dp)",
+    "focusBorderDefault": "Por defecto (1.5 dp)",
+    "focusBorderMedium": "Medio (2.0 dp)",
+    "focusBorderBold": "Grueso (3.0 dp)",
     "appInfo": "Datos de la aplicación",
     "appKeyClick": "Sonido al presionar una tecla",
     "appearanceSettings": "Apariencia",
@@ -14,6 +19,7 @@
     "dockShadow": "Sombra del dock",
     "applications": "Aplicaciones",
     "autoHideAppBar": "Ocultar barra de estado automáticamente",
+    "hideStatusBarInGrid": "Ocultar barra de estado en la cuadrícula",
     "backButtonAction": "Acción del botón 'Atrás'",
     "category": "Categoría",
     "categories": "Categorías",
@@ -112,6 +118,7 @@
             }
         }
     },
+    "updateChangelog": "Novedades",
     "updateDownloadButton": "Descargar",
     "updateReadyToInstallTitle": "Lista para instalar",
     "updateReadyToInstallBody": "El APK de la versión {latestVersion} ya se descargó. ¿Instalar ahora?",
@@ -146,6 +153,17 @@
     "wallpaper": "Fondo de pantalla",
     "withEllipsisAddTo": "Añadir a...",
     "timeBasedWallpaper": "Fondo de pantalla según la hora",
+    "unsplashSlideshow": "Presentación de Unsplash",
+    "unsplashEnable": "Mostrar fotos de Unsplash",
+    "unsplashAccessKey": "Clave de acceso de Unsplash",
+    "unsplashAccessKeyHelp": "Crea una app gratuita en unsplash.com/developers y pega su Access Key.",
+    "unsplashNotSet": "Sin configurar",
+    "unsplashInterval": "Cambiar cada",
+    "unsplashIntervalMinutes": "{minutes} min",
+    "slideshowCategories": "Categorías",
+    "slideshowDay": "Día (6:00 - 18:00)",
+    "slideshowNight": "Noche (18:00 - 6:00)",
+    "unsplashPhotoCredit": "Foto: {author} / Unsplash",
     "pickDayWallpaper": "Elegir fondo de día",
     "pickNightWallpaper": "Elegir fondo de noche",
     "video": "Vídeo",
@@ -174,5 +192,51 @@
     "weekly": "Semanal",
     "monthly": "Mensual",
     "grantPermission": "Conceder permiso",
-    "checkStatus": "Comprobar estado"
+    "checkStatus": "Comprobar estado",
+    "redditWallpaper": "Fondo de Reddit",
+    "redditWallpaperEnable": "Mostrar fotos de Reddit",
+    "redditSubreddits": "Subreddits",
+    "redditSort": "Ordenar por",
+    "redditSortHot": "Popular",
+    "redditSortTopDay": "Destacados (Hoy)",
+    "redditSortTopWeek": "Destacados (Semana)",
+    "redditSortTopMonth": "Destacados (Mes)",
+    "redditSortTopAll": "Destacados (Siempre)",
+    "redditSortNew": "Nuevos",
+    "redditInterval": "Cambiar cada",
+    "redditIntervalMinutes": "{minutes} min",
+    "@redditIntervalMinutes": {
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Hour": "1 hora",
+    "redditIntervalHours": "{hours} horas",
+    "@redditIntervalHours": {
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            }
+        }
+    },
+    "redditInterval1Day": "1 día",
+    "redditIntervalDays": "{days} días",
+    "@redditIntervalDays": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "redditClientId": "ID de cliente de Reddit (opcional)",
+    "redditClientIdHelp": "Opcional. Crea una app instalada en reddit.com/prefs/apps y pega su ID.",
+    "redditChangeNow": "Cambiar fondo ahora",
+    "redditAddSubreddit": "Añadir subreddit personalizado",
+    "redditSubredditName": "Nombre del subreddit (sin r/)",
+    "redditSubredditAdded": "Subreddit añadido",
+    "redditSubredditInvalid": "Introduce un nombre de subreddit válido",
+    "redditWallpaperUpdated": "Fondo de pantalla actualizado con éxito",
+    "redditWallpaperFailed": "Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes."
 }

@@ -18,11 +18,14 @@
 
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/gradients.dart';
+import 'package:flauncher/providers/reddit_slideshow.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -39,6 +42,39 @@ class WallpaperService extends ChangeNotifier {
   bool _initialized = false;
   Timer? _timer;
   int _wallpaperRevision = 0;
+
+  late UnsplashSlideshow _slideshow;
+  Timer? _slideshowTimer;
+  final Random _random = Random();
+  File? _slideshowFile;
+
+  late RedditSlideshow _redditSlideshow;
+  Timer? _redditTimer;
+  Timer? _redditDebounce;
+  File? _redditFile;
+
+  static const Duration redditConfigDebounce = Duration(seconds: 3);
+
+  /// Credit to display while the Reddit wallpaper is on screen.
+  String? get redditWallpaperCredit {
+    if (!_settingsService.redditWallpaperEnabled || _redditFile == null) return null;
+    final sub = _settingsService.redditCurrentSubreddit;
+    final author = _settingsService.redditCurrentAuthor;
+    if (sub != null && sub.isNotEmpty) {
+      if (author != null && author.isNotEmpty) {
+        return "r/$sub • u/$author";
+      }
+      return "r/$sub";
+    }
+    return _settingsService.redditCurrentTitle;
+  }
+
+  String? get redditWallpaperTitle =>
+      _settingsService.redditWallpaperEnabled && _redditFile != null ? _settingsService.redditCurrentTitle : null;
+
+  /// Photographer credit to display while the Unsplash slideshow is on screen.
+  String? get slideshowAuthor =>
+      _settingsService.unsplashSlideshowEnabled && _slideshowFile != null ? _settingsService.unsplashAuthor : null;
 
   ImageProvider? _wallpaper;
   int get wallpaperRevision => _wallpaperRevision;
@@ -61,6 +97,18 @@ class WallpaperService extends ChangeNotifier {
   }
 
   bool _lastTimeBasedEnabled = false;
+  // Slideshow settings that require restarting its timer when they change.
+  (bool, int) _lastSlideshowConfig = (false, 0);
+  (bool, int) get _slideshowConfig =>
+      (_settingsService.unsplashSlideshowEnabled, _settingsService.unsplashIntervalMinutes);
+
+  (bool, int, List<String>, String) _lastRedditConfig = (false, 0, [], '');
+  (bool, int, List<String>, String) get _redditConfig => (
+    _settingsService.redditWallpaperEnabled,
+    _settingsService.redditIntervalMinutes,
+    _settingsService.redditSubreddits,
+    _settingsService.redditSort,
+  );
 
   void _onSettingsChanged() {
     final enabled = _settingsService.timeBasedWallpaperEnabled;
@@ -69,12 +117,32 @@ class WallpaperService extends ChangeNotifier {
       _updateTimerState();
       _updateWallpaper();
     }
+    if (_initialized && _slideshowConfig != _lastSlideshowConfig) {
+      _lastSlideshowConfig = _slideshowConfig;
+      _updateSlideshowState();
+      _updateWallpaper(force: true);
+    }
+    if (_initialized && _redditConfig != _lastRedditConfig) {
+      _lastRedditConfig = _redditConfig;
+      // Debounce while enabled so toggling several subreddits in a row triggers
+      // a single fetch instead of one per change.
+      _redditDebounce?.cancel();
+      if (_settingsService.redditWallpaperEnabled) {
+        _redditDebounce = Timer(redditConfigDebounce, _updateRedditState);
+      } else {
+        _updateRedditState();
+      }
+      _updateWallpaper(force: true);
+    }
   }
 
   @override
   void dispose() {
     _settingsService.removeListener(_onSettingsChanged);
     _timer?.cancel();
+    _slideshowTimer?.cancel();
+    _redditTimer?.cancel();
+    _redditDebounce?.cancel();
     super.dispose();
   }
 
@@ -86,20 +154,82 @@ class WallpaperService extends ChangeNotifier {
     _wallpaperVideoFile = File("${directory.path}/wallpaper_video");
     _wallpaperDayVideoFile = File("${directory.path}/wallpaper_day_video");
     _wallpaperNightVideoFile = File("${directory.path}/wallpaper_night_video");
+    _slideshow = UnsplashSlideshow(Directory("${directory.path}/slideshow"));
+    _slideshowFile = newestCachedImage(_slideshow.cacheDir);
+    _redditSlideshow = RedditSlideshow(Directory("${directory.path}/reddit_slideshow"));
+    _redditFile = newestCachedImage(_redditSlideshow.cacheDir);
     _initialized = true;
 
     _lastTimeBasedEnabled = _settingsService.timeBasedWallpaperEnabled;
+    _lastSlideshowConfig = _slideshowConfig;
+    _lastRedditConfig = _redditConfig;
     _updateWallpaper();
     _updateTimerState();
+    _updateSlideshowState();
+    _updateRedditState();
+  }
+
+  void _updateSlideshowState() {
+    _slideshowTimer?.cancel();
+    _slideshowTimer = null;
+    if (!_settingsService.unsplashSlideshowEnabled) return;
+    final interval = Duration(minutes: _settingsService.unsplashIntervalMinutes);
+    _slideshowTimer = Timer.periodic(interval, (_) => _advanceSlideshow());
+    final file = _slideshowFile;
+    // Reuse the cached image after a reboot unless it is already due for a change.
+    if (file == null || DateTime.now().difference(file.lastModifiedSync()) >= interval) {
+      _advanceSlideshow();
+    }
+  }
+
+  Future<void> _advanceSlideshow() async {
+    final hour = DateTime.now().hour;
+    // Same 6h-18h day/night split as the time-based wallpaper.
+    final isDay = hour >= 6 && hour < 18;
+    final result = await _slideshow.next(
+      isDay
+          ? pickSlideshowFilter(_settingsService.unsplashDaySources, defaultDaySlideshowSources, _random)
+          : pickSlideshowFilter(_settingsService.unsplashNightSources, defaultNightSlideshowSources, _random),
+      _settingsService.unsplashAccessKey,
+    );
+    if (result == null || !_settingsService.unsplashSlideshowEnabled) return;
+    final (file, author) = result;
+    _slideshowFile = file;
+    await _settingsService.setUnsplashAuthor(author);
+    _updateWallpaper(force: true);
+  }
+
+  void _updateRedditState() {
+    _redditTimer?.cancel();
+    _redditTimer = null;
+    if (!_settingsService.redditWallpaperEnabled) return;
+    final interval = Duration(minutes: _settingsService.redditIntervalMinutes);
+    _redditTimer = Timer.periodic(interval, (_) => advanceRedditWallpaper());
+    final file = _redditFile;
+    if (file == null || DateTime.now().difference(file.lastModifiedSync()) >= interval) {
+      advanceRedditWallpaper();
+    }
+  }
+
+  Future<void> advanceRedditWallpaper() async {
+    final result = await _redditSlideshow.next(
+      subreddits: _settingsService.redditSubreddits,
+      sort: RedditSort.fromKey(_settingsService.redditSort),
+      clientId: _settingsService.redditClientId.isNotEmpty ? _settingsService.redditClientId : null,
+      clientSecret: _settingsService.redditClientSecret.isNotEmpty ? _settingsService.redditClientSecret : null,
+      random: _random,
+    );
+    if (result == null || !_settingsService.redditWallpaperEnabled) return;
+    final (file, post) = result;
+    _redditFile = file;
+    await _settingsService.setRedditWallpaperInfo(title: post.title, author: post.author, subreddit: post.subreddit);
+    _updateWallpaper(force: true);
   }
 
   void _updateTimerState() {
     final enabled = _settingsService.timeBasedWallpaperEnabled;
     if (enabled && (_timer == null || !_timer!.isActive)) {
-      _timer = Timer.periodic(
-        const Duration(minutes: 1),
-        (_) => _updateWallpaper(),
-      );
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) => _updateWallpaper());
     } else if (!enabled && _timer != null) {
       _timer?.cancel();
       _timer = null;
@@ -108,6 +238,8 @@ class WallpaperService extends ChangeNotifier {
 
   File? _resolveActiveVideoFile() {
     if (!isInitialized) return null;
+    if (_settingsService.redditWallpaperEnabled) return null;
+    if (_settingsService.unsplashSlideshowEnabled) return null;
 
     final now = DateTime.now();
     final isDay = now.hour >= 6 && now.hour < 18;
@@ -140,7 +272,13 @@ class WallpaperService extends ChangeNotifier {
 
     ImageProvider? newWallpaper;
 
-    if (videoFile != null) {
+    final slideshowFile = _slideshowFile;
+    final redditFile = _redditFile;
+    if (_settingsService.redditWallpaperEnabled && redditFile != null && redditFile.existsSync()) {
+      newWallpaper = FileImage(redditFile);
+    } else if (_settingsService.unsplashSlideshowEnabled && slideshowFile != null && slideshowFile.existsSync()) {
+      newWallpaper = FileImage(slideshowFile);
+    } else if (videoFile != null) {
       newWallpaper = null;
     } else if (enabled) {
       if (isDay && _wallpaperDayFile.existsSync()) {
@@ -166,10 +304,7 @@ class WallpaperService extends ChangeNotifier {
   }
 
   Future<void> pickWallpaperFromUri(String sourceUri) async {
-    await _saveImageBytes(
-      await _channel.loadContentUriImage(sourceUri),
-      _wallpaperFile,
-    );
+    await _saveImageBytes(await _channel.loadContentUriImage(sourceUri), _wallpaperFile);
   }
 
   Future<void> pickWallpaperDay(File sourceFile) async {
@@ -177,10 +312,7 @@ class WallpaperService extends ChangeNotifier {
   }
 
   Future<void> pickWallpaperDayFromUri(String sourceUri) async {
-    await _saveImageBytes(
-      await _channel.loadContentUriImage(sourceUri),
-      _wallpaperDayFile,
-    );
+    await _saveImageBytes(await _channel.loadContentUriImage(sourceUri), _wallpaperDayFile);
   }
 
   Future<void> pickWallpaperNight(File sourceFile) async {
@@ -188,10 +320,7 @@ class WallpaperService extends ChangeNotifier {
   }
 
   Future<void> pickWallpaperNightFromUri(String sourceUri) async {
-    await _saveImageBytes(
-      await _channel.loadContentUriImage(sourceUri),
-      _wallpaperNightFile,
-    );
+    await _saveImageBytes(await _channel.loadContentUriImage(sourceUri), _wallpaperNightFile);
   }
 
   Future<void> pickVideoWallpaper(File sourceFile) async {
@@ -207,6 +336,12 @@ class WallpaperService extends ChangeNotifier {
   }
 
   Future<void> _saveImage(File sourceFile, File targetFile) async {
+    if (_settingsService.redditWallpaperEnabled) {
+      await _settingsService.setRedditWallpaperEnabled(false);
+    }
+    if (_settingsService.unsplashSlideshowEnabled) {
+      await _settingsService.setUnsplashSlideshowEnabled(false);
+    }
     await _replacePairedVideo(targetFile);
 
     final readStream = sourceFile.openRead();
@@ -219,6 +354,13 @@ class WallpaperService extends ChangeNotifier {
   Future<void> _saveImageBytes(Uint8List imageBytes, File targetFile) async {
     if (imageBytes.isEmpty) {
       throw StateError('Unable to read the selected image');
+    }
+
+    if (_settingsService.redditWallpaperEnabled) {
+      await _settingsService.setRedditWallpaperEnabled(false);
+    }
+    if (_settingsService.unsplashSlideshowEnabled) {
+      await _settingsService.setUnsplashSlideshowEnabled(false);
     }
 
     await _replacePairedVideo(targetFile);
@@ -249,6 +391,13 @@ class WallpaperService extends ChangeNotifier {
       await pairedImage.delete();
     }
 
+    if (_settingsService.redditWallpaperEnabled) {
+      await _settingsService.setRedditWallpaperEnabled(false);
+    }
+    if (_settingsService.unsplashSlideshowEnabled) {
+      await _settingsService.setUnsplashSlideshowEnabled(false);
+    }
+
     final readStream = sourceFile.openRead();
     final writeStream = targetVideoFile.openWrite();
     await readStream.cast<List<int>>().pipe(writeStream);
@@ -259,14 +408,20 @@ class WallpaperService extends ChangeNotifier {
   File? _pairedImageForVideo(File videoFile) {
     if (videoFile.path == _wallpaperVideoFile.path) return _wallpaperFile;
     if (videoFile.path == _wallpaperDayVideoFile.path) return _wallpaperDayFile;
-    if (videoFile.path == _wallpaperNightVideoFile.path)
-      return _wallpaperNightFile;
+    if (videoFile.path == _wallpaperNightVideoFile.path) return _wallpaperNightFile;
     return null;
   }
 
   Future<void> setGradient(FLauncherGradient fLauncherGradient) async {
     await cleanImageWallpaperFiles();
     await cleanVideoWallpaperFiles();
+
+    if (_settingsService.redditWallpaperEnabled) {
+      await _settingsService.setRedditWallpaperEnabled(false);
+    }
+    if (_settingsService.unsplashSlideshowEnabled) {
+      await _settingsService.setUnsplashSlideshowEnabled(false);
+    }
 
     await _settingsService.setGradientUuid(fLauncherGradient.uuid);
     // Drop the in-memory wallpaper provider so the gradient is shown instead of

@@ -18,6 +18,8 @@
 
 import 'dart:async';
 
+import 'package:flauncher/providers/reddit_slideshow.dart';
+import 'package:flauncher/providers/unsplash_slideshow.dart';
 import 'package:flauncher/widgets/settings/back_button_actions.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _appHighlightAnimationEnabledKey = "app_highlight_animation_enabled";
 const _appKeyClickEnabledKey = "app_key_click_enabled";
 const _autoHideAppBar = "auto_hide_app_bar";
+const _hideStatusBarInGrid = "hide_status_bar_in_grid";
 const _gradientUuidKey = "gradient_uuid";
 const _backButtonAction = "back_button_action";
 const _dateFormat = "date_format";
@@ -45,6 +48,20 @@ const String _showWatchNextSection = "show_watch_next_section";
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
 const String _showFocusBorders = "show_focus_borders";
+const String _focusBorderThickness = "focus_border_thickness";
+
+// Focus border thickness options (in dp)
+const double FOCUS_BORDER_THIN = 1.0;
+const double FOCUS_BORDER_DEFAULT = 1.5;
+const double FOCUS_BORDER_MEDIUM = 2.0;
+const double FOCUS_BORDER_BOLD = 3.0;
+
+const List<double> FOCUS_BORDER_THICKNESS_OPTIONS = [
+  FOCUS_BORDER_THIN,
+  FOCUS_BORDER_DEFAULT,
+  FOCUS_BORDER_MEDIUM,
+  FOCUS_BORDER_BOLD,
+];
 
 // WiFi usage period options
 const String WIFI_USAGE_DAILY = "daily";
@@ -73,13 +90,14 @@ class SettingsService extends ChangeNotifier {
   static final defaultTimeFormat = "H:mm";
   final SharedPreferences _sharedPreferences;
 
-
   bool get appHighlightAnimationEnabled =>
       showFocusBorders && (_sharedPreferences.getBool(_appHighlightAnimationEnabledKey) ?? false);
 
   bool get appKeyClickEnabled => _sharedPreferences.getBool(_appKeyClickEnabledKey) ?? true;
 
   bool get autoHideAppBarEnabled => _sharedPreferences.getBool(_autoHideAppBar) ?? false;
+
+  bool get hideStatusBarInGrid => _sharedPreferences.getBool(_hideStatusBarInGrid) ?? false;
 
   bool get showCategoryTitles => _sharedPreferences.getBool(_showCategoryTitles) ?? false;
 
@@ -119,14 +137,19 @@ class SettingsService extends ChangeNotifier {
 
   bool get showFocusBorders => _sharedPreferences.getBool(_showFocusBorders) ?? true;
 
+  double get focusBorderThickness => _sharedPreferences.getDouble(_focusBorderThickness) ?? FOCUS_BORDER_DEFAULT;
+
+  Future<void> setFocusBorderThickness(double value) async {
+    await _sharedPreferences.setDouble(_focusBorderThickness, value);
+    notifyListeners();
+  }
+
   Color get accentColor {
     final hex = accentColorHex;
     return Color(int.parse("0xFF$hex"));
   }
 
-  SettingsService(
-    this._sharedPreferences
-  );
+  SettingsService(this._sharedPreferences);
 
   Future<void> set(String key, bool value) async {
     await _sharedPreferences.setBool(key, value);
@@ -148,6 +171,10 @@ class SettingsService extends ChangeNotifier {
     return set(_autoHideAppBar, value);
   }
 
+  Future<void> setHideStatusBarInGrid(bool value) async {
+    return set(_hideStatusBarInGrid, value);
+  }
+
   Future<void> setGradientUuid(String value) async {
     await _sharedPreferences.setString(_gradientUuidKey, value);
     notifyListeners();
@@ -161,7 +188,7 @@ class SettingsService extends ChangeNotifier {
   Future<void> setDateTimeFormat(String dateFormatString, String timeFormatString) async {
     await Future.wait([
       _sharedPreferences.setString(_dateFormat, dateFormatString),
-      _sharedPreferences.setString(_timeFormat, timeFormatString)
+      _sharedPreferences.setString(_timeFormat, timeFormatString),
     ]);
     notifyListeners();
   }
@@ -236,6 +263,120 @@ class SettingsService extends ChangeNotifier {
 
   Future<void> setTimeBasedWallpaperEnabled(bool enabled) async {
     await _sharedPreferences.setBool("time_based_wallpaper_enabled", enabled);
+    notifyListeners();
+  }
+
+  /// Each user brings their own Unsplash API access key (Demo apps are limited to 50 requests/hour).
+  String get unsplashAccessKey => _sharedPreferences.getString("unsplash_access_key") ?? "";
+
+  Future<void> setUnsplashAccessKey(String key) async {
+    await _sharedPreferences.setString("unsplash_access_key", key.trim());
+    if (key.trim().isEmpty) {
+      await _sharedPreferences.setBool("unsplash_slideshow_enabled", false);
+    }
+    notifyListeners();
+  }
+
+  /// The slideshow only runs with an access key.
+  bool get unsplashSlideshowEnabled =>
+      unsplashAccessKey.isNotEmpty && (_sharedPreferences.getBool("unsplash_slideshow_enabled") ?? false);
+
+  static const List<int> unsplashIntervalChoices = [5, 10, 30, 60];
+
+  int get unsplashIntervalMinutes => _sharedPreferences.getInt("unsplash_interval_minutes") ?? 10;
+
+  Future<void> setUnsplashIntervalMinutes(int minutes) async {
+    await _sharedPreferences.setInt("unsplash_interval_minutes", minutes);
+    notifyListeners();
+  }
+
+  /// Slideshow sources: search keywords, "topics:ID,ID" or "collections:ID,ID".
+  /// Slideshow category keys (see slideshowSources) used from 6h to 18h, and the rest of the time.
+  List<String> get unsplashDaySources =>
+      _sharedPreferences.getStringList("unsplash_day_sources") ?? defaultDaySlideshowSources;
+
+  List<String> get unsplashNightSources =>
+      _sharedPreferences.getStringList("unsplash_night_sources") ?? defaultNightSlideshowSources;
+
+  Future<void> setUnsplashSources({required bool day, required List<String> keys}) async {
+    await _sharedPreferences.setStringList(day ? "unsplash_day_sources" : "unsplash_night_sources", keys);
+    notifyListeners();
+  }
+
+  Future<void> setUnsplashSlideshowEnabled(bool enabled) async {
+    await _sharedPreferences.setBool("unsplash_slideshow_enabled", enabled);
+    if (enabled) {
+      await _sharedPreferences.setBool("reddit_wallpaper_enabled", false);
+    }
+    notifyListeners();
+  }
+
+  /// Photographer of the slideshow image on screen, kept across restarts for attribution.
+  String? get unsplashAuthor => _sharedPreferences.getString("unsplash_author");
+
+  Future<void> setUnsplashAuthor(String author) => _sharedPreferences.setString("unsplash_author", author);
+
+  // Reddit Wallpaper Settings
+
+  bool get redditWallpaperEnabled => _sharedPreferences.getBool("reddit_wallpaper_enabled") ?? false;
+
+  Future<void> setRedditWallpaperEnabled(bool enabled) async {
+    await _sharedPreferences.setBool("reddit_wallpaper_enabled", enabled);
+    if (enabled) {
+      await _sharedPreferences.setBool("unsplash_slideshow_enabled", false);
+    }
+    notifyListeners();
+  }
+
+  static const List<int> redditIntervalChoices = [5, 10, 30, 60, 360, 720, 1440];
+
+  int get redditIntervalMinutes => _sharedPreferences.getInt("reddit_interval_minutes") ?? 10;
+
+  Future<void> setRedditIntervalMinutes(int minutes) async {
+    await _sharedPreferences.setInt("reddit_interval_minutes", minutes);
+    notifyListeners();
+  }
+
+  List<String> get redditSubreddits => _sharedPreferences.getStringList("reddit_subreddits") ?? defaultRedditSubreddits;
+
+  Future<void> setRedditSubreddits(List<String> subreddits) async {
+    await _sharedPreferences.setStringList("reddit_subreddits", subreddits);
+    notifyListeners();
+  }
+
+  String get redditSort => _sharedPreferences.getString("reddit_sort") ?? RedditSort.hot.key;
+
+  Future<void> setRedditSort(String sort) async {
+    await _sharedPreferences.setString("reddit_sort", sort);
+    notifyListeners();
+  }
+
+  String get redditClientId => _sharedPreferences.getString("reddit_client_id") ?? "";
+
+  Future<void> setRedditClientId(String clientId) async {
+    await _sharedPreferences.setString("reddit_client_id", clientId.trim());
+    notifyListeners();
+  }
+
+  String get redditClientSecret => _sharedPreferences.getString("reddit_client_secret") ?? "";
+
+  Future<void> setRedditClientSecret(String secret) async {
+    await _sharedPreferences.setString("reddit_client_secret", secret.trim());
+    notifyListeners();
+  }
+
+  String? get redditCurrentTitle => _sharedPreferences.getString("reddit_current_title");
+  String? get redditCurrentAuthor => _sharedPreferences.getString("reddit_current_author");
+  String? get redditCurrentSubreddit => _sharedPreferences.getString("reddit_current_subreddit");
+
+  Future<void> setRedditWallpaperInfo({
+    required String title,
+    required String author,
+    required String subreddit,
+  }) async {
+    await _sharedPreferences.setString("reddit_current_title", title);
+    await _sharedPreferences.setString("reddit_current_author", author);
+    await _sharedPreferences.setString("reddit_current_subreddit", subreddit);
     notifyListeners();
   }
 }

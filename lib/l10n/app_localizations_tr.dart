@@ -27,6 +27,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get showFocusBorders => 'Odak kenarlıklarını göster';
 
   @override
+  String get focusBorderThickness => 'Odak kenarlık kalınlığı';
+
+  @override
+  String get focusBorderThin => 'İnce (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Varsayılan (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Orta (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Kalın (3.0 dp)';
+
+  @override
   String get appInfo => 'Uygulama bilgisi';
 
   @override
@@ -52,6 +67,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get autoHideAppBar => 'Durum çubuğunu otomatik gizle';
+
+  @override
+  String get hideStatusBarInGrid => 'Durum çubuğunu ızgarada gizle';
 
   @override
   String get backButtonAction => 'Geri tuşu eylemi';
@@ -234,6 +252,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get updateChangelog => 'Yenilikler';
+
+  @override
   String get updateDownloadButton => 'İndir';
 
   @override
@@ -299,6 +320,44 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get timeBasedWallpaper => 'Zamana dayalı duvar kağıdı';
+
+  @override
+  String get unsplashSlideshow => 'Unsplash slayt gösterisi';
+
+  @override
+  String get unsplashEnable => 'Unsplash fotoğraflarını göster';
+
+  @override
+  String get unsplashAccessKey => 'Unsplash erişim anahtarı';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'unsplash.com/developers adresinde ücretsiz bir uygulama oluşturun ve Access Key\'i yapıştırın.';
+
+  @override
+  String get unsplashNotSet => 'Ayarlanmadı';
+
+  @override
+  String get unsplashInterval => 'Değiştirme sıklığı';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes dk';
+  }
+
+  @override
+  String get slideshowCategories => 'Kategoriler';
+
+  @override
+  String get slideshowDay => 'Gündüz (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Gece (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Fotoğraf: $author / Unsplash';
+  }
 
   @override
   String get pickDayWallpaper => 'Gündüz duvar kağıdını seç';
@@ -387,4 +446,87 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get checkStatus => 'Durumu denetle';
+
+  @override
+  String get redditWallpaper => 'Reddit duvar kağıdı';
+
+  @override
+  String get redditWallpaperEnable => 'Reddit fotoğraflarını göster';
+
+  @override
+  String get redditSubreddits => 'Subreddit\'ler';
+
+  @override
+  String get redditSort => 'Sırala';
+
+  @override
+  String get redditSortHot => 'Popüler';
+
+  @override
+  String get redditSortTopDay => 'En İyiler (Bugün)';
+
+  @override
+  String get redditSortTopWeek => 'En İyiler (Bu Hafta)';
+
+  @override
+  String get redditSortTopMonth => 'En İyiler (Bu Ay)';
+
+  @override
+  String get redditSortTopAll => 'En İyiler (Tüm Zamanlar)';
+
+  @override
+  String get redditSortNew => 'Yeni';
+
+  @override
+  String get redditInterval => 'Değiştirme sıklığı';
+
+  @override
+  String redditIntervalMinutes(int minutes) {
+    return '$minutes dk';
+  }
+
+  @override
+  String get redditInterval1Hour => '1 saat';
+
+  @override
+  String redditIntervalHours(int hours) {
+    return '$hours saat';
+  }
+
+  @override
+  String get redditInterval1Day => '1 gün';
+
+  @override
+  String redditIntervalDays(int days) {
+    return '$days gün';
+  }
+
+  @override
+  String get redditClientId => 'Reddit İstemci Kimliği (İsteğe bağlı)';
+
+  @override
+  String get redditClientIdHelp =>
+      'İsteğe bağlı. reddit.com/prefs/apps adresinden yüklü uygulama oluşturup kimliğini yapıştırın.';
+
+  @override
+  String get redditChangeNow => 'Duvar kağıdını şimdi değiştir';
+
+  @override
+  String get redditAddSubreddit => 'Özel subreddit ekle';
+
+  @override
+  String get redditSubredditName => 'Subreddit adı (r/ olmadan)';
+
+  @override
+  String get redditSubredditAdded => 'Subreddit eklendi';
+
+  @override
+  String get redditSubredditInvalid => 'Lütfen geçerli bir subreddit adı girin';
+
+  @override
+  String get redditWallpaperUpdated => 'Duvar kağıdı başarıyla güncellendi';
+
+  @override
+  String get redditWallpaperFailed =>
+      'Duvar kağıdı alınamadı. Sorun devam ederse ayarlardan bir Reddit İstemci Kimliği girin.';
 }

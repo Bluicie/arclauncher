@@ -27,6 +27,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get showFocusBorders => 'Mostrar bordes de enfoque';
 
   @override
+  String get focusBorderThickness => 'Grosor del borde de enfoque';
+
+  @override
+  String get focusBorderThin => 'Sutil (1.0 dp)';
+
+  @override
+  String get focusBorderDefault => 'Por defecto (1.5 dp)';
+
+  @override
+  String get focusBorderMedium => 'Medio (2.0 dp)';
+
+  @override
+  String get focusBorderBold => 'Grueso (3.0 dp)';
+
+  @override
   String get appInfo => 'Datos de la aplicación';
 
   @override
@@ -52,6 +67,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get autoHideAppBar => 'Ocultar barra de estado automáticamente';
+
+  @override
+  String get hideStatusBarInGrid => 'Ocultar barra de estado en la cuadrícula';
 
   @override
   String get backButtonAction => 'Acción del botón \'Atrás\'';
@@ -236,6 +254,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get updateChangelog => 'Novedades';
+
+  @override
   String get updateDownloadButton => 'Descargar';
 
   @override
@@ -302,6 +323,44 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get timeBasedWallpaper => 'Fondo de pantalla según la hora';
+
+  @override
+  String get unsplashSlideshow => 'Presentación de Unsplash';
+
+  @override
+  String get unsplashEnable => 'Mostrar fotos de Unsplash';
+
+  @override
+  String get unsplashAccessKey => 'Clave de acceso de Unsplash';
+
+  @override
+  String get unsplashAccessKeyHelp =>
+      'Crea una app gratuita en unsplash.com/developers y pega su Access Key.';
+
+  @override
+  String get unsplashNotSet => 'Sin configurar';
+
+  @override
+  String get unsplashInterval => 'Cambiar cada';
+
+  @override
+  String unsplashIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get slideshowCategories => 'Categorías';
+
+  @override
+  String get slideshowDay => 'Día (6:00 - 18:00)';
+
+  @override
+  String get slideshowNight => 'Noche (18:00 - 6:00)';
+
+  @override
+  String unsplashPhotoCredit(String author) {
+    return 'Foto: $author / Unsplash';
+  }
 
   @override
   String get pickDayWallpaper => 'Elegir fondo de día';
@@ -390,4 +449,89 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get checkStatus => 'Comprobar estado';
+
+  @override
+  String get redditWallpaper => 'Fondo de Reddit';
+
+  @override
+  String get redditWallpaperEnable => 'Mostrar fotos de Reddit';
+
+  @override
+  String get redditSubreddits => 'Subreddits';
+
+  @override
+  String get redditSort => 'Ordenar por';
+
+  @override
+  String get redditSortHot => 'Popular';
+
+  @override
+  String get redditSortTopDay => 'Destacados (Hoy)';
+
+  @override
+  String get redditSortTopWeek => 'Destacados (Semana)';
+
+  @override
+  String get redditSortTopMonth => 'Destacados (Mes)';
+
+  @override
+  String get redditSortTopAll => 'Destacados (Siempre)';
+
+  @override
+  String get redditSortNew => 'Nuevos';
+
+  @override
+  String get redditInterval => 'Cambiar cada';
+
+  @override
+  String redditIntervalMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get redditInterval1Hour => '1 hora';
+
+  @override
+  String redditIntervalHours(int hours) {
+    return '$hours horas';
+  }
+
+  @override
+  String get redditInterval1Day => '1 día';
+
+  @override
+  String redditIntervalDays(int days) {
+    return '$days días';
+  }
+
+  @override
+  String get redditClientId => 'ID de cliente de Reddit (opcional)';
+
+  @override
+  String get redditClientIdHelp =>
+      'Opcional. Crea una app instalada en reddit.com/prefs/apps y pega su ID.';
+
+  @override
+  String get redditChangeNow => 'Cambiar fondo ahora';
+
+  @override
+  String get redditAddSubreddit => 'Añadir subreddit personalizado';
+
+  @override
+  String get redditSubredditName => 'Nombre del subreddit (sin r/)';
+
+  @override
+  String get redditSubredditAdded => 'Subreddit añadido';
+
+  @override
+  String get redditSubredditInvalid =>
+      'Introduce un nombre de subreddit válido';
+
+  @override
+  String get redditWallpaperUpdated =>
+      'Fondo de pantalla actualizado con éxito';
+
+  @override
+  String get redditWallpaperFailed =>
+      'Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes.';
 }

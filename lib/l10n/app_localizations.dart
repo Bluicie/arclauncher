@@ -136,6 +136,36 @@ abstract class AppLocalizations {
   /// **'Show focus borders'**
   String get showFocusBorders;
 
+  /// No description provided for @focusBorderThickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus border thickness'**
+  String get focusBorderThickness;
+
+  /// No description provided for @focusBorderThin.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtle (1.0 dp)'**
+  String get focusBorderThin;
+
+  /// No description provided for @focusBorderDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default (1.5 dp)'**
+  String get focusBorderDefault;
+
+  /// No description provided for @focusBorderMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium (2.0 dp)'**
+  String get focusBorderMedium;
+
+  /// No description provided for @focusBorderBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold (3.0 dp)'**
+  String get focusBorderBold;
+
   /// No description provided for @appInfo.
   ///
   /// In en, this message translates to:
@@ -189,6 +219,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Automatically hide status bar'**
   String get autoHideAppBar;
+
+  /// No description provided for @hideStatusBarInGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide status bar in grid'**
+  String get hideStatusBarInGrid;
 
   /// No description provided for @backButtonAction.
   ///
@@ -520,6 +556,12 @@ abstract class AppLocalizations {
   /// **'Version {latestVersion} is available (current: {currentVersion}).'**
   String updateAvailableBody(String latestVersion, String currentVersion);
 
+  /// No description provided for @updateChangelog.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get updateChangelog;
+
   /// No description provided for @updateDownloadButton.
   ///
   /// In en, this message translates to:
@@ -639,6 +681,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time based wallpaper'**
   String get timeBasedWallpaper;
+
+  /// No description provided for @unsplashSlideshow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsplash slideshow'**
+  String get unsplashSlideshow;
+
+  /// No description provided for @unsplashEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Unsplash photos'**
+  String get unsplashEnable;
+
+  /// No description provided for @unsplashAccessKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsplash access key'**
+  String get unsplashAccessKey;
+
+  /// No description provided for @unsplashAccessKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a free app at unsplash.com/developers and paste its Access Key.'**
+  String get unsplashAccessKeyHelp;
+
+  /// No description provided for @unsplashNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get unsplashNotSet;
+
+  /// No description provided for @unsplashInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Change every'**
+  String get unsplashInterval;
+
+  /// No description provided for @unsplashIntervalMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String unsplashIntervalMinutes(int minutes);
+
+  /// No description provided for @slideshowCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get slideshowCategories;
+
+  /// No description provided for @slideshowDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day (6:00 - 18:00)'**
+  String get slideshowDay;
+
+  /// No description provided for @slideshowNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night (18:00 - 6:00)'**
+  String get slideshowNight;
+
+  /// No description provided for @unsplashPhotoCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo: {author} / Unsplash'**
+  String unsplashPhotoCredit(String author);
 
   /// No description provided for @pickDayWallpaper.
   ///
@@ -813,6 +921,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check Status'**
   String get checkStatus;
+
+  /// No description provided for @redditWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Reddit wallpaper'**
+  String get redditWallpaper;
+
+  /// No description provided for @redditWallpaperEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Reddit wallpapers'**
+  String get redditWallpaperEnable;
+
+  /// No description provided for @redditSubreddits.
+  ///
+  /// In en, this message translates to:
+  /// **'Subreddits'**
+  String get redditSubreddits;
+
+  /// No description provided for @redditSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get redditSort;
+
+  /// No description provided for @redditSortHot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get redditSortHot;
+
+  /// No description provided for @redditSortTopDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Top (Today)'**
+  String get redditSortTopDay;
+
+  /// No description provided for @redditSortTopWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Top (This week)'**
+  String get redditSortTopWeek;
+
+  /// No description provided for @redditSortTopMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Top (This month)'**
+  String get redditSortTopMonth;
+
+  /// No description provided for @redditSortTopAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Top (All time)'**
+  String get redditSortTopAll;
+
+  /// No description provided for @redditSortNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get redditSortNew;
+
+  /// No description provided for @redditInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Change every'**
+  String get redditInterval;
+
+  /// No description provided for @redditIntervalMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String redditIntervalMinutes(int minutes);
+
+  /// No description provided for @redditInterval1Hour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get redditInterval1Hour;
+
+  /// No description provided for @redditIntervalHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours'**
+  String redditIntervalHours(int hours);
+
+  /// No description provided for @redditInterval1Day.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day'**
+  String get redditInterval1Day;
+
+  /// No description provided for @redditIntervalDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String redditIntervalDays(int days);
+
+  /// No description provided for @redditClientId.
+  ///
+  /// In en, this message translates to:
+  /// **'Reddit Client ID (Optional)'**
+  String get redditClientId;
+
+  /// No description provided for @redditClientIdHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. Create an installed app at reddit.com/prefs/apps and paste its ID if your network requires it.'**
+  String get redditClientIdHelp;
+
+  /// No description provided for @redditChangeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Change wallpaper now'**
+  String get redditChangeNow;
+
+  /// No description provided for @redditAddSubreddit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom subreddit'**
+  String get redditAddSubreddit;
+
+  /// No description provided for @redditSubredditName.
+  ///
+  /// In en, this message translates to:
+  /// **'Subreddit name (without r/)'**
+  String get redditSubredditName;
+
+  /// No description provided for @redditSubredditAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Subreddit added'**
+  String get redditSubredditAdded;
+
+  /// No description provided for @redditSubredditInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid subreddit name'**
+  String get redditSubredditInvalid;
+
+  /// No description provided for @redditWallpaperUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper updated successfully'**
+  String get redditWallpaperUpdated;
+
+  /// No description provided for @redditWallpaperFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings.'**
+  String get redditWallpaperFailed;
 }
 
 class _AppLocalizationsDelegate

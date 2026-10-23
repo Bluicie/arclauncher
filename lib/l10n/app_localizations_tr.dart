@@ -461,6 +461,30 @@ class AppLocalizationsTr extends AppLocalizations {
   String get watchNextResume => 'Devam Et';
 
   @override
+  String get watchNextRefresh => 'İçeriği yenile';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Medya sağlayıcılarından önerileri yeniden yükle';
+
+  @override
+  String get watchNextRefreshed => 'Sıradakiler içeriği yenilendi';
+
+  @override
+  String get watchNextFilterApps => 'Uygulamaları filtrele';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Hangi uygulamaların Sıradakiler bölümünde içerik göstereceğini seçin';
+
+  @override
+  String get watchNextNoApps =>
+      'Şu anda Sıradakiler içeriği sağlayan medya uygulaması yok';
+
+  @override
+  String get watchNextShowAllApps => 'Yüklü tüm uygulamaları göster';
+
+  @override
   String get redditWallpaper => 'Reddit duvar kağıdı';
 
   @override

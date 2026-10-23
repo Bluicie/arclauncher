@@ -47,6 +47,25 @@ void main() async {
     expect(settingsService.watchNextBigPictureMode, isFalse);
   });
 
+  test("watchNextExcludedPackages default and toggle", () async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final settingsService = SettingsService(sharedPreferences);
+
+    expect(settingsService.watchNextExcludedPackages, isEmpty);
+    expect(settingsService.isWatchNextPackageExcluded("com.plexapp.android"), isFalse);
+
+    await settingsService.toggleWatchNextExcludedPackage("com.plexapp.android");
+    expect(settingsService.watchNextExcludedPackages, ["com.plexapp.android"]);
+    expect(settingsService.isWatchNextPackageExcluded("com.plexapp.android"), isTrue);
+
+    await settingsService.toggleWatchNextExcludedPackage("com.netflix.ninja");
+    expect(settingsService.watchNextExcludedPackages, ["com.plexapp.android", "com.netflix.ninja"]);
+
+    await settingsService.toggleWatchNextExcludedPackage("com.plexapp.android");
+    expect(settingsService.watchNextExcludedPackages, ["com.netflix.ninja"]);
+    expect(settingsService.isWatchNextPackageExcluded("com.plexapp.android"), isFalse);
+  });
+
 
   test("setUse24HourTimeFormat", () async {
     final sharedPreferences = await SharedPreferences.getInstance();

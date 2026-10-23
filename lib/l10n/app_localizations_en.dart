@@ -459,6 +459,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchNextResume => 'Resume';
 
   @override
+  String get watchNextRefresh => 'Refresh content';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Reload recommendations from media providers';
+
+  @override
+  String get watchNextRefreshed => 'Watch Next content refreshed';
+
+  @override
+  String get watchNextFilterApps => 'Filter apps';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Select which apps can display content in Watch Next';
+
+  @override
+  String get watchNextNoApps =>
+      'No media apps currently providing Watch Next content';
+
+  @override
+  String get watchNextShowAllApps => 'Show all installed apps';
+
+  @override
   String get redditWallpaper => 'Reddit wallpaper';
 
   @override

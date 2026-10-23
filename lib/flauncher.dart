@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -63,6 +64,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
   final GlobalKey<FocusAwareAppBarState> _appBarKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _dockKey = GlobalKey();
+  late final _HeroBackdropBaker _heroBackdropBaker = _HeroBackdropBaker();
 
   @override
   void initState() {
@@ -74,6 +76,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
+    _heroBackdropBaker.dispose();
     super.dispose();
   }
 
@@ -105,6 +108,13 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                 final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(activeItem) : null;
                 final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
                 final hasHeroBackdrop = isBigPicture && heroBytes != null;
+                final screenSize = MediaQuery.sizeOf(context);
+                final dpr = MediaQuery.devicePixelRatioOf(context);
+                _heroBackdropBaker.update(
+                  bytes: hasHeroBackdrop ? heroBytes : null,
+                  size: screenSize,
+                  dpr: dpr,
+                );
                 return Stack(
                   children: [
                     // Crossfade between wallpapers (each one has a revision-based key).
@@ -114,13 +124,32 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                           ? const SizedBox.shrink(key: ValueKey('occluded_wallpaper'))
                           : _wallpaper(context, wallpaperService),
                     ),
-                    // Hero items crossfade inside _CachedHeroBackground once baked.
+                    // Hero items crossfade once baked simultaneously with dock blur.
                     AnimatedSwitcher(
                       duration: _kHeroFadeDuration,
                       child: hasHeroBackdrop
                           ? RepaintBoundary(
                               key: const ValueKey('hero_bg'),
-                              child: _CachedHeroBackground(bytes: heroBytes),
+                              child: ListenableBuilder(
+                                listenable: _heroBackdropBaker,
+                                builder: (context, _) {
+                                  final heroImage = _heroBackdropBaker.textures?.hero;
+                                  return AnimatedSwitcher(
+                                    duration: _kHeroFadeDuration,
+                                    switchInCurve: Curves.easeOutCubic,
+                                    switchOutCurve: Curves.easeInCubic,
+                                    child: heroImage == null
+                                        ? const SizedBox.expand(key: ValueKey('empty_hero'))
+                                        : RawImage(
+                                            key: ObjectKey(heroImage),
+                                            image: heroImage,
+                                            width: screenSize.width,
+                                            height: screenSize.height,
+                                            fit: BoxFit.fill,
+                                          ),
+                                  );
+                                },
+                              ),
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
                     ),
@@ -160,42 +189,36 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               },
             ),
           ),
-          Selector4<LauncherState, SettingsService, WallpaperService, WatchNextService, (bool, bool, bool, bool, Uint8List?, String?)>(
-            selector: (_, launcherState, settings, wallpaperService, watchNextService) {
-              final isBigPicture = settings.showWatchNextSection && settings.watchNextBigPictureMode;
-              final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(watchNextService.activeHeroItem) : null;
-              final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
-              final hasHeroBackdrop = isBigPicture && heroBytes != null;
-              return (
-                launcherState.appGridFocused,
-                settings.backgroundBlurDisabled,
-                wallpaperService.wallpaperVideoFile != null,
-                hasHeroBackdrop,
-                heroBytes,
-                heroUri,
-              );
-            },
+          Selector3<LauncherState, SettingsService, WallpaperService, (bool, bool, bool)>(
+            selector: (_, launcherState, settings, wallpaperService) => (
+              launcherState.appGridFocused,
+              settings.backgroundBlurDisabled,
+              wallpaperService.wallpaperVideoFile != null,
+            ),
             builder: (_, data, __) {
-              final (appGridFocused, blurDisabled, hasVideoWallpaper, hasHeroBackdrop, heroBytes, heroUri) = data;
-              if (hasVideoWallpaper && !hasHeroBackdrop) {
-                return const SizedBox.shrink();
-              }
-              final ImageProvider? imageProvider = hasHeroBackdrop ? ResizeImage(MemoryImage(heroBytes!), width: 960) : null;
-              final Object? imageKey = hasHeroBackdrop ? heroUri : null;
-              return Positioned.fill(
-                child: IgnorePointer(
-                  child: AnimatedOpacity(
-                    opacity: appGridFocused && !blurDisabled ? 1 : 0,
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeInOut,
-                    child: CachedBlurLayer(
-                      sigma: 10,
-                      imageProvider: imageProvider,
-                      imageKey: imageKey,
-                      hidden: !appGridFocused || blurDisabled,
+              final (appGridFocused, blurDisabled, hasVideoWallpaper) = data;
+              return ListenableBuilder(
+                listenable: _heroBackdropBaker,
+                builder: (context, _) {
+                  final gridBlur = _heroBackdropBaker.textures?.gridBlur;
+                  if (hasVideoWallpaper && gridBlur == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Positioned.fill(
+                    child: IgnorePointer(
+                      child: AnimatedOpacity(
+                        opacity: appGridFocused && !blurDisabled ? 1 : 0,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                        child: CachedBlurLayer(
+                          sigma: 10,
+                          prebakedBlur: gridBlur,
+                          hidden: !appGridFocused || blurDisabled,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
             },
           ),
@@ -565,19 +588,14 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
           clipBehavior: Clip.antiAlias,
           child: backdropDisabled
               ? content
-              : Selector<WatchNextService, (Uint8List?, String?)>(
-                  selector: (_, watchNextService) {
-                    final item = isBigPicture ? watchNextService.activeHeroItem : null;
-                    final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(item) : null;
-                    return (watchNextService.getCachedPoster(heroUri), heroUri);
-                  },
+              : ListenableBuilder(
+                  listenable: _heroBackdropBaker,
                   child: content,
-                  builder: (_, hero, child) {
-                    final (heroBytes, heroUri) = hero;
+                  builder: (_, child) {
+                    final dockBlur = _heroBackdropBaker.textures?.dockBlur;
                     return CachedBlurBackdrop(
                       sigma: 5,
-                      imageProvider: heroBytes != null ? ResizeImage(MemoryImage(heroBytes), width: 960) : null,
-                      imageKey: heroBytes != null ? heroUri : null,
+                      prebakedBlur: dockBlur,
                       child: child!,
                     );
                   },
@@ -704,104 +722,197 @@ class _CachedGradientBackgroundState extends State<_CachedGradientBackground> {
   }
 }
 
-/// Bakes the hero image and its cinematic scrim into one screen-sized texture,
-/// so the immersive background costs a single image draw per frame like a
-/// static wallpaper instead of an image plus two full-screen gradients.
-class _CachedHeroBackground extends StatefulWidget {
-  final Uint8List bytes;
-
-  const _CachedHeroBackground({required this.bytes});
-
-  @override
-  State<_CachedHeroBackground> createState() => _CachedHeroBackgroundState();
-}
-
 const _kHeroFadeDuration = Duration(milliseconds: 600);
 
-class _CachedHeroBackgroundState extends State<_CachedHeroBackground> {
-  ui.Image? _image;
-  Size _renderedSize = Size.zero;
-  Uint8List? _renderedBytes;
-  bool _rendering = false;
+class _HeroBackdropTextures {
+  final ui.Image hero;
+  final ui.Image dockBlur;
+  final ui.Image gridBlur;
+  final Uint8List bytes;
+  bool _disposed = false;
+
+  _HeroBackdropTextures({
+    required this.hero,
+    required this.dockBlur,
+    required this.gridBlur,
+    required this.bytes,
+  });
+
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    hero.dispose();
+    dockBlur.dispose();
+    gridBlur.dispose();
+  }
+}
+
+class _HeroBackdropBaker extends ChangeNotifier {
+  _HeroBackdropTextures? _current;
+  final List<_HeroBackdropTextures> _disposedTextures = [];
+  Uint8List? _requestedBytes;
+  Size _requestedSize = Size.zero;
+  double _requestedDpr = 1.0;
+  Size _currentSize = Size.zero;
+  double _currentDpr = 1.0;
+  bool _baking = false;
+
+  _HeroBackdropTextures? get textures => _current;
+
+  void update({required Uint8List? bytes, required Size size, required double dpr}) {
+    if (identical(bytes, _requestedBytes) && size == _requestedSize && dpr == _requestedDpr) {
+      return;
+    }
+    _requestedBytes = bytes;
+    _requestedSize = size;
+    _requestedDpr = dpr;
+
+    if (bytes == null || size.width <= 0 || size.height <= 0) {
+      if (_current != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_requestedBytes == null && _current != null) {
+            _scheduleDispose(_current!);
+            _current = null;
+            notifyListeners();
+          }
+        });
+      }
+      return;
+    }
+
+    if (!_baking) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_baking && _requestedBytes != null) {
+          _bake();
+        }
+      });
+    }
+  }
+
+  void _scheduleDispose(_HeroBackdropTextures textures) {
+    _disposedTextures.add(textures);
+    Timer(const Duration(milliseconds: 1000), () {
+      _disposedTextures.remove(textures);
+      textures.dispose();
+    });
+  }
+
+  Future<void> _bake() async {
+    if (_baking) return;
+    _baking = true;
+    try {
+      while (_requestedBytes != null &&
+          (_current == null ||
+              !identical(_requestedBytes, _current!.bytes) ||
+              _requestedSize != _currentSize ||
+              _requestedDpr != _currentDpr)) {
+        final bytes = _requestedBytes!;
+        final size = _requestedSize;
+        final dpr = _requestedDpr;
+
+        final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
+        final codec = await ui.instantiateImageCodecWithSize(
+          await ui.ImmutableBuffer.fromUint8List(bytes),
+          getTargetSize: (w, h) {
+            final scale = min(1.0, max(pxSize.width / w, pxSize.height / h));
+            return ui.TargetImageSize(width: (w * scale).round(), height: (h * scale).round());
+          },
+        );
+        final source = (await codec.getNextFrame()).image;
+        codec.dispose();
+
+        if (!identical(bytes, _requestedBytes)) {
+          source.dispose();
+          continue;
+        }
+
+        // 1. Full-screen hero background with cinematic scrim
+        final heroRecorder = ui.PictureRecorder();
+        final heroCanvas = Canvas(heroRecorder);
+        paintImage(canvas: heroCanvas, rect: Offset.zero & pxSize, image: source, fit: BoxFit.cover);
+        const _CinematicScrimPainter().paint(heroCanvas, pxSize);
+        final heroPicture = heroRecorder.endRecording();
+        final heroImage = heroPicture.toImageSync(pxSize.width.toInt(), pxSize.height.toInt());
+        heroPicture.dispose();
+
+        // 2. Dock blur snapshot (960x540, sigma 5)
+        final double targetWidth = min(size.width * dpr, 960.0);
+        final double targetHeight = min(size.height * dpr, 540.0);
+        final pxWidth = targetWidth.round();
+        final pxHeight = targetHeight.round();
+        final blurRect = Rect.fromLTWH(0, 0, pxWidth.toDouble(), pxHeight.toDouble());
+        final double scaleFactor = pxWidth / size.width;
+
+        final dockRecorder = ui.PictureRecorder();
+        final dockCanvas = Canvas(dockRecorder);
+        final dockPaint = Paint()
+          ..imageFilter = ui.ImageFilter.blur(
+            sigmaX: 5.0 * scaleFactor,
+            sigmaY: 5.0 * scaleFactor,
+            tileMode: TileMode.clamp,
+          );
+        dockCanvas.saveLayer(blurRect, dockPaint);
+        paintImage(canvas: dockCanvas, rect: blurRect, image: source, fit: BoxFit.cover, filterQuality: FilterQuality.low);
+        dockCanvas.restore();
+        final dockPicture = dockRecorder.endRecording();
+        final dockImage = dockPicture.toImageSync(pxWidth, pxHeight);
+        dockPicture.dispose();
+
+        // 3. App grid blur snapshot (960x540, sigma 10)
+        final gridRecorder = ui.PictureRecorder();
+        final gridCanvas = Canvas(gridRecorder);
+        final gridPaint = Paint()
+          ..imageFilter = ui.ImageFilter.blur(
+            sigmaX: 10.0 * scaleFactor,
+            sigmaY: 10.0 * scaleFactor,
+            tileMode: TileMode.clamp,
+          );
+        gridCanvas.saveLayer(blurRect, gridPaint);
+        paintImage(canvas: gridCanvas, rect: blurRect, image: source, fit: BoxFit.cover, filterQuality: FilterQuality.low);
+        gridCanvas.restore();
+        final gridPicture = gridRecorder.endRecording();
+        final gridImage = gridPicture.toImageSync(pxWidth, pxHeight);
+        gridPicture.dispose();
+
+        source.dispose();
+
+        if (!identical(bytes, _requestedBytes)) {
+          heroImage.dispose();
+          dockImage.dispose();
+          gridImage.dispose();
+          continue;
+        }
+
+        final old = _current;
+        _current = _HeroBackdropTextures(
+          hero: heroImage,
+          dockBlur: dockImage,
+          gridBlur: gridImage,
+          bytes: bytes,
+        );
+        _currentSize = size;
+        _currentDpr = dpr;
+
+        if (old != null) {
+          _scheduleDispose(old);
+        }
+
+        notifyListeners();
+      }
+    } finally {
+      _baking = false;
+    }
+  }
 
   @override
   void dispose() {
-    _image?.dispose();
+    for (final t in _disposedTextures) {
+      t.dispose();
+    }
+    _disposedTextures.clear();
+    _current?.dispose();
+    _current = null;
     super.dispose();
-  }
-
-  Future<void> _render(Size size, double dpr) async {
-    if (_rendering) {
-      return;
-    }
-    _rendering = true;
-    final bytes = widget.bytes;
-    try {
-      final pxSize = Size((size.width * dpr).roundToDouble(), (size.height * dpr).roundToDouble());
-      final codec = await ui.instantiateImageCodecWithSize(
-        await ui.ImmutableBuffer.fromUint8List(bytes),
-        getTargetSize: (w, h) {
-          final scale = min(1.0, max(pxSize.width / w, pxSize.height / h));
-          return ui.TargetImageSize(width: (w * scale).round(), height: (h * scale).round());
-        },
-      );
-      final source = (await codec.getNextFrame()).image;
-      codec.dispose();
-      final recorder = ui.PictureRecorder();
-      final canvas = Canvas(recorder);
-      paintImage(canvas: canvas, rect: Offset.zero & pxSize, image: source, fit: BoxFit.cover);
-      const _CinematicScrimPainter().paint(canvas, pxSize);
-      final picture = recorder.endRecording();
-      final image = picture.toImageSync(pxSize.width.toInt(), pxSize.height.toInt());
-      picture.dispose();
-      source.dispose();
-      if (!mounted) {
-        image.dispose();
-        return;
-      }
-      // Hero changed mid-bake (fast scrolling): drop this one, build() re-bakes the latest.
-      if (!identical(bytes, widget.bytes)) {
-        image.dispose();
-        setState(() {});
-        return;
-      }
-      setState(() {
-        _image?.dispose();
-        _image = image;
-        _renderedSize = size;
-        _renderedBytes = bytes;
-      });
-    } finally {
-      _rendering = false;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final dpr = MediaQuery.devicePixelRatioOf(context);
-    if ((size != _renderedSize || !identical(widget.bytes, _renderedBytes)) && size.width > 0 && size.height > 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _render(size, dpr);
-      });
-    }
-    final image = _image;
-    // Previous hero stays up until the next one is baked, then they crossfade
-    // (RawImage holds its own clone, so the outgoing one survives disposal).
-    return AnimatedSwitcher(
-      duration: _kHeroFadeDuration,
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
-      child: image == null
-          ? const SizedBox.expand()
-          : RawImage(
-              key: ObjectKey(image),
-              image: image,
-              width: size.width,
-              height: size.height,
-              fit: BoxFit.fill,
-            ),
-    );
   }
 }
 

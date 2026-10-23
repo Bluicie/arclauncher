@@ -42,6 +42,7 @@ class CachedBlurLayer extends StatefulWidget {
   final double sigma;
   final ImageProvider? imageProvider;
   final Object? imageKey;
+  final ui.Image? prebakedBlur;
 
   /// While hidden, skip re-snapshotting; the stale snapshot is refreshed once shown.
   final bool hidden;
@@ -51,6 +52,7 @@ class CachedBlurLayer extends StatefulWidget {
     required this.sigma,
     this.imageProvider,
     this.imageKey,
+    this.prebakedBlur,
     this.hidden = false,
   });
 
@@ -69,6 +71,9 @@ class _CachedBlurLayerState extends _CachedBlurBackgroundState<CachedBlurLayer> 
   Object? get customImageKey => widget.imageKey;
 
   @override
+  ui.Image? get prebakedBlur => widget.prebakedBlur;
+
+  @override
   bool get hidden => widget.hidden;
 
   @override
@@ -82,6 +87,7 @@ class CachedBlurBackdrop extends StatefulWidget {
   final double sigma;
   final ImageProvider? imageProvider;
   final Object? imageKey;
+  final ui.Image? prebakedBlur;
   final Widget child;
 
   const CachedBlurBackdrop({
@@ -89,6 +95,7 @@ class CachedBlurBackdrop extends StatefulWidget {
     required this.sigma,
     this.imageProvider,
     this.imageKey,
+    this.prebakedBlur,
     required this.child,
   });
 
@@ -105,6 +112,9 @@ class _CachedBlurBackdropState extends _CachedBlurBackgroundState<CachedBlurBack
 
   @override
   Object? get customImageKey => widget.imageKey;
+
+  @override
+  ui.Image? get prebakedBlur => widget.prebakedBlur;
 
   @override
   Widget buildBlurContent(Widget blurBackground) {
@@ -138,6 +148,7 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
 
   ImageProvider? get customImageProvider => null;
   Object? get customImageKey => null;
+  ui.Image? get prebakedBlur => null;
   bool get hidden => false;
 
   Widget buildBlurContent(Widget blurBackground);
@@ -220,9 +231,10 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
 
   @override
   Widget build(BuildContext context) {
+    final prebaked = prebakedBlur;
     final service = context.watch<WallpaperService>();
     // Video wallpapers are not static: keep the live blur ONLY if no custom image provider is given.
-    if (customImageProvider == null && service.wallpaperVideoFile != null) {
+    if (prebaked == null && customImageProvider == null && service.wallpaperVideoFile != null) {
       return buildLiveBlur();
     }
 
@@ -230,20 +242,22 @@ abstract class _CachedBlurBackgroundState<T extends StatefulWidget> extends Stat
       builder: (context, constraints) {
         final screen = MediaQuery.sizeOf(context);
         final dpr = MediaQuery.devicePixelRatioOf(context);
-        final gradientId = (customImageProvider ?? service.wallpaper) == null ? service.gradient.uuid : null;
-        final stale =
-            _blurred == null ||
-            _builtSize != screen ||
-            _builtRevision != service.wallpaperRevision ||
-            _builtGradientId != gradientId ||
-            _builtSigma != sigma ||
-            _builtCustomKey != customImageKey;
-        if (stale && !hidden && screen.width > 0 && screen.height > 0) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _build(service, screen, dpr);
-          });
+        if (prebaked == null) {
+          final gradientId = (customImageProvider ?? service.wallpaper) == null ? service.gradient.uuid : null;
+          final stale =
+              _blurred == null ||
+              _builtSize != screen ||
+              _builtRevision != service.wallpaperRevision ||
+              _builtGradientId != gradientId ||
+              _builtSigma != sigma ||
+              _builtCustomKey != customImageKey;
+          if (stale && !hidden && screen.width > 0 && screen.height > 0) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _build(service, screen, dpr);
+            });
+          }
         }
-        final image = _blurred;
+        final image = prebaked ?? _blurred;
         // Keep the previous snapshot while a new one is built to avoid a blur-less flash.
         if (image == null) {
           return buildLiveBlur();

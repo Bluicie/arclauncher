@@ -23,11 +23,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/models/watch_next_item.dart';
+import 'package:flauncher/providers/settings_service.dart';
 import 'package:http/http.dart' as http;
 
 class WatchNextService extends ChangeNotifier {
   final FLauncherChannel _fLauncherChannel;
+  final SettingsService? _settingsService;
 
+  List<WatchNextItem> _allRawItems = [];
   List<WatchNextItem> _items = [];
   bool _isLoading = false;
   bool _hasPermission = false;
@@ -47,6 +50,14 @@ class WatchNextService extends ChangeNotifier {
   int get activeHeroIndex => _activeHeroIndex;
   WatchNextItem? get activeHeroItem =>
       _items.isNotEmpty && _activeHeroIndex < _items.length ? _items[_activeHeroIndex] : null;
+
+  Set<String> get availablePackageNames {
+    return _allRawItems
+        .map((item) => item.packageName)
+        .whereType<String>()
+        .where((pkg) => pkg.trim().isNotEmpty)
+        .toSet();
+  }
 
   String? getPosterUriForItem(WatchNextItem? item) {
     if (item == null) return null;
@@ -87,8 +98,14 @@ class WatchNextService extends ChangeNotifier {
     }
   }
 
-  WatchNextService(this._fLauncherChannel) {
+  WatchNextService(this._fLauncherChannel, {SettingsService? settingsService})
+      : _settingsService = settingsService {
+    _settingsService?.addListener(_onSettingsChanged);
     _init();
+  }
+
+  void _onSettingsChanged() {
+    _applyFilterAndNotify();
   }
 
   void _init() async {
@@ -100,6 +117,7 @@ class WatchNextService extends ChangeNotifier {
 
   @override
   void dispose() {
+    _settingsService?.removeListener(_onSettingsChanged);
     _refreshTimer?.cancel();
     _posterNotifyDebounce?.cancel();
     super.dispose();
@@ -123,11 +141,18 @@ class WatchNextService extends ChangeNotifier {
     }
   }
 
+  Future<void> forceRefresh() async {
+    _posterCache.clear();
+    _failedPosters.clear();
+    await refreshPermissionAndItems();
+  }
+
   Future<void> refreshPermissionAndItems() async {
     await checkPermission();
     if (_hasPermission) {
       await refreshItems();
     } else {
+      _allRawItems = [];
       _items = [];
       notifyListeners();
     }
@@ -139,6 +164,7 @@ class WatchNextService extends ChangeNotifier {
     if (!_hasPermission) {
       await checkPermission();
       if (!_hasPermission) {
+        _allRawItems = [];
         _items = [];
         notifyListeners();
         return;
@@ -150,21 +176,34 @@ class WatchNextService extends ChangeNotifier {
 
     try {
       final results = await _fLauncherChannel.getWatchNextItems();
-      _items = results.map((map) => WatchNextItem.fromMap(map)).toList();
-
-      if (_activeHeroIndex >= _items.length) {
-        _activeHeroIndex = 0;
-      }
-      _ensureActiveHeroImageLoaded();
-
+      _allRawItems = results.map((map) => WatchNextItem.fromMap(map)).toList();
+      _applyFilterAndNotify();
       unawaited(_preloadInitialPosters());
     } catch (e) {
       debugPrint('WatchNext: Error loading items: $e');
+      _allRawItems = [];
       _items = [];
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _applyFilterAndNotify() {
+    final excluded = _settingsService?.watchNextExcludedPackages ?? const [];
+    _items = _allRawItems.where((item) {
+      final pkg = item.packageName;
+      if (pkg != null && excluded.contains(pkg)) {
+        return false;
+      }
+      return true;
+    }).toList();
+
+    if (_activeHeroIndex >= _items.length) {
+      _activeHeroIndex = 0;
+    }
+    _ensureActiveHeroImageLoaded();
+    notifyListeners();
   }
 
   Future<void> _preloadInitialPosters() async {

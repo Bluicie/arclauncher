@@ -946,6 +946,48 @@ abstract class AppLocalizations {
   /// **'Resume'**
   String get watchNextResume;
 
+  /// No description provided for @watchNextRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh content'**
+  String get watchNextRefresh;
+
+  /// No description provided for @watchNextRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload recommendations from media providers'**
+  String get watchNextRefreshDescription;
+
+  /// No description provided for @watchNextRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Next content refreshed'**
+  String get watchNextRefreshed;
+
+  /// No description provided for @watchNextFilterApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter apps'**
+  String get watchNextFilterApps;
+
+  /// No description provided for @watchNextFilterAppsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select which apps can display content in Watch Next'**
+  String get watchNextFilterAppsDescription;
+
+  /// No description provided for @watchNextNoApps.
+  ///
+  /// In en, this message translates to:
+  /// **'No media apps currently providing Watch Next content'**
+  String get watchNextNoApps;
+
+  /// No description provided for @watchNextShowAllApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all installed apps'**
+  String get watchNextShowAllApps;
+
   /// No description provided for @redditWallpaper.
   ///
   /// In en, this message translates to:

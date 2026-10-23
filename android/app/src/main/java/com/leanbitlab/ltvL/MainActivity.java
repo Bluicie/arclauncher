@@ -798,7 +798,7 @@ public class MainActivity extends FlutterActivity {
 
                 if (cursor != null && cursor.moveToFirst()) {
                     int count = 0;
-                    int fetchLimit = Math.max(limit * 3, 30);
+                    int fetchLimit = Math.max(limit * 3, 150);
 
                     do {
                         try {
@@ -870,6 +870,7 @@ public class MainActivity extends FlutterActivity {
             android.util.Log.e("MainActivity", "Error querying Watch Next", e);
         }
 
+        android.util.Log.d("MainActivity", "getWatchNextItems: total retrieved = " + items.size() + ", limit = " + limit);
         return items.subList(0, Math.min(items.size(), limit));
     }
 

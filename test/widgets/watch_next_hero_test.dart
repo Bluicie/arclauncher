@@ -94,6 +94,13 @@ class TestWatchNextService extends ChangeNotifier implements WatchNextService {
 
   @override
   Future<void> requestPermission() async {}
+
+  @override
+  Set<String> get availablePackageNames =>
+      _items.map((e) => e.packageName).whereType<String>().toSet();
+
+  @override
+  Future<void> forceRefresh() async {}
 }
 
 class TestAppsService extends ChangeNotifier implements AppsService {

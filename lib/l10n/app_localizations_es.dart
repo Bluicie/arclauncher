@@ -464,6 +464,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get watchNextResume => 'Reanudar';
 
   @override
+  String get watchNextRefresh => 'Actualizar contenido';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Recargar recomendaciones de los proveedores multimedia';
+
+  @override
+  String get watchNextRefreshed => 'Contenido de Seguir viendo actualizado';
+
+  @override
+  String get watchNextFilterApps => 'Filtrar aplicaciones';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Selecciona qué aplicaciones pueden mostrar contenido en Seguir viendo';
+
+  @override
+  String get watchNextNoApps =>
+      'Ninguna aplicación multimedia proporciona contenido actualmente';
+
+  @override
+  String get watchNextShowAllApps =>
+      'Mostrar todas las aplicaciones instaladas';
+
+  @override
   String get redditWallpaper => 'Fondo de Reddit';
 
   @override

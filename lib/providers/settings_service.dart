@@ -46,6 +46,7 @@ const String _dockBackdropFilterDisabled = "dock_backdrop_filter_disabled";
 const String _backgroundBlurDisabled = "background_blur_disabled";
 const String _showWatchNextSection = "show_watch_next_section";
 const String _watchNextBigPictureMode = "watch_next_big_picture_mode";
+const String _watchNextExcludedPackages = "watch_next_excluded_packages";
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
 const String _showFocusBorders = "show_focus_borders";
@@ -250,6 +251,27 @@ class SettingsService extends ChangeNotifier {
   Future<void> setWatchNextBigPictureMode(bool value) async {
     return set(_watchNextBigPictureMode, value);
   }
+
+  List<String> get watchNextExcludedPackages =>
+      _sharedPreferences.getStringList(_watchNextExcludedPackages) ?? const [];
+
+  Future<void> setWatchNextExcludedPackages(List<String> packages) async {
+    await _sharedPreferences.setStringList(_watchNextExcludedPackages, packages);
+    notifyListeners();
+  }
+
+  Future<void> toggleWatchNextExcludedPackage(String packageName) async {
+    final current = List<String>.from(watchNextExcludedPackages);
+    if (current.contains(packageName)) {
+      current.remove(packageName);
+    } else {
+      current.add(packageName);
+    }
+    await setWatchNextExcludedPackages(current);
+  }
+
+  bool isWatchNextPackageExcluded(String packageName) =>
+      watchNextExcludedPackages.contains(packageName);
 
   Future<void> setDockDarkBackground(bool value) async {
     return set(_dockDarkBackground, value);

@@ -448,6 +448,60 @@ class AppLocalizationsVi extends AppLocalizations {
   String get checkStatus => 'Kiểm tra trạng thái';
 
   @override
+  String get watchNextBigPictureMode => 'Chế độ chìm đắm';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Hiển thị hình nền nổi bật toàn màn hình với nút xem tác vụ';
+
+  @override
+  String get watchNextWatch => 'Xem';
+
+  @override
+  String get watchNextResume => 'Tiếp tục xem';
+
+  @override
+  String get watchNextRefresh => 'Làm mới nội dung';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Tải lại đề xuất từ các ứng dụng đa phương tiện';
+
+  @override
+  String get watchNextRefreshed => 'Đã làm mới nội dung Tiếp tục xem';
+
+  @override
+  String get watchNextFilterApps => 'Lọc ứng dụng';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Chọn ứng dụng có thể hiển thị nội dung trong Tiếp tục xem';
+
+  @override
+  String get watchNextNoApps =>
+      'Hiện không có ứng dụng truyền thông nào cung cấp nội dung Tiếp tục xem';
+
+  @override
+  String get watchNextShowAllApps => 'Hiển thị tất cả ứng dụng đã cài đặt';
+
+  @override
+  String get watchNextHideWithoutImages => 'Ẩn chương trình không có hình ảnh';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Chỉ hiển thị các chương trình có hình ảnh áp phích hoặc hình nền';
+
+  @override
+  String get watchNextMaxItems => 'Số lượng chương trình tối đa';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Giới hạn số lượng chương trình hiển thị trong Tiếp tục xem';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Không giới hạn';
+
+  @override
   String get redditWallpaper => 'Hình nền Reddit';
 
   @override

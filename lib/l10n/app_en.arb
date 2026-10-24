@@ -252,5 +252,90 @@
     "redditSubredditAdded": "Subreddit added",
     "redditSubredditInvalid": "Please enter a valid subreddit name",
     "redditWallpaperUpdated": "Wallpaper updated successfully",
-    "redditWallpaperFailed": "Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings."
+    "redditWallpaperFailed": "Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings.",
+    "addToFavorites": "Add to Fav",
+    "removeFromFavorites": "Remove from Fav",
+    "addToCategory": "Add to Category",
+    "setCustomBanner": "Set Custom Banner",
+    "clearCustomBanner": "Clear Custom Banner",
+    "customBannerSetFailed": "Failed to set banner: {error}",
+    "customBannerClearFailed": "Failed to clear banner: {error}",
+    "selectImage": "Select Image",
+    "selectVideo": "Select Video",
+    "mediaItemCount": "{count} items",
+    "noImagesFound": "No images found on device",
+    "noVideosFound": "No videos found on device",
+    "mediaNavigationHint": "D-pad: navigate  •  Back: cancel",
+    "mediaSelectionHint": "D-pad: navigate  •  Select: set wallpaper  •  Back: cancel",
+    "mediaPermissionRequired": "Media access permission is required",
+    "mediaPermissionHelp": "Grant permission to browse photos and videos",
+    "preview": "Preview",
+    "colorPurple": "Purple",
+    "colorTeal": "Teal",
+    "colorBlue": "Blue",
+    "colorOrange": "Orange",
+    "colorPink": "Pink",
+    "colorGreen": "Green",
+    "colorWhite": "White",
+    "colorYellow": "Yellow",
+    "colorRed": "Red",
+    "colorCyan": "Cyan",
+    "colorIndigo": "Indigo",
+    "colorLime": "Lime",
+    "colorAmber": "Amber",
+    "colorRose": "Rose",
+    "colorIceBlue": "Ice Blue",
+    "clockStyleMinimal": "Minimal",
+    "clockStyleMinimalDescription": "Thin, elegant font (Default)",
+    "clockStyleBold": "Bold",
+    "clockStyleBoldDescription": "Thick, highly visible font",
+    "clockStyleRetro": "Retro",
+    "clockStyleRetroDescription": "Monospaced, retro terminal style",
+    "clockStyleElegant": "Elegant",
+    "clockStyleElegantDescription": "Classic serif typeface",
+    "clockStyleNeon": "Neon",
+    "clockStyleNeonDescription": "Ultra-thin, glowing style",
+    "clockStylePixel": "Pixel",
+    "clockStylePixelDescription": "Bold monospaced, arcade feel",
+    "clockStyleDigital": "Digital",
+    "clockStyleDigitalDescription": "Clean monospaced display",
+    "brightnessPermissionRequired": "Permission Required",
+    "brightnessPermissionHelp": "To control brightness on this device, you must grant permission via ADB:",
+    "brightnessExperimentalNotice": "EXPERIMENTAL: This feature is untested and may be removed in future versions based on user feedback.",
+    "brightnessDeviceSupportNote": "Note: Some Android TV devices may not support app-level brightness control.",
+    "enableBrightnessScheduler": "Enable Scheduler",
+    "currentBrightnessSlot": "Current: {slot}",
+    "brightnessSlotMorning": "6 AM - 9 AM",
+    "brightnessSlotDay": "9 AM - 3 PM",
+    "brightnessSlotAfternoon": "3 PM - 6 PM",
+    "brightnessSlotEvening": "6 PM - 10 PM",
+    "brightnessSlotNight": "10 PM - 6 AM",
+    "@customBannerSetFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
+    },
+    "@customBannerClearFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
+    },
+    "@mediaItemCount": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "@currentBrightnessSlot": {
+      "placeholders": {
+        "slot": {
+          "type": "String"
+        }
+      }
+    }
 }

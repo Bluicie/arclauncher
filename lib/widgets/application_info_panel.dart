@@ -105,7 +105,7 @@ class _ApplicationInfoPanelState extends State<ApplicationInfoPanel>
                        children: [
                          const Icon(Icons.add_box_outlined),
                          Container(width: 8),
-                         Text('Add to Category', style: Theme.of(context).textTheme.bodyMedium),
+                         Text(localizations.addToCategory, style: Theme.of(context).textTheme.bodyMedium),
                        ],
                      ),
                      onPressed: () async {
@@ -153,7 +153,7 @@ class _ApplicationInfoPanelState extends State<ApplicationInfoPanel>
                              Container(width: 8),
                              Flexible(
                                child: Text(
-                                 isInFavorites ? 'Remove from Fav' : 'Add to Fav',
+                                 isInFavorites ? localizations.removeFromFavorites : localizations.addToFavorites,
                                  style: Theme.of(context).textTheme.bodyMedium,
                                  overflow: TextOverflow.ellipsis,
                                ),
@@ -218,7 +218,7 @@ class _ApplicationInfoPanelState extends State<ApplicationInfoPanel>
                                children: [
                                  const Icon(Icons.image_search),
                                  Container(width: 8),
-                                 Text('Set Custom Banner', style: Theme.of(context).textTheme.bodyMedium),
+                                 Text(localizations.setCustomBanner, style: Theme.of(context).textTheme.bodyMedium),
                                ],
                              ),
 onPressed: () async {
@@ -244,7 +244,7 @@ onPressed: () async {
                                } catch (e) {
                                  if (context.mounted) {
                                    ScaffoldMessenger.of(context).showSnackBar(
-                                     SnackBar(content: Text('Failed to set banner: $e')),
+                                     SnackBar(content: Text(localizations.customBannerSetFailed(e.toString()))),
                                    );
                                  }
                                }
@@ -257,7 +257,7 @@ onPressed: () async {
                                  children: [
                                    const Icon(Icons.hide_image_outlined),
                                    Container(width: 8),
-                                   Text('Clear Custom Banner', style: Theme.of(context).textTheme.bodyMedium),
+                                   Text(localizations.clearCustomBanner, style: Theme.of(context).textTheme.bodyMedium),
                                  ],
                                ),
                                onPressed: () async {
@@ -271,7 +271,7 @@ onPressed: () async {
                                  } catch (e) {
                                    if (context.mounted) {
                                      ScaffoldMessenger.of(context).showSnackBar(
-                                       SnackBar(content: Text('Failed to clear banner: $e')),
+                                       SnackBar(content: Text(localizations.customBannerClearFailed(e.toString()))),
                                      );
                                    }
                                  }

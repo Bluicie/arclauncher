@@ -61,7 +61,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Permission Required',
+                                      localizations.brightnessPermissionRequired,
                                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         color: Colors.orange,
                                         fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              const Text('To control brightness on this device, you must grant permission via ADB:'),
+                              Text(localizations.brightnessPermissionHelp),
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(8),
@@ -110,7 +110,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                     RoundedSwitchListTile(
                       autofocus: true,
                       title: Text(
-                        'Enable Scheduler',
+                        localizations.enableBrightnessScheduler,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       secondary: Icon(isEnabled ? Icons.schedule : Icons.schedule_outlined),
@@ -123,7 +123,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          'Current: ${currentSlot.label}',
+                          localizations.currentBrightnessSlot(_slotLabel(localizations, currentSlot)),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -158,7 +158,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    'EXPERIMENTAL: This feature is untested and may be removed in future versions based on user feedback.',
+                                    localizations.brightnessExperimentalNotice,
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.redAccent,
                                       fontWeight: FontWeight.bold,
@@ -170,7 +170,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Note: Some Android TV devices may not support app-level brightness control.',
+                            localizations.brightnessDeviceSupportNote,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.white54,
                               fontStyle: FontStyle.italic,
@@ -236,6 +236,7 @@ class _TimeSlotSliderState extends State<_TimeSlotSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Actions(
       actions: <Type, Action<Intent>>{
         // Intercept left/right to control slider, let up/down pass through for navigation
@@ -287,7 +288,7 @@ class _TimeSlotSliderState extends State<_TimeSlotSlider> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        widget.slot.label,
+                        _slotLabel(localizations, widget.slot),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: widget.isCurrentSlot ? FontWeight.bold : FontWeight.normal,
                           color: widget.isCurrentSlot 
@@ -346,4 +347,14 @@ class _TimeSlotSliderState extends State<_TimeSlotSlider> {
         return Icons.bedtime;
     }
   }
+}
+
+String _slotLabel(AppLocalizations localizations, TimeSlot slot) {
+  return switch (slot) {
+    TimeSlot.morning => localizations.brightnessSlotMorning,
+    TimeSlot.day => localizations.brightnessSlotDay,
+    TimeSlot.afternoon => localizations.brightnessSlotAfternoon,
+    TimeSlot.evening => localizations.brightnessSlotEvening,
+    TimeSlot.night => localizations.brightnessSlotNight,
+  };
 }

@@ -49,7 +49,7 @@ Once you're in the group, you can enrol in the beta either way:
 - **In-App Updater with Changelogs** - Check for updates and read release notes directly within the app.
 - **Refined Settings** - Reorganized menus with a new "Miscellaneous" section and unified focus styles.
 - **Accent Color Support** - Personalize the UI with multiple color presets.
-- **Multilingual Support** - Interface available in English, Spanish, and Turkish.
+- **Multilingual Support** - Interface available in English, Spanish, Turkish, and Vietnamese.
 - **Improved Sorting** - Easily reorder categories using Left/Right arrow keys instead of finicky gestures.
 - **Left Side Settings** - Reorganized settings panel now opens on the left for better reach.
 - **Brightness Scheduler (Experimental)** - Automatically adjust system brightness based on time of day (Requires `WRITE_SETTINGS` permission via ADB).

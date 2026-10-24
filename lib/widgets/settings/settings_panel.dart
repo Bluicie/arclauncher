@@ -43,6 +43,7 @@ import 'package:flauncher/widgets/settings/general_settings_page.dart';
 import 'package:flauncher/widgets/settings/screensaver_clock_style_page.dart';
 import 'package:flauncher/models/app.dart';
 import 'package:flauncher/widgets/settings/slideshow_sources_panel_page.dart';
+import 'package:flauncher/widgets/settings/settings_theme.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPanel extends StatefulWidget {
@@ -62,17 +63,26 @@ class _SettingsPanelState extends State<SettingsPanel> {
     return WillPopScope(
       onWillPop: () async => !await _navigatorKey.currentState!.maybePop(),
       child: Scaffold(
-        backgroundColor: Colors.black54, // Dim the background
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            // Tap outside to close
+            // Tap outside to close. A single gradient scrim adds depth next to
+            // the panel without a second full-screen colour layer.
             GestureDetector(
               onTap: () => Navigator.of(context).pop(),
-              child: Container(color: Colors.transparent),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Color(0x8C000000), Color(0x1A000000)],
+                  ),
+                ),
+              ),
             ),
             // The side panel
             SidePanelDialog(
-              width: 350,
+              width: SettingsStyle.panelWidth,
               isRightSide: false,
               child: Navigator(
                 key: _navigatorKey,
@@ -144,14 +154,89 @@ class _SettingsPanelState extends State<SettingsPanel> {
   }
 }
 
-/// A faster page route with a 150ms slide transition instead of
-/// the default 300ms Material transition.
-class _FastPageRoute<T> extends MaterialPageRoute<T> {
-  _FastPageRoute({required super.builder});
+/// A faster page route: a staggered fade + slide instead of the default Material
+/// transition. Both effects are composited, so navigation stays smooth on
+/// low-power TV boxes.
+///
+/// To prevent the outgoing and incoming menus from mixing (ghosting / double
+/// exposure over the shared glass panel background), the transition uses a
+/// sequential fade-through:
+/// - The outgoing menu fades out quickly while shifting slightly left.
+/// - The incoming menu fades in smoothly while sliding in from the right.
+/// On reverse (back button), the current submenu fades out quickly to the right
+/// while the parent menu fades back in from the left.
+class FastPageRoute<T> extends PageRouteBuilder<T> {
+  FastPageRoute({required WidgetBuilder builder, RouteSettings? settings})
+      : super(
+          settings: settings,
+          transitionDuration: const Duration(milliseconds: 140),
+          reverseTransitionDuration: const Duration(milliseconds: 110),
+          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+          transitionsBuilder: buildPageTransitions,
+        );
 
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 150);
+  static Widget buildPageTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    // When this route is pushed (animation: 0 -> 1):
+    // It fades in during [0.45, 1.0] and slides in from the right.
+    // When popped (animation: 1 -> 0):
+    // It fades out during [1.0 -> 0.45] and slides back to the right.
+    final primaryFade = animation.drive(
+      CurveTween(
+        curve: const Interval(0.45, 1.0, curve: Curves.easeOutCubic),
+      ),
+    );
+    final primarySlide = animation.drive(
+      Tween<Offset>(
+        begin: const Offset(0.04, 0),
+        end: Offset.zero,
+      ).chain(
+        CurveTween(
+          curve: const Interval(0.25, 1.0, curve: Curves.easeOutCubic),
+        ),
+      ),
+    );
 
-  @override
-  Duration get reverseTransitionDuration => const Duration(milliseconds: 120);
+    // When another route is pushed on top of this one (secondaryAnimation: 0 -> 1):
+    // This route fades out during [0.0, 0.40] and shifts slightly left.
+    // When that top route is popped (secondaryAnimation: 1 -> 0):
+    // This route fades back in during [0.40 -> 0.0] and shifts back from the left.
+    final secondaryFade = secondaryAnimation.drive(
+      Tween<double>(begin: 1.0, end: 0.0).chain(
+        CurveTween(
+          curve: const Interval(0.0, 0.40, curve: Curves.easeInCubic),
+        ),
+      ),
+    );
+    final secondarySlide = secondaryAnimation.drive(
+      Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(-0.02, 0),
+      ).chain(
+        CurveTween(
+          curve: const Interval(0.0, 0.50, curve: Curves.easeInCubic),
+        ),
+      ),
+    );
+
+    return SlideTransition(
+      position: secondarySlide,
+      child: FadeTransition(
+        opacity: secondaryFade,
+        child: SlideTransition(
+          position: primarySlide,
+          child: FadeTransition(
+            opacity: primaryFade,
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
 }
+
+typedef _FastPageRoute<T> = FastPageRoute<T>;

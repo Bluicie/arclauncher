@@ -137,18 +137,25 @@ $ adb shell cmd package set-home-activity <package>/<activity>
 > `adb shell cmd package clear-package-preferred-activities`, which makes the system ask again on the next
 > Home press.
 
-### Method 3: TV Box Tools (no command line)
+### Method 3: GUI tools (no command line)
 
-TV Box Tools is a third-party tool that does the Method 2 setup without you typing any commands. Pick Arc
-Launcher in the tool, and it installs the latest release if it isn't on the box yet and sets it as the home
-activity. It runs on Windows, macOS, Linux, on a phone, or directly in a browser on the TV itself.
+#### TV Box Tools (Android TV / Google TV)
+
+TV Box Tools sets Arc Launcher as the home activity without typing ADB commands manually. Pick Arc
+Launcher in the tool, and it installs the latest release and sets it as the default launcher. It runs on
+Windows, macOS, Linux, Android phones, or directly in a TV browser:
 
 - [Google Play](https://play.google.com/store/apps/details?id=com.tv.launcher.manager.adb.tvboxtools)
 - [tvboxtools.com](https://tvboxtools.com)
 
-TV Box Tools is not affiliated with or endorsed by this project. As with any tool that administers your device,
-review what it asks for before you run it — in particular whether it requires enabling wireless debugging on the
-box, which exposes a debugging interface on your network.
+#### Launcher Manager (Amazon Fire TV Stick / Fire OS)
+
+On Amazon Fire TV devices, standard Android launcher switching commands are restricted by Fire OS.
+Use **Launcher Manager (FireOS)** (available on [XDA Developers](https://xdaforums.com/t/app-firetv-noroot-launcher-manager-change-launcher-without-root.4176349/))
+to set Arc Launcher as your default home screen and override the stock Fire TV launcher.
+
+> [!NOTE]
+> Third-party tools are not affiliated with or endorsed by this project. Review device permissions and wireless debugging access before running external management utilities.
 
 ### Fallback: Disable the default launcher
 

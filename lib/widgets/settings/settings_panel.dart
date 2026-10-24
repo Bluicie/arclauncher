@@ -154,27 +154,89 @@ class _SettingsPanelState extends State<SettingsPanel> {
   }
 }
 
-/// A faster page route: a short fade + slide instead of the default Material
+/// A faster page route: a staggered fade + slide instead of the default Material
 /// transition. Both effects are composited, so navigation stays smooth on
 /// low-power TV boxes.
-class _FastPageRoute<T> extends PageRouteBuilder<T> {
-  _FastPageRoute({required WidgetBuilder builder, RouteSettings? settings})
+///
+/// To prevent the outgoing and incoming menus from mixing (ghosting / double
+/// exposure over the shared glass panel background), the transition uses a
+/// sequential fade-through:
+/// - The outgoing menu fades out quickly while shifting slightly left.
+/// - The incoming menu fades in smoothly while sliding in from the right.
+/// On reverse (back button), the current submenu fades out quickly to the right
+/// while the parent menu fades back in from the left.
+class FastPageRoute<T> extends PageRouteBuilder<T> {
+  FastPageRoute({required WidgetBuilder builder, RouteSettings? settings})
       : super(
           settings: settings,
-          transitionDuration: const Duration(milliseconds: 200),
-          reverseTransitionDuration: const Duration(milliseconds: 150),
+          transitionDuration: const Duration(milliseconds: 220),
+          reverseTransitionDuration: const Duration(milliseconds: 180),
           pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curve = CurveTween(curve: Curves.easeOutCubic);
-            return FadeTransition(
-              opacity: animation.drive(curve),
-              child: SlideTransition(
-                position: animation.drive(
-                  Tween<Offset>(begin: const Offset(0.05, 0), end: Offset.zero).chain(curve),
-                ),
-                child: child,
-              ),
-            );
-          },
+          transitionsBuilder: buildPageTransitions,
         );
+
+  static Widget buildPageTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    // When this route is pushed (animation: 0 -> 1):
+    // It fades in during [0.50, 1.0] and slides in from the right.
+    // When popped (animation: 1 -> 0):
+    // It fades out during [1.0 -> 0.50] and slides back to the right.
+    final primaryFade = animation.drive(
+      CurveTween(
+        curve: const Interval(0.50, 1.0, curve: Curves.easeOutCubic),
+      ),
+    );
+    final primarySlide = animation.drive(
+      Tween<Offset>(
+        begin: const Offset(0.06, 0),
+        end: Offset.zero,
+      ).chain(
+        CurveTween(
+          curve: const Interval(0.35, 1.0, curve: Curves.easeOutCubic),
+        ),
+      ),
+    );
+
+    // When another route is pushed on top of this one (secondaryAnimation: 0 -> 1):
+    // This route fades out during [0.0, 0.45] and shifts slightly left.
+    // When that top route is popped (secondaryAnimation: 1 -> 0):
+    // This route fades back in during [0.45 -> 0.0] and shifts back from the left.
+    final secondaryFade = secondaryAnimation.drive(
+      Tween<double>(begin: 1.0, end: 0.0).chain(
+        CurveTween(
+          curve: const Interval(0.0, 0.45, curve: Curves.easeInCubic),
+        ),
+      ),
+    );
+    final secondarySlide = secondaryAnimation.drive(
+      Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(-0.03, 0),
+      ).chain(
+        CurveTween(
+          curve: const Interval(0.0, 0.60, curve: Curves.easeInCubic),
+        ),
+      ),
+    );
+
+    return SlideTransition(
+      position: secondarySlide,
+      child: FadeTransition(
+        opacity: secondaryFade,
+        child: SlideTransition(
+          position: primarySlide,
+          child: FadeTransition(
+            opacity: primaryFade,
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
 }
+
+typedef _FastPageRoute<T> = FastPageRoute<T>;

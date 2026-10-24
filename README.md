@@ -6,9 +6,9 @@
 
 [![Version](https://img.shields.io/github/v/release/meddouribadis/arclauncher?style=for-the-badge&color=7C4DFF&label=Version)](https://github.com/meddouribadis/arclauncher/releases/latest) [![Downloads](https://img.shields.io/github/downloads/meddouribadis/arclauncher/total?style=for-the-badge&color=7C4DFF&label=Downloads)](https://github.com/meddouribadis/arclauncher/releases) [![Stars](https://img.shields.io/github/stars/meddouribadis/arclauncher?style=for-the-badge&color=7C4DFF)](https://github.com/meddouribadis/arclauncher/stargazers) [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/meddouribadis) [![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/omeda)
 
-**Arc Launcher** is a fork of [LTvLauncher](https://github.com/LeanBitLab/LtvLauncher) (originally by [etienn01](https://gitlab.com/flauncher/flauncher)) - an open-source alternative launcher for Android TV.
+**Arc Launcher** is an open-source launcher for Android TV, built as a fork of [LTvLauncher](https://github.com/LeanBitLab/LtvLauncher) (originally [FLauncher](https://gitlab.com/flauncher/flauncher)).
 
-This customized version introduces a modern smart TV-style grid layout, usability enhancements, and UX improvements.
+It adds a modern grid layout, customizable video and slideshow wallpapers, OLED screensaver protection, and remote-friendly navigation.
 
 [![Get it on GitHub](https://img.shields.io/badge/Get_it_on-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/meddouribadis/arclauncher/releases/latest) [![Downloader Code](https://img.shields.io/badge/Downloader_Code-6330120-FF6600?style=for-the-badge&logo=android&logoColor=white)](https://go.aftvnews.com/6330120)
 
@@ -26,42 +26,35 @@ Once you're in the group, you can enrol in the beta either way:
 - **On Android** — follow the same testing link from the device itself, or find
   [Arc Launcher](https://play.google.com/store/apps/details?id=com.omeda.arc) in the Play Store app.
 
-## Key Features & Enhancements
+## Features
 
-- **Modern TV Layout** - Redesigned home screen inspired by premium smart TV interfaces.
-- **Data Usage Widget** - Track daily Internet consumption directly from the status bar.
-- **Inbuilt OLED Screensaver** - Minimal screensaver with 30s clock position shifting to prevent burn-in.
-- **Easy WiFi Access** - Network indicator doubles as a shortcut to system WiFi settings.
-- **Quick Presets** - Select Time/Date formats and Category names from a list (No keyboard required).
-- **Video Wallpaper** - Set animated video files as your home screen background for a dynamic visual experience.
-- **Reddit Wallpaper Slideshow** - Rotate wallpapers from custom or default subreddits with configurable intervals (5 min to 24 hr), sort orders, and author credit display.
-- **Unsplash Slideshow** - Rotate the wallpaper with random Unsplash photos (pick categories for day and night among Unsplash topics and a Milky Way collection; 5–60 min interval, cross-fade, photographer credit). Requires your own free Unsplash access key.
-- **Dynamic & Time-Based Wallpaper** - Switch between day/night backgrounds or enable automatic dark mode based on time.
-- **Watch Next Section** - Continue watching your shows with a dedicated "Watch Next" row at the top.
-- **Hide Status Bar in Grid** - Automatically hide the status bar when scrolling into the app grid to free vertical screen space, restoring it when moving back to the dock.
-- **Pitch Black Wallpaper** - A true black gradient background option for OLED optimization.
-- **Enhanced Focus Indicator** - Double-border design ensures visibility on any background, with adjustable border thickness in Appearance settings.
-- **Smart Navigation** - Fixed "bounce back" issues and optimized focus traversal for a smoother experience.
-- **In-App Updater with Changelogs** - Check for updates and read release notes directly within the app.
-- **Refined Settings** - Reorganized menus with a new "Miscellaneous" section and unified focus styles.
-- **Accent Color Support** - Personalize the UI with multiple color presets.
-- **Multilingual Support** - Interface available in English, Spanish, and Turkish.
-- **Improved Sorting** - Easily reorder categories using Left/Right arrow keys instead of finicky gestures.
-- **Left Side Settings** - Reorganized settings panel now opens on the left for better reach.
-- **Brightness Scheduler (Experimental)** - Automatically adjust system brightness based on time of day (Requires `WRITE_SETTINGS` permission via ADB).
-- **New Category** - Added "Favorites".
-- **Custom Banner Support** - Display and apply your own personalized custom banners.
-- **Optimizations** - Improved performance with aggressive icon caching and code cleanups.
-- **Compatibility** - Works on Android TV boxes, Fire TV Stick, and other devices.
+### Interface & Navigation
+- **Grid Layout** - Clean smart TV app grid with configurable row and column sizing.
+- **Watch Next** - Continue watching shows directly from a top-row carousel.
+- **Remote Navigation** - High-visibility double-border focus indicators with smooth D-pad navigation.
+- **Custom Categories** - Group apps into favorites or custom sections; reorder categories with Left/Right keys.
+- **Quick Status Bar** - Displays time, daily data usage, and a shortcut to system Wi-Fi settings.
+- **Auto-Hide Status Bar** - Hides the status bar when scrolling into the app grid to maximize screen space.
+- **Accent Colors** - Personalize the UI with multiple color presets.
+- **Multilingual** - Available in English, Spanish, Turkish, and Vietnamese.
 
-> [!WARNING]
-> **Brightness Scheduler is an experimental feature.** It is currently untested across all devices and may be removed or modified in future versions based on user feedback.
+### Wallpapers & Screensavers
+- **Video Wallpapers** - Set animated video files (MP4/WebM) as the home screen background.
+- **Slideshows** - Rotate wallpapers from custom subreddits or Unsplash categories with configurable intervals.
+- **OLED Protection** - Pitch-black theme option and screensaver with position-shifting clock to prevent burn-in.
+- **Dynamic Wallpapers** - Automatically switch wallpapers or enable dark mode based on the time of day.
+
+### System & Tools
+- **No Ads & No Tracking** - Completely open source with zero sponsored content or ads.
+- **In-App Updater** - Check for new releases and read changelogs directly inside the app.
+- **Sideloaded App Support** - Displays and launches non-TV Android apps without extra workarounds.
+- **Brightness Scheduler (Experimental)** - Automatically adjust brightness based on time (requires ADB `WRITE_SETTINGS` permission).
+
+> [!NOTE]
+> Because Android's `WallpaperManager` is not available on some Android TV devices, Arc Launcher manages its own wallpapers. Changing the wallpaper requires a file explorer installed on the device.
 
 > [!TIP]
-> **Video Wallpaper Performance:** Using video wallpapers with the backdrop blur filter enabled may cause performance issues on older or low-powered devices. If you experience stuttering or lag, disable the backdrop filter in settings when using video backgrounds.
-
-> [!TIP]
-> **Video File Size:** Video wallpapers are loaded into RAM for smooth playback. For optimal performance, use small, compressed video files (ideally under 10MB) rather than large, high-bitrate videos.
+> **Video Wallpaper Performance:** Video wallpapers are loaded into memory for smooth playback. Use compressed clips (ideally under 10MB) on lower-powered TV sticks. If you experience UI stutter, disable the backdrop blur filter in settings.
 
 ## Screenshots
 
@@ -77,8 +70,8 @@ Once you're in the group, you can enrol in the beta either way:
     <td><img src="docs/images/screen_settings3.png" width="100%" alt="Settings screen 3"/></td>
   </tr>
   <tr>
-    <td align="center">Disable blur</td>
-    <td align="center">Disabled blur</td>
+    <td align="center">Backdrop blur</td>
+    <td align="center">Without blur</td>
     <td align="center">Custom banner</td>
   </tr>
   <tr>
@@ -97,20 +90,6 @@ Once you're in the group, you can enrol in the beta either way:
     <td><img src="docs/images/watch_next.png" width="100%" alt="Watch next section"/></td>
   </tr>
 </table>
-
-## Original FLauncher Features
-
-- [x] No ads
-- [x] Customizable categories
-- [x] Manually reorder apps within categories
-- [x] Wallpaper support
-- [x] Open "Android Settings"
-- [x] Open "App info"
-- [x] Uninstall app
-- [x] Clock
-- [x] Switch between row and grid for categories
-- [x] Support for non-TV (sideloaded) apps
-- [x] Navigation sound feedback
 
 ## Set Arc Launcher as default launcher
 
@@ -201,12 +180,6 @@ $ adb shell pm enable com.google.android.tungsten.setupwraith
 #### Known issues
 
 On Chromecast with Google TV (maybe others), the "YouTube" remote button will stop working if the default launcher is disabled. As a workaround, you can use [Button Mapper](https://play.google.com/store/apps/details?id=flar2.homebutton) to remap it correctly.
-
-## Wallpaper
-
-Because Android's `WallpaperManager` is not available on some Android TV devices, Arc Launcher implements its own wallpaper management method.
-
-Please note that changing wallpaper requires a file explorer to be installed on the device in order to pick a file.
 
 ## Contributing
 

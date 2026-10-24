@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flauncher/flauncher_channel.dart';
+import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -199,7 +200,8 @@ class _TvMediaPickerState extends State<TvMediaPicker>
 
   @override
   Widget build(BuildContext context) {
-    final title = isImage ? 'Select Image' : 'Select Video';
+    final localizations = AppLocalizations.of(context)!;
+    final title = isImage ? localizations.selectImage : localizations.selectVideo;
     final accentColor = Theme.of(context).colorScheme.primary;
 
     return Dialog(
@@ -233,7 +235,7 @@ class _TvMediaPickerState extends State<TvMediaPicker>
                   const Spacer(),
                   if (!_permissionDenied && !_loading)
                     Text(
-                      '${_items.length} items',
+                      localizations.mediaItemCount(_items.length),
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium?.copyWith(color: Colors.white54),
@@ -251,8 +253,8 @@ class _TvMediaPickerState extends State<TvMediaPicker>
                   ? Center(
                       child: Text(
                         isImage
-                            ? 'No images found on device'
-                            : 'No videos found on device',
+                            ? localizations.noImagesFound
+                            : localizations.noVideosFound,
                         style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 16,
@@ -266,8 +268,8 @@ class _TvMediaPickerState extends State<TvMediaPicker>
               child: Center(
                 child: Text(
                   _items.isEmpty
-                      ? 'D-pad: navigate  •  Back: cancel'
-                      : 'D-pad: navigate  •  Select: set wallpaper  •  Back: cancel',
+                      ? localizations.mediaNavigationHint
+                      : localizations.mediaSelectionHint,
                   style: const TextStyle(color: Colors.white38, fontSize: 12),
                 ),
               ),
@@ -279,20 +281,21 @@ class _TvMediaPickerState extends State<TvMediaPicker>
   }
 
   Widget _buildPermissionDenied(Color accentColor) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.lock_outline, color: Colors.white38, size: 48),
           const SizedBox(height: 16),
-          const Text(
-            'Media access permission is required',
-            style: TextStyle(color: Colors.white54, fontSize: 16),
+          Text(
+            localizations.mediaPermissionRequired,
+            style: const TextStyle(color: Colors.white54, fontSize: 16),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Grant permission to browse photos and videos',
-            style: TextStyle(color: Colors.white38, fontSize: 13),
+          Text(
+            localizations.mediaPermissionHelp,
+            style: const TextStyle(color: Colors.white38, fontSize: 13),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -303,7 +306,7 @@ class _TvMediaPickerState extends State<TvMediaPicker>
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
             icon: const Icon(Icons.settings),
-            label: const Text('Grant Permission'),
+            label: Text(localizations.grantPermission),
           ),
         ],
       ),

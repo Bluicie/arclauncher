@@ -46,6 +46,28 @@ class AccentColorPage extends StatelessWidget {
 
   const AccentColorPage({super.key});
 
+  String _localizedColorName(BuildContext context, String name) {
+    final localizations = AppLocalizations.of(context)!;
+    return switch (name) {
+      'Purple' => localizations.colorPurple,
+      'Teal' => localizations.colorTeal,
+      'Blue' => localizations.colorBlue,
+      'Orange' => localizations.colorOrange,
+      'Pink' => localizations.colorPink,
+      'Green' => localizations.colorGreen,
+      'White' => localizations.colorWhite,
+      'Yellow' => localizations.colorYellow,
+      'Red' => localizations.colorRed,
+      'Cyan' => localizations.colorCyan,
+      'Indigo' => localizations.colorIndigo,
+      'Lime' => localizations.colorLime,
+      'Amber' => localizations.colorAmber,
+      'Rose' => localizations.colorRose,
+      'Ice Blue' => localizations.colorIceBlue,
+      _ => name,
+    };
+  }
+
   Color _hexToColor(String hex) {
     return Color(int.parse('FF$hex', radix: 16));
   }
@@ -76,7 +98,7 @@ class AccentColorPage extends StatelessWidget {
                   
                   return _ColorTile(
                     color: _hexToColor(hex),
-                    name: name,
+                    name: _localizedColorName(context, name),
                     isSelected: isSelected,
                     autofocus: index == 0,
                     onTap: () => settingsService.setAccentColor(hex),
@@ -107,7 +129,7 @@ class AccentColorPage extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Preview',
+                      AppLocalizations.of(context)!.preview,
                       style: TextStyle(
                         color: _hexToColor(currentColor),
                         fontSize: 18,

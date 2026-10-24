@@ -78,6 +78,7 @@ class FLauncherApp extends StatelessWidget
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
       supportedLocales: AppLocalizations.supportedLocales,

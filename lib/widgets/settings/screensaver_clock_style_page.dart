@@ -33,6 +33,7 @@ class ScreensaverClockStylePage extends StatelessWidget {
       selector: (_, settingsService) => settingsService.screensaverClockStyle,
       builder: (context, currentStyle, _) {
         final settingsService = context.read<SettingsService>();
+        final localizations = AppLocalizations.of(context)!;
 
         return Column(
           children: [
@@ -43,56 +44,56 @@ class ScreensaverClockStylePage extends StatelessWidget {
                 child: Column(
                   children: [
                     _StyleRadioTile(
-                      title: 'Minimal',
-                      subtitle: 'Thin, elegant font (Default)',
+                      title: localizations.clockStyleMinimal,
+                      subtitle: localizations.clockStyleMinimalDescription,
                       value: 'minimal',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'minimal',
                     ),
                     _StyleRadioTile(
-                      title: 'Bold',
-                      subtitle: 'Thick, highly visible font',
+                      title: localizations.clockStyleBold,
+                      subtitle: localizations.clockStyleBoldDescription,
                       value: 'bold',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'bold',
                     ),
                     _StyleRadioTile(
-                      title: 'Retro',
-                      subtitle: 'Monospaced, retro terminal style',
+                      title: localizations.clockStyleRetro,
+                      subtitle: localizations.clockStyleRetroDescription,
                       value: 'retro',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'retro',
                     ),
                     _StyleRadioTile(
-                      title: 'Elegant',
-                      subtitle: 'Classic serif typeface',
+                      title: localizations.clockStyleElegant,
+                      subtitle: localizations.clockStyleElegantDescription,
                       value: 'elegant',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'elegant',
                     ),
                     _StyleRadioTile(
-                      title: 'Neon',
-                      subtitle: 'Ultra-thin, glowing style',
+                      title: localizations.clockStyleNeon,
+                      subtitle: localizations.clockStyleNeonDescription,
                       value: 'neon',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'neon',
                     ),
                     _StyleRadioTile(
-                      title: 'Pixel',
-                      subtitle: 'Bold monospaced, arcade feel',
+                      title: localizations.clockStylePixel,
+                      subtitle: localizations.clockStylePixelDescription,
                       value: 'pixel',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),
                       autofocus: currentStyle == 'pixel',
                     ),
                     _StyleRadioTile(
-                      title: 'Digital',
-                      subtitle: 'Clean monospaced display',
+                      title: localizations.clockStyleDigital,
+                      subtitle: localizations.clockStyleDigitalDescription,
                       value: 'digital',
                       groupValue: currentStyle,
                       onChanged: (value) => settingsService.setScreensaverClockStyle(value!),

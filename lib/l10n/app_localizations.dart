@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_vi.dart';
 
 // ignore_for_file: type=lint
 
@@ -98,6 +99,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('tr'),
+    Locale('vi'),
   ];
 
   /// No description provided for @aboutFlauncher.
@@ -1167,6 +1169,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to fetch wallpaper. If this persists, configure a Reddit Client ID in settings.'**
   String get redditWallpaperFailed;
+
+  /// No description provided for @addToFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Fav'**
+  String get addToFavorites;
+
+  /// No description provided for @removeFromFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Fav'**
+  String get removeFromFavorites;
+
+  /// No description provided for @addToCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Category'**
+  String get addToCategory;
+
+  /// No description provided for @setCustomBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Custom Banner'**
+  String get setCustomBanner;
+
+  /// No description provided for @clearCustomBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Custom Banner'**
+  String get clearCustomBanner;
+
+  /// No description provided for @customBannerSetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to set banner: {error}'**
+  String customBannerSetFailed(String error);
+
+  /// No description provided for @customBannerClearFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to clear banner: {error}'**
+  String customBannerClearFailed(String error);
+
+  /// No description provided for @selectImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Image'**
+  String get selectImage;
+
+  /// No description provided for @selectVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Video'**
+  String get selectVideo;
+
+  /// No description provided for @mediaItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String mediaItemCount(int count);
+
+  /// No description provided for @noImagesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No images found on device'**
+  String get noImagesFound;
+
+  /// No description provided for @noVideosFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No videos found on device'**
+  String get noVideosFound;
+
+  /// No description provided for @mediaNavigationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'D-pad: navigate  •  Back: cancel'**
+  String get mediaNavigationHint;
+
+  /// No description provided for @mediaSelectionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'D-pad: navigate  •  Select: set wallpaper  •  Back: cancel'**
+  String get mediaSelectionHint;
+
+  /// No description provided for @mediaPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Media access permission is required'**
+  String get mediaPermissionRequired;
+
+  /// No description provided for @mediaPermissionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant permission to browse photos and videos'**
+  String get mediaPermissionHelp;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// No description provided for @colorPurple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get colorPurple;
+
+  /// No description provided for @colorTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get colorTeal;
+
+  /// No description provided for @colorBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colorBlue;
+
+  /// No description provided for @colorOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get colorOrange;
+
+  /// No description provided for @colorPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get colorPink;
+
+  /// No description provided for @colorGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colorGreen;
+
+  /// No description provided for @colorWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get colorWhite;
+
+  /// No description provided for @colorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get colorYellow;
+
+  /// No description provided for @colorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colorRed;
+
+  /// No description provided for @colorCyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyan'**
+  String get colorCyan;
+
+  /// No description provided for @colorIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get colorIndigo;
+
+  /// No description provided for @colorLime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lime'**
+  String get colorLime;
+
+  /// No description provided for @colorAmber.
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get colorAmber;
+
+  /// No description provided for @colorRose.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get colorRose;
+
+  /// No description provided for @colorIceBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice Blue'**
+  String get colorIceBlue;
+
+  /// No description provided for @clockStyleMinimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal'**
+  String get clockStyleMinimal;
+
+  /// No description provided for @clockStyleMinimalDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Thin, elegant font (Default)'**
+  String get clockStyleMinimalDescription;
+
+  /// No description provided for @clockStyleBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold'**
+  String get clockStyleBold;
+
+  /// No description provided for @clockStyleBoldDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Thick, highly visible font'**
+  String get clockStyleBoldDescription;
+
+  /// No description provided for @clockStyleRetro.
+  ///
+  /// In en, this message translates to:
+  /// **'Retro'**
+  String get clockStyleRetro;
+
+  /// No description provided for @clockStyleRetroDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Monospaced, retro terminal style'**
+  String get clockStyleRetroDescription;
+
+  /// No description provided for @clockStyleElegant.
+  ///
+  /// In en, this message translates to:
+  /// **'Elegant'**
+  String get clockStyleElegant;
+
+  /// No description provided for @clockStyleElegantDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic serif typeface'**
+  String get clockStyleElegantDescription;
+
+  /// No description provided for @clockStyleNeon.
+  ///
+  /// In en, this message translates to:
+  /// **'Neon'**
+  String get clockStyleNeon;
+
+  /// No description provided for @clockStyleNeonDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Ultra-thin, glowing style'**
+  String get clockStyleNeonDescription;
+
+  /// No description provided for @clockStylePixel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pixel'**
+  String get clockStylePixel;
+
+  /// No description provided for @clockStylePixelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold monospaced, arcade feel'**
+  String get clockStylePixelDescription;
+
+  /// No description provided for @clockStyleDigital.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital'**
+  String get clockStyleDigital;
+
+  /// No description provided for @clockStyleDigitalDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean monospaced display'**
+  String get clockStyleDigitalDescription;
+
+  /// No description provided for @brightnessPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get brightnessPermissionRequired;
+
+  /// No description provided for @brightnessPermissionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'To control brightness on this device, you must grant permission via ADB:'**
+  String get brightnessPermissionHelp;
+
+  /// No description provided for @brightnessExperimentalNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPERIMENTAL: This feature is untested and may be removed in future versions based on user feedback.'**
+  String get brightnessExperimentalNotice;
+
+  /// No description provided for @brightnessDeviceSupportNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Some Android TV devices may not support app-level brightness control.'**
+  String get brightnessDeviceSupportNote;
+
+  /// No description provided for @enableBrightnessScheduler.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Scheduler'**
+  String get enableBrightnessScheduler;
+
+  /// No description provided for @currentBrightnessSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Current: {slot}'**
+  String currentBrightnessSlot(String slot);
+
+  /// No description provided for @brightnessSlotMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'6 AM - 9 AM'**
+  String get brightnessSlotMorning;
+
+  /// No description provided for @brightnessSlotDay.
+  ///
+  /// In en, this message translates to:
+  /// **'9 AM - 3 PM'**
+  String get brightnessSlotDay;
+
+  /// No description provided for @brightnessSlotAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'3 PM - 6 PM'**
+  String get brightnessSlotAfternoon;
+
+  /// No description provided for @brightnessSlotEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'6 PM - 10 PM'**
+  String get brightnessSlotEvening;
+
+  /// No description provided for @brightnessSlotNight.
+  ///
+  /// In en, this message translates to:
+  /// **'10 PM - 6 AM'**
+  String get brightnessSlotNight;
 }
 
 class _AppLocalizationsDelegate
@@ -1180,7 +1524,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'es', 'tr'].contains(locale.languageCode);
+      <String>['en', 'es', 'tr', 'vi'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1195,6 +1539,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'tr':
       return AppLocalizationsTr();
+    case 'vi':
+      return AppLocalizationsVi();
   }
 
   throw FlutterError(

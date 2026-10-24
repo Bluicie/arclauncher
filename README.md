@@ -8,7 +8,7 @@
 
 **Arc Launcher** is a fork of [LTvLauncher](https://github.com/LeanBitLab/LtvLauncher) (originally by [etienn01](https://gitlab.com/flauncher/flauncher)) - an open-source alternative launcher for Android TV.
 
-This customized version introduces a modern smart TV-style grid layout, usability enhancements, and UX improvements by [meddouribadis](https://github.com/meddouribadis).
+This customized version introduces a modern smart TV-style grid layout, usability enhancements, and UX improvements.
 
 <a href="https://github.com/meddouribadis/arclauncher/releases/latest">
   <img alt="Get it on GitHub" src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" height="50">
@@ -66,12 +66,6 @@ Once you're in the group, you can enrol in the beta either way:
 
 > [!TIP]
 > **Video File Size:** Video wallpapers are loaded into RAM for smooth playback. For optimal performance, use small, compressed video files (ideally under 10MB) rather than large, high-bitrate videos.
-
-> [!TIP]
-> **Unsplash Slideshow:** create a free app at [unsplash.com/developers](https://unsplash.com/developers) and paste its *Access Key* in Settings → Interface → Wallpaper → Unsplash slideshow. Tick the categories to use by day and by night under *Categories*; one of them is picked at random for each photo. Demo keys allow 50 requests per hour; the slideshow uses at most 12. Only the two most recent photos are kept on disk.
-
-> [!TIP]
-> **Reddit Slideshow:** choose subreddits, sort orders, and intervals (5 minutes to 24 hours) under Settings → Wallpaper → Reddit. Works without an account using public feeds, with optional client credentials for authenticated access.
 
 ## Screenshots
 
@@ -226,12 +220,7 @@ Contributions are welcome! Please check our [Contributing Guidelines](CONTRIBUTI
 
 If you enjoy using Arc Launcher and would like to support its ongoing development, consider sponsoring or buying a coffee! Your support helps keep the project active and maintained.
 
-<a href="https://github.com/sponsors/meddouribadis" target="_blank">
-  <img src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white" height="36" alt="GitHub Sponsors">
-</a>
-<a href="https://ko-fi.com/omeda" target="_blank">
-  <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=3" height="36" alt="Support on Ko-fi">
-</a>
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/meddouribadis) [![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/omeda)
 
 - **GitHub Sponsors**: [github.com/sponsors/meddouribadis](https://github.com/sponsors/meddouribadis)
 - **Ko-fi**: [ko-fi.com/omeda](https://ko-fi.com/omeda)

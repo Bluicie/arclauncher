@@ -451,6 +451,61 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkStatus => 'Comprobar estado';
 
   @override
+  String get watchNextBigPictureMode => 'Modo inmersivo';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Mostrar fondo de pantalla completa con un botón de ver';
+
+  @override
+  String get watchNextWatch => 'Ver';
+
+  @override
+  String get watchNextResume => 'Reanudar';
+
+  @override
+  String get watchNextRefresh => 'Actualizar contenido';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Recargar recomendaciones de los proveedores multimedia';
+
+  @override
+  String get watchNextRefreshed => 'Contenido de Seguir viendo actualizado';
+
+  @override
+  String get watchNextFilterApps => 'Filtrar aplicaciones';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Selecciona qué aplicaciones pueden mostrar contenido en Seguir viendo';
+
+  @override
+  String get watchNextNoApps =>
+      'Ninguna aplicación multimedia proporciona contenido actualmente';
+
+  @override
+  String get watchNextShowAllApps =>
+      'Mostrar todas las aplicaciones instaladas';
+
+  @override
+  String get watchNextHideWithoutImages => 'Ocultar programas sin imagen';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Mostrar solo programas que incluyan póster o imagen de fondo';
+
+  @override
+  String get watchNextMaxItems => 'Máximo de programas';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Limitar el número de programas mostrados en Seguir viendo';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Ilimitado';
+
+  @override
   String get redditWallpaper => 'Fondo de Reddit';
 
   @override
@@ -534,4 +589,188 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get redditWallpaperFailed =>
       'Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes.';
+
+  @override
+  String get addToFavorites => 'Add to Fav';
+
+  @override
+  String get removeFromFavorites => 'Remove from Fav';
+
+  @override
+  String get addToCategory => 'Add to Category';
+
+  @override
+  String get setCustomBanner => 'Set Custom Banner';
+
+  @override
+  String get clearCustomBanner => 'Clear Custom Banner';
+
+  @override
+  String customBannerSetFailed(String error) {
+    return 'Failed to set banner: $error';
+  }
+
+  @override
+  String customBannerClearFailed(String error) {
+    return 'Failed to clear banner: $error';
+  }
+
+  @override
+  String get selectImage => 'Select Image';
+
+  @override
+  String get selectVideo => 'Select Video';
+
+  @override
+  String mediaItemCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get noImagesFound => 'No images found on device';
+
+  @override
+  String get noVideosFound => 'No videos found on device';
+
+  @override
+  String get mediaNavigationHint => 'D-pad: navigate  •  Back: cancel';
+
+  @override
+  String get mediaSelectionHint =>
+      'D-pad: navigate  •  Select: set wallpaper  •  Back: cancel';
+
+  @override
+  String get mediaPermissionRequired => 'Media access permission is required';
+
+  @override
+  String get mediaPermissionHelp =>
+      'Grant permission to browse photos and videos';
+
+  @override
+  String get preview => 'Preview';
+
+  @override
+  String get colorPurple => 'Purple';
+
+  @override
+  String get colorTeal => 'Teal';
+
+  @override
+  String get colorBlue => 'Blue';
+
+  @override
+  String get colorOrange => 'Orange';
+
+  @override
+  String get colorPink => 'Pink';
+
+  @override
+  String get colorGreen => 'Green';
+
+  @override
+  String get colorWhite => 'White';
+
+  @override
+  String get colorYellow => 'Yellow';
+
+  @override
+  String get colorRed => 'Red';
+
+  @override
+  String get colorCyan => 'Cyan';
+
+  @override
+  String get colorIndigo => 'Indigo';
+
+  @override
+  String get colorLime => 'Lime';
+
+  @override
+  String get colorAmber => 'Amber';
+
+  @override
+  String get colorRose => 'Rose';
+
+  @override
+  String get colorIceBlue => 'Ice Blue';
+
+  @override
+  String get clockStyleMinimal => 'Minimal';
+
+  @override
+  String get clockStyleMinimalDescription => 'Thin, elegant font (Default)';
+
+  @override
+  String get clockStyleBold => 'Bold';
+
+  @override
+  String get clockStyleBoldDescription => 'Thick, highly visible font';
+
+  @override
+  String get clockStyleRetro => 'Retro';
+
+  @override
+  String get clockStyleRetroDescription => 'Monospaced, retro terminal style';
+
+  @override
+  String get clockStyleElegant => 'Elegant';
+
+  @override
+  String get clockStyleElegantDescription => 'Classic serif typeface';
+
+  @override
+  String get clockStyleNeon => 'Neon';
+
+  @override
+  String get clockStyleNeonDescription => 'Ultra-thin, glowing style';
+
+  @override
+  String get clockStylePixel => 'Pixel';
+
+  @override
+  String get clockStylePixelDescription => 'Bold monospaced, arcade feel';
+
+  @override
+  String get clockStyleDigital => 'Digital';
+
+  @override
+  String get clockStyleDigitalDescription => 'Clean monospaced display';
+
+  @override
+  String get brightnessPermissionRequired => 'Permission Required';
+
+  @override
+  String get brightnessPermissionHelp =>
+      'To control brightness on this device, you must grant permission via ADB:';
+
+  @override
+  String get brightnessExperimentalNotice =>
+      'EXPERIMENTAL: This feature is untested and may be removed in future versions based on user feedback.';
+
+  @override
+  String get brightnessDeviceSupportNote =>
+      'Note: Some Android TV devices may not support app-level brightness control.';
+
+  @override
+  String get enableBrightnessScheduler => 'Enable Scheduler';
+
+  @override
+  String currentBrightnessSlot(String slot) {
+    return 'Current: $slot';
+  }
+
+  @override
+  String get brightnessSlotMorning => '6 AM - 9 AM';
+
+  @override
+  String get brightnessSlotDay => '9 AM - 3 PM';
+
+  @override
+  String get brightnessSlotAfternoon => '3 PM - 6 PM';
+
+  @override
+  String get brightnessSlotEvening => '6 PM - 10 PM';
+
+  @override
+  String get brightnessSlotNight => '10 PM - 6 AM';
 }

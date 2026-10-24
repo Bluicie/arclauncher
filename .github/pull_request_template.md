@@ -8,19 +8,19 @@ Fixes #(issue)
 
 ## Type of Change
 
-Please mark the relevant option with an `x`:
+<!-- Mark the applicable option with (x) -->
 
-- [ ] `fix`: Bug fix (non-breaking change which fixes an issue)
-- [ ] `feat`: New feature (non-breaking change which adds functionality)
-- [ ] `improvement`: Improvement to an existing feature
-- [ ] `perf`: Performance improvement
-- [ ] `refactor`: Code refactoring without changing behavior
-- [ ] `docs`: Documentation updates
-- [ ] `style`: Formatting, missing semicolons, etc. (no code logic changes)
-- [ ] `test`: Adding or correcting tests
-- [ ] `build`: Changes affecting the build system or external dependencies
-- [ ] `ci`: CI configuration files and scripts
-- [ ] `chore`: Maintenance tasks or repository housekeeping
+- ( ) `fix`: Bug fix (non-breaking change which fixes an issue)
+- ( ) `feat`: New feature (non-breaking change which adds functionality)
+- ( ) `improvement`: Improvement to an existing feature
+- ( ) `perf`: Performance improvement
+- ( ) `refactor`: Code refactoring without changing behavior
+- ( ) `docs`: Documentation updates
+- ( ) `style`: Formatting, missing semicolons, etc. (no code logic changes)
+- ( ) `test`: Adding or correcting tests
+- ( ) `build`: Changes affecting the build system or external dependencies
+- ( ) `ci`: CI configuration files and scripts
+- ( ) `chore`: Maintenance tasks or repository housekeeping
 
 ---
 

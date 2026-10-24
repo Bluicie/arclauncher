@@ -924,6 +924,102 @@ abstract class AppLocalizations {
   /// **'Check Status'**
   String get checkStatus;
 
+  /// No description provided for @watchNextBigPictureMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Immersive mode'**
+  String get watchNextBigPictureMode;
+
+  /// No description provided for @watchNextBigPictureModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show full-width hero backdrop with an action watch button'**
+  String get watchNextBigPictureModeDescription;
+
+  /// No description provided for @watchNextWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get watchNextWatch;
+
+  /// No description provided for @watchNextResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get watchNextResume;
+
+  /// No description provided for @watchNextRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh content'**
+  String get watchNextRefresh;
+
+  /// No description provided for @watchNextRefreshDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload recommendations from media providers'**
+  String get watchNextRefreshDescription;
+
+  /// No description provided for @watchNextRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Next content refreshed'**
+  String get watchNextRefreshed;
+
+  /// No description provided for @watchNextFilterApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter apps'**
+  String get watchNextFilterApps;
+
+  /// No description provided for @watchNextFilterAppsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select which apps can display content in Watch Next'**
+  String get watchNextFilterAppsDescription;
+
+  /// No description provided for @watchNextNoApps.
+  ///
+  /// In en, this message translates to:
+  /// **'No media apps currently providing Watch Next content'**
+  String get watchNextNoApps;
+
+  /// No description provided for @watchNextShowAllApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all installed apps'**
+  String get watchNextShowAllApps;
+
+  /// No description provided for @watchNextHideWithoutImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide programs without image'**
+  String get watchNextHideWithoutImages;
+
+  /// No description provided for @watchNextHideWithoutImagesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Only show programs that provide poster or backdrop artwork'**
+  String get watchNextHideWithoutImagesDescription;
+
+  /// No description provided for @watchNextMaxItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum programs'**
+  String get watchNextMaxItems;
+
+  /// No description provided for @watchNextMaxItemsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit the number of programs displayed in Watch Next'**
+  String get watchNextMaxItemsDescription;
+
+  /// No description provided for @watchNextMaxItemsUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get watchNextMaxItemsUnlimited;
+
   /// No description provided for @redditWallpaper.
   ///
   /// In en, this message translates to:

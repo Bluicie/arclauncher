@@ -45,6 +45,12 @@ const String _screensaverClockStyle = "screensaver_clock_style";
 const String _dockBackdropFilterDisabled = "dock_backdrop_filter_disabled";
 const String _backgroundBlurDisabled = "background_blur_disabled";
 const String _showWatchNextSection = "show_watch_next_section";
+const String _watchNextBigPictureMode = "watch_next_big_picture_mode";
+const String _watchNextHideProgramsWithoutImages = "watch_next_hide_programs_without_images";
+const String _watchNextMaxItems = "watch_next_max_items";
+const String _watchNextExcludedPackages = "watch_next_excluded_packages";
+
+const List<int> WATCH_NEXT_MAX_ITEMS_OPTIONS = [0, 5, 10, 15, 20, 25, 30, 50];
 const String _dockDarkBackground = "dock_dark_background";
 const String _dockShadowEnabled = "dock_shadow_enabled";
 const String _showFocusBorders = "show_focus_borders";
@@ -130,6 +136,13 @@ class SettingsService extends ChangeNotifier {
   bool get backgroundBlurDisabled => _sharedPreferences.getBool(_backgroundBlurDisabled) ?? false;
 
   bool get showWatchNextSection => _sharedPreferences.getBool(_showWatchNextSection) ?? false;
+
+  bool get watchNextBigPictureMode => _sharedPreferences.getBool(_watchNextBigPictureMode) ?? false;
+
+  bool get watchNextHideProgramsWithoutImages =>
+      _sharedPreferences.getBool(_watchNextHideProgramsWithoutImages) ?? false;
+
+  int get watchNextMaxItems => _sharedPreferences.getInt(_watchNextMaxItems) ?? 0;
 
   bool get dockDarkBackground => _sharedPreferences.getBool(_dockDarkBackground) ?? false;
 
@@ -243,6 +256,40 @@ class SettingsService extends ChangeNotifier {
   Future<void> setShowWatchNextSection(bool value) async {
     return set(_showWatchNextSection, value);
   }
+
+  Future<void> setWatchNextBigPictureMode(bool value) async {
+    return set(_watchNextBigPictureMode, value);
+  }
+
+  Future<void> setWatchNextHideProgramsWithoutImages(bool value) async {
+    return set(_watchNextHideProgramsWithoutImages, value);
+  }
+
+  Future<void> setWatchNextMaxItems(int value) async {
+    await _sharedPreferences.setInt(_watchNextMaxItems, value);
+    notifyListeners();
+  }
+
+  List<String> get watchNextExcludedPackages =>
+      _sharedPreferences.getStringList(_watchNextExcludedPackages) ?? const [];
+
+  Future<void> setWatchNextExcludedPackages(List<String> packages) async {
+    await _sharedPreferences.setStringList(_watchNextExcludedPackages, packages);
+    notifyListeners();
+  }
+
+  Future<void> toggleWatchNextExcludedPackage(String packageName) async {
+    final current = List<String>.from(watchNextExcludedPackages);
+    if (current.contains(packageName)) {
+      current.remove(packageName);
+    } else {
+      current.add(packageName);
+    }
+    await setWatchNextExcludedPackages(current);
+  }
+
+  bool isWatchNextPackageExcluded(String packageName) =>
+      watchNextExcludedPackages.contains(packageName);
 
   Future<void> setDockDarkBackground(bool value) async {
     return set(_dockDarkBackground, value);

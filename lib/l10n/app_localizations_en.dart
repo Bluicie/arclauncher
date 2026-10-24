@@ -446,6 +446,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkStatus => 'Check Status';
 
   @override
+  String get watchNextBigPictureMode => 'Immersive mode';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Show full-width hero backdrop with an action watch button';
+
+  @override
+  String get watchNextWatch => 'Watch';
+
+  @override
+  String get watchNextResume => 'Resume';
+
+  @override
+  String get watchNextRefresh => 'Refresh content';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Reload recommendations from media providers';
+
+  @override
+  String get watchNextRefreshed => 'Watch Next content refreshed';
+
+  @override
+  String get watchNextFilterApps => 'Filter apps';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Select which apps can display content in Watch Next';
+
+  @override
+  String get watchNextNoApps =>
+      'No media apps currently providing Watch Next content';
+
+  @override
+  String get watchNextShowAllApps => 'Show all installed apps';
+
+  @override
+  String get watchNextHideWithoutImages => 'Hide programs without image';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Only show programs that provide poster or backdrop artwork';
+
+  @override
+  String get watchNextMaxItems => 'Maximum programs';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Limit the number of programs displayed in Watch Next';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Unlimited';
+
+  @override
   String get redditWallpaper => 'Reddit wallpaper';
 
   @override

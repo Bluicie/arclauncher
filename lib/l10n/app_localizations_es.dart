@@ -451,6 +451,61 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkStatus => 'Comprobar estado';
 
   @override
+  String get watchNextBigPictureMode => 'Modo inmersivo';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'Mostrar fondo de pantalla completa con un botón de ver';
+
+  @override
+  String get watchNextWatch => 'Ver';
+
+  @override
+  String get watchNextResume => 'Reanudar';
+
+  @override
+  String get watchNextRefresh => 'Actualizar contenido';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Recargar recomendaciones de los proveedores multimedia';
+
+  @override
+  String get watchNextRefreshed => 'Contenido de Seguir viendo actualizado';
+
+  @override
+  String get watchNextFilterApps => 'Filtrar aplicaciones';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Selecciona qué aplicaciones pueden mostrar contenido en Seguir viendo';
+
+  @override
+  String get watchNextNoApps =>
+      'Ninguna aplicación multimedia proporciona contenido actualmente';
+
+  @override
+  String get watchNextShowAllApps =>
+      'Mostrar todas las aplicaciones instaladas';
+
+  @override
+  String get watchNextHideWithoutImages => 'Ocultar programas sin imagen';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Mostrar solo programas que incluyan póster o imagen de fondo';
+
+  @override
+  String get watchNextMaxItems => 'Máximo de programas';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Limitar el número de programas mostrados en Seguir viendo';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Ilimitado';
+
+  @override
   String get redditWallpaper => 'Fondo de Reddit';
 
   @override

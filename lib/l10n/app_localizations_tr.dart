@@ -448,6 +448,60 @@ class AppLocalizationsTr extends AppLocalizations {
   String get checkStatus => 'Durumu denetle';
 
   @override
+  String get watchNextBigPictureMode => 'Sürükleyici mod';
+
+  @override
+  String get watchNextBigPictureModeDescription =>
+      'İzle düğmeli tam ekran arka plan olarak göster';
+
+  @override
+  String get watchNextWatch => 'İzle';
+
+  @override
+  String get watchNextResume => 'Devam Et';
+
+  @override
+  String get watchNextRefresh => 'İçeriği yenile';
+
+  @override
+  String get watchNextRefreshDescription =>
+      'Medya sağlayıcılarından önerileri yeniden yükle';
+
+  @override
+  String get watchNextRefreshed => 'Sıradakiler içeriği yenilendi';
+
+  @override
+  String get watchNextFilterApps => 'Uygulamaları filtrele';
+
+  @override
+  String get watchNextFilterAppsDescription =>
+      'Hangi uygulamaların Sıradakiler bölümünde içerik göstereceğini seçin';
+
+  @override
+  String get watchNextNoApps =>
+      'Şu anda Sıradakiler içeriği sağlayan medya uygulaması yok';
+
+  @override
+  String get watchNextShowAllApps => 'Yüklü tüm uygulamaları göster';
+
+  @override
+  String get watchNextHideWithoutImages => 'Resimsiz programları gizle';
+
+  @override
+  String get watchNextHideWithoutImagesDescription =>
+      'Yalnızca afiş veya arka plan resmi olan programları göster';
+
+  @override
+  String get watchNextMaxItems => 'Maksimum program sayısı';
+
+  @override
+  String get watchNextMaxItemsDescription =>
+      'Sıradakiler bölümünde gösterilen program sayısını sınırla';
+
+  @override
+  String get watchNextMaxItemsUnlimited => 'Sınırsız';
+
+  @override
   String get redditWallpaper => 'Reddit duvar kağıdı';
 
   @override

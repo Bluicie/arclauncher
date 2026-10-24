@@ -71,21 +71,21 @@ void main() {
       expect(getOutgoingOpacity(), 1.0);
       expect(getIncomingOpacity(), 0.0);
 
-      // t = 0.25: Page A is fading out, Page B is strictly 0.0
-      animationController.value = 0.25;
+      // t = 0.20: Page A is fading out, Page B is strictly 0.0
+      animationController.value = 0.20;
       await tester.pump();
       expect(getOutgoingOpacity(), lessThan(1.0));
       expect(getOutgoingOpacity(), greaterThan(0.0));
       expect(getIncomingOpacity(), 0.0);
 
-      // t = 0.48: Page A is completely faded out, Page B is still 0.0
-      animationController.value = 0.48;
+      // t = 0.42: Page A is completely faded out, Page B is still 0.0
+      animationController.value = 0.42;
       await tester.pump();
       expect(getOutgoingOpacity(), 0.0);
       expect(getIncomingOpacity(), 0.0);
 
-      // t = 0.75: Page A is strictly 0.0, Page B is fading in
-      animationController.value = 0.75;
+      // t = 0.70: Page A is strictly 0.0, Page B is fading in
+      animationController.value = 0.70;
       await tester.pump();
       expect(getOutgoingOpacity(), 0.0);
       expect(getIncomingOpacity(), greaterThan(0.0));
@@ -165,21 +165,21 @@ void main() {
       expect(getPoppedOpacity(), 1.0);
       expect(getParentOpacity(), 0.0);
 
-      // t = 0.75: Page B is fading out, Page A is strictly 0.0
-      animationController.value = 0.75;
+      // t = 0.70: Page B is fading out, Page A is strictly 0.0
+      animationController.value = 0.70;
       await tester.pump();
       expect(getPoppedOpacity(), lessThan(1.0));
       expect(getPoppedOpacity(), greaterThan(0.0));
       expect(getParentOpacity(), 0.0);
 
-      // t = 0.48: Page B is completely faded out, Page A has not started fading in yet
-      animationController.value = 0.48;
+      // t = 0.42: Page B is completely faded out, Page A has not started fading in yet
+      animationController.value = 0.42;
       await tester.pump();
       expect(getPoppedOpacity(), 0.0);
       expect(getParentOpacity(), 0.0);
 
-      // t = 0.25: Page B is strictly 0.0, Page A is fading in
-      animationController.value = 0.25;
+      // t = 0.20: Page B is strictly 0.0, Page A is fading in
+      animationController.value = 0.20;
       await tester.pump();
       expect(getPoppedOpacity(), 0.0);
       expect(getParentOpacity(), greaterThan(0.0));

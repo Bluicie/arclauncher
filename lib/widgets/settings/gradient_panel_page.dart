@@ -77,7 +77,7 @@ class GradientPanelPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: Focus.of(context).hasFocus ? Colors.white : Colors.white.withValues(alpha: 0.7),
                         ),
-                    duration: const Duration(milliseconds: 150),
+                    duration: SettingsStyle.focusDurationFor(context),
                     child: Text(fLauncherGradient.name, overflow: TextOverflow.ellipsis),
                   ),
                 ),

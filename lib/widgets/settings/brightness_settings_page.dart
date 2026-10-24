@@ -260,7 +260,7 @@ class _TimeSlotSliderState extends State<_TimeSlotSlider> {
       child: Focus(
         onFocusChange: (hasFocus) => setState(() => _focused = hasFocus),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: SettingsStyle.focusDurationFor(context),
           curve: Curves.easeOutCubic,
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),

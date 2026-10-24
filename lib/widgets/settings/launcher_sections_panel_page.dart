@@ -172,10 +172,10 @@ class _LauncherSectionsPanelPageState extends State<LauncherSectionsPanelPage> {
               },
               child: AnimatedScale(
                 scale: focused ? 1.015 : 1.0,
-                duration: const Duration(milliseconds: 150),
+                duration: SettingsStyle.focusDurationFor(context),
                 curve: Curves.easeOutCubic,
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                  duration: SettingsStyle.focusDurationFor(context),
                   curve: Curves.easeOutCubic,
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   decoration: BoxDecoration(

@@ -191,7 +191,7 @@ class _ApplicationsPanelPageState extends State<ApplicationsPanelPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 2),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: SettingsStyle.focusDurationFor(context),
             curve: Curves.easeOutCubic,
             decoration: BoxDecoration(
               color: selected

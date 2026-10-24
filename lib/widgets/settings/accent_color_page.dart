@@ -187,10 +187,10 @@ class _ColorTileState extends State<_ColorTile> {
           onTap: widget.onTap,
           child: AnimatedScale(
             scale: _focused ? 1.04 : 1.0,
-            duration: const Duration(milliseconds: 150),
+            duration: SettingsStyle.focusDurationFor(context),
             curve: Curves.easeOutCubic,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
+              duration: SettingsStyle.focusDurationFor(context),
               curve: Curves.easeOutCubic,
               // A light-to-dark sheen gives the swatch depth without a shadow
               // layer, which is expensive to composite on TV hardware.

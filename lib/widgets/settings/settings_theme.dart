@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 /// feedback is a single [CustomPaint] plus a composited scale transform, so a
 /// focus change repaints one small row instead of the whole panel.
 abstract final class SettingsStyle {
-  /// Focus lift/highlight animation.
-  static const Duration focusDuration = Duration(milliseconds: 160);
+  /// Focus lift/highlight animation. Snappy (90ms) for responsive TV D-pad navigation.
+  static const Duration focusDuration = Duration(milliseconds: 90);
 
   /// Row card geometry.
   static const double cardRadius = 16;

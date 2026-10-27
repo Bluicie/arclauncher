@@ -59,6 +59,12 @@ jobs:
           echo "build_name=${VERSION}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "build_number=$(( BUILD * 1000 + GITHUB_RUN_NUMBER ))" >> "$GITHUB_OUTPUT"
       - run: flutter pub get
+      - name: Check generated localizations
+        run: git diff --exit-code -- lib/l10n || echo "::warning::lib/l10n differs from gen-l10n output; commit the regenerated files"
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - name: Test
+        run: flutter test
       - name: Build release APKs
         env:
           SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}

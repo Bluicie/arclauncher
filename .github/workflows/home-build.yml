@@ -39,17 +39,6 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Setup signing
-        env:
-          SIGNING_JKS_FILE_BASE64: ${{ secrets.SIGNING_JKS_FILE_BASE64 }}
-          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        run: |
-          for name in SIGNING_JKS_FILE_BASE64 SIGNING_KEYSTORE_PASSWORD SIGNING_KEY_ALIAS SIGNING_KEY_PASSWORD; do
-            test -n "${!name:-}" || { echo "::error::Repository secret $name is not set (Settings > Secrets and variables > Actions)"; exit 1; }
-          done
-          echo -n "$SIGNING_JKS_FILE_BASE64" | base64 -d > android/app/upload-keystore.jks
       - name: Set build metadata
         id: meta
         run: |
@@ -65,6 +54,17 @@ jobs:
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - name: Test
         run: flutter test
+      - name: Setup signing
+        env:
+          SIGNING_JKS_FILE_BASE64: ${{ secrets.SIGNING_JKS_FILE_BASE64 }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          for name in SIGNING_JKS_FILE_BASE64 SIGNING_KEYSTORE_PASSWORD SIGNING_KEY_ALIAS SIGNING_KEY_PASSWORD; do
+            test -n "${!name:-}" || { echo "::error::Repository secret $name is not set (Settings > Secrets and variables > Actions)"; exit 1; }
+          done
+          echo -n "$SIGNING_JKS_FILE_BASE64" | base64 -d > android/app/upload-keystore.jks
       - name: Build release APKs
         env:
           SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}

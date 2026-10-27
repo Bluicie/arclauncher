@@ -24,6 +24,7 @@ import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
 import 'package:flauncher/providers/network_service.dart';
+import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/brightness_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
@@ -81,6 +82,10 @@ Future<void> main() async {
                 },
               )..watchForChanges(Listenable.merge([settingsService, appsService]));
             },
+            lazy: false
+        ),
+        ChangeNotifierProvider(
+            create: (context) => RemoteSyncService(sharedPreferences, Provider.of<BackupService>(context, listen: false)),
             lazy: false
         ),
       ],

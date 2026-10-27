@@ -270,5 +270,15 @@
     "backupCancelButton": "Cancelar",
     "backupRestored": "Restauradas {sections} secciones con {apps} apps",
     "backupMissingApps": "{count} apps de la copia no están instaladas en este dispositivo",
-    "backupRestoreFailed": "Error al restaurar: {error}"
+    "backupRestoreFailed": "Error al restaurar: {error}",
+    "remoteSyncTitle": "Sincronizar desde una dirección",
+    "remoteSyncAddress": "Dirección",
+    "remoteSyncAddressNotSet": "Sin configurar",
+    "remoteSyncAddressHelp": "Dirección web de un archivo de copia, p. ej. http://192.168.1.10:8123/local/arc-launcher/backup.json. Déjala vacía para desactivar la sincronización.",
+    "remoteSyncAutomatic": "Sincronizar automáticamente",
+    "remoteSyncAutomaticDescription": "Comprueba al iniciar y cada 6 horas; sustituye el diseño y los ajustes de este dispositivo cuando el archivo cambia",
+    "remoteSyncNow": "Sincronizar ahora",
+    "remoteSyncInProgress": "Sincronizando…",
+    "remoteSyncLastCheck": "Última comprobación: {time}",
+    "remoteSyncFailed": "Error de sincronización: {error}"
 }

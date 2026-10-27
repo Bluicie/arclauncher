@@ -213,5 +213,15 @@
     "backupCancelButton": "İptal",
     "backupRestored": "{sections} bölüm ve {apps} uygulama geri yüklendi",
     "backupMissingApps": "Yedekteki {count} uygulama bu cihazda yüklü değil",
-    "backupRestoreFailed": "Geri yükleme başarısız: {error}"
+    "backupRestoreFailed": "Geri yükleme başarısız: {error}",
+    "remoteSyncTitle": "Adresten eşitle",
+    "remoteSyncAddress": "Adres",
+    "remoteSyncAddressNotSet": "Ayarlanmadı",
+    "remoteSyncAddressHelp": "Bir yedek dosyasının web adresi, ör. http://192.168.1.10:8123/local/arc-launcher/backup.json. Eşitlemeyi kapatmak için boş bırakın.",
+    "remoteSyncAutomatic": "Otomatik eşitle",
+    "remoteSyncAutomaticDescription": "Açılışta ve 6 saatte bir kontrol eder; dosya değiştiğinde bu cihazın düzenini ve ayarlarını değiştirir",
+    "remoteSyncNow": "Şimdi eşitle",
+    "remoteSyncInProgress": "Eşitleniyor…",
+    "remoteSyncLastCheck": "Son kontrol: {time}",
+    "remoteSyncFailed": "Eşitleme başarısız: {error}"
 }

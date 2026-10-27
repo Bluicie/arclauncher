@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flauncher/providers/backup_service.dart';
+import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
 import 'package:flauncher/widgets/settings/settings_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
@@ -99,6 +101,95 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
     }
   }
 
+  List<Widget> _remoteSyncTiles(BuildContext context, AppLocalizations localizations) {
+    final remoteSyncService = context.watch<RemoteSyncService>();
+    final textStyle = Theme.of(context).textTheme.bodyMedium;
+    final captionStyle = Theme.of(context).textTheme.bodySmall;
+    final lastCheck = remoteSyncService.lastCheck;
+
+    String? status;
+    if (remoteSyncService.syncing) {
+      status = localizations.remoteSyncInProgress;
+    } else if (remoteSyncService.lastError != null) {
+      status = localizations.remoteSyncFailed(remoteSyncService.lastError!);
+    } else if (lastCheck != null) {
+      status = localizations.remoteSyncLastCheck(DateFormat.yMd().add_Hm().format(lastCheck));
+      final result = remoteSyncService.lastResult;
+      if (result != null) {
+        status = "$status\n${localizations.backupRestored(result.categories, result.placedApps)}";
+      }
+    }
+
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 16, bottom: 8),
+        child: Text(localizations.remoteSyncTitle, style: Theme.of(context).textTheme.titleSmall),
+      ),
+      FocusableSettingsTile(
+        leading: const Icon(Icons.link),
+        title: Text(localizations.remoteSyncAddress, style: textStyle),
+        subtitle: Text(
+          remoteSyncService.url.isEmpty ? localizations.remoteSyncAddressNotSet : remoteSyncService.url,
+          style: captionStyle,
+        ),
+        onPressed: () => _editRemoteUrl(context, localizations, remoteSyncService),
+      ),
+      if (remoteSyncService.url.isNotEmpty) ...[
+        RoundedSwitchListTile(
+          value: remoteSyncService.enabled,
+          onChanged: (value) => remoteSyncService.setEnabled(value),
+          title: Text(localizations.remoteSyncAutomatic, style: textStyle),
+          subtitle: Text(localizations.remoteSyncAutomaticDescription, style: captionStyle),
+          secondary: const Icon(Icons.sync),
+        ),
+        FocusableSettingsTile(
+          leading: const Icon(Icons.cloud_download_outlined),
+          title: Text(localizations.remoteSyncNow, style: textStyle),
+          onPressed: remoteSyncService.syncing ? null : () => remoteSyncService.syncNow(force: true),
+        ),
+      ],
+      if (status != null)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Text(status, style: captionStyle),
+        ),
+    ];
+  }
+
+  Future<void> _editRemoteUrl(
+      BuildContext context, AppLocalizations localizations, RemoteSyncService remoteSyncService) async {
+    final value = await showDialog<String>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        insetPadding: const EdgeInsets.only(bottom: 120),
+        contentPadding: const EdgeInsets.all(24),
+        title: Text(localizations.remoteSyncAddress),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(localizations.remoteSyncAddressHelp),
+          ),
+          TextFormField(
+            autofocus: true,
+            initialValue: remoteSyncService.url,
+            keyboardType: TextInputType.url,
+            onFieldSubmitted: (value) => Navigator.of(context).pop(value),
+          ),
+        ],
+      ),
+    );
+    if (value == null) {
+      return;
+    }
+    try {
+      await remoteSyncService.setUrl(value);
+    } on FormatException catch (e) {
+      if (mounted) {
+        setState(() => _status = localizations.remoteSyncFailed(e.message));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -134,6 +225,7 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(_status!, style: captionStyle),
                 ),
+              ..._remoteSyncTiles(context, localizations),
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),
                 child: Text(localizations.backupRestore, style: Theme.of(context).textTheme.titleSmall),

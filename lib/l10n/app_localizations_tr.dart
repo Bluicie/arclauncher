@@ -830,4 +830,40 @@ class AppLocalizationsTr extends AppLocalizations {
   String backupRestoreFailed(String error) {
     return 'Geri yükleme başarısız: $error';
   }
+
+  @override
+  String get remoteSyncTitle => 'Adresten eşitle';
+
+  @override
+  String get remoteSyncAddress => 'Adres';
+
+  @override
+  String get remoteSyncAddressNotSet => 'Ayarlanmadı';
+
+  @override
+  String get remoteSyncAddressHelp =>
+      'Bir yedek dosyasının web adresi, ör. http://192.168.1.10:8123/local/arc-launcher/backup.json. Eşitlemeyi kapatmak için boş bırakın.';
+
+  @override
+  String get remoteSyncAutomatic => 'Otomatik eşitle';
+
+  @override
+  String get remoteSyncAutomaticDescription =>
+      'Açılışta ve 6 saatte bir kontrol eder; dosya değiştiğinde bu cihazın düzenini ve ayarlarını değiştirir';
+
+  @override
+  String get remoteSyncNow => 'Şimdi eşitle';
+
+  @override
+  String get remoteSyncInProgress => 'Eşitleniyor…';
+
+  @override
+  String remoteSyncLastCheck(String time) {
+    return 'Son kontrol: $time';
+  }
+
+  @override
+  String remoteSyncFailed(String error) {
+    return 'Eşitleme başarısız: $error';
+  }
 }

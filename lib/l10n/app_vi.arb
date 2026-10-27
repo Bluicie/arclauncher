@@ -250,5 +250,15 @@
   "backupCancelButton": "Hủy",
   "backupRestored": "Đã khôi phục {sections} mục với {apps} ứng dụng",
   "backupMissingApps": "{count} ứng dụng trong bản sao lưu chưa được cài trên thiết bị này",
-  "backupRestoreFailed": "Khôi phục thất bại: {error}"
+  "backupRestoreFailed": "Khôi phục thất bại: {error}",
+  "remoteSyncTitle": "Đồng bộ từ địa chỉ",
+  "remoteSyncAddress": "Địa chỉ",
+  "remoteSyncAddressNotSet": "Chưa đặt",
+  "remoteSyncAddressHelp": "Địa chỉ web của tệp sao lưu, ví dụ http://192.168.1.10:8123/local/arc-launcher/backup.json. Để trống để tắt đồng bộ.",
+  "remoteSyncAutomatic": "Tự động đồng bộ",
+  "remoteSyncAutomaticDescription": "Kiểm tra khi khởi động và mỗi 6 giờ; thay thế bố cục và cài đặt của thiết bị này khi tệp thay đổi",
+  "remoteSyncNow": "Đồng bộ ngay",
+  "remoteSyncInProgress": "Đang đồng bộ…",
+  "remoteSyncLastCheck": "Lần kiểm tra cuối: {time}",
+  "remoteSyncFailed": "Đồng bộ thất bại: {error}"
 }

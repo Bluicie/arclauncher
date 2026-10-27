@@ -232,5 +232,14 @@
     "layoutFollowTv": "Başka bir TV'yi takip et",
     "layoutFollowSearching": "Ağınız aranıyor…",
     "layoutFollowNoneFound": "TV bulunamadı. Takip etmek istediğiniz TV'de “Bu düzeni paylaş”ı açın.",
-    "layoutFollowing": "{name} takip ediliyor"
+    "layoutFollowing": "{name} takip ediliyor",
+    "controlSwitch": "Diğer uygulamalardan kontrole izin ver",
+    "controlDescription": "Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir",
+    "controlPairedApps": "Eşleşmiş uygulamalar",
+    "controlNoPairedApps": "Henüz eşleşmiş uygulama yok",
+    "controlRemoveTitle": "{name} kaldırılsın mı?",
+    "controlRemoveMessage": "Bu uygulama yeniden eşleşene kadar bu TV'yi kontrol edemez.",
+    "controlRemoveButton": "Kaldır",
+    "pairingTitle": "{client} ile eşleştir",
+    "pairingMessage": "{client} uygulamasının bu TV'yi kontrol etmesine izin vermek için bu kodu girin:"
 }

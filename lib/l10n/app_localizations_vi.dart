@@ -904,4 +904,39 @@ class AppLocalizationsVi extends AppLocalizations {
   String layoutFollowing(String name) {
     return 'Đang theo dõi $name';
   }
+
+  @override
+  String get controlSwitch => 'Cho phép ứng dụng khác điều khiển';
+
+  @override
+  String get controlDescription =>
+      'Các ứng dụng như Home Assistant có thể đồng bộ, sao lưu và thay đổi các cài đặt này sau khi ghép nối bằng mã';
+
+  @override
+  String get controlPairedApps => 'Ứng dụng đã ghép nối';
+
+  @override
+  String get controlNoPairedApps => 'Chưa có ứng dụng nào được ghép nối';
+
+  @override
+  String controlRemoveTitle(String name) {
+    return 'Xóa $name?';
+  }
+
+  @override
+  String get controlRemoveMessage =>
+      'Ứng dụng này sẽ không thể điều khiển TV này cho đến khi được ghép nối lại.';
+
+  @override
+  String get controlRemoveButton => 'Xóa';
+
+  @override
+  String pairingTitle(String client) {
+    return 'Ghép nối với $client';
+  }
+
+  @override
+  String pairingMessage(String client) {
+    return 'Nhập mã này trong $client để cho phép điều khiển TV này:';
+  }
 }

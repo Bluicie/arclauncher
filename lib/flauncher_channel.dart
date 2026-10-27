@@ -134,6 +134,17 @@ class FLauncherChannel {
   /// The name the user gave this device (Settings > Device name), or its model.
   Future<String> getDeviceName() async => await _methodChannel.invokeMethod<String>('getDeviceName') ?? '';
 
+  /// Announces a service on the local network (mDNS / DNS-SD), replacing a previous announcement.
+  Future<void> registerNsdService(String name, String type, int port, Map<String, String> attributes) async =>
+      await _methodChannel.invokeMethod('registerNsdService', {
+        'name': name,
+        'type': type,
+        'port': port,
+        'attributes': attributes,
+      });
+
+  Future<void> unregisterNsdService() async => await _methodChannel.invokeMethod('unregisterNsdService');
+
   Future<bool> installApk(String apkPath) async =>
       await _methodChannel.invokeMethod("installApk", apkPath);
 

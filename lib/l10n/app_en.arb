@@ -475,5 +475,35 @@
           "type": "String"
         }
       }
+    },
+    "controlSwitch": "Allow control from other apps",
+    "controlDescription": "Apps like Home Assistant can sync, back up and change these settings after pairing with a code",
+    "controlPairedApps": "Paired apps",
+    "controlNoPairedApps": "No apps paired yet",
+    "controlRemoveTitle": "Remove {name}?",
+    "controlRemoveMessage": "This app can no longer control this TV until it is paired again.",
+    "controlRemoveButton": "Remove",
+    "pairingTitle": "Pair with {client}",
+    "pairingMessage": "Enter this code in {client} to allow it to control this TV:",
+    "@controlRemoveTitle": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "@pairingTitle": {
+      "placeholders": {
+        "client": {
+          "type": "String"
+        }
+      }
+    },
+    "@pairingMessage": {
+      "placeholders": {
+        "client": {
+          "type": "String"
+        }
+      }
     }
 }

@@ -180,6 +180,7 @@ public class MainActivity extends FlutterActivity {
                         result.success(false);
                     }
                 }
+                case "getDeviceName" -> result.success(getDeviceName());
                 case "loadContentUriImage" -> {
                     String contentUri = (String) call.arguments();
                     if (contentUri != null) {
@@ -1115,4 +1116,13 @@ public class MainActivity extends FlutterActivity {
         return stream.toByteArray();
     }
 
+    private String getDeviceName() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            String name = Settings.Global.getString(getContentResolver(), Settings.Global.DEVICE_NAME);
+            if (name != null && !name.isEmpty()) {
+                return name;
+            }
+        }
+        return Build.MODEL;
+    }
 }

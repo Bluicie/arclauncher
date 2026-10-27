@@ -11,6 +11,7 @@ const _urlKey = "backup_remote_url";
 const _enabledKey = "backup_remote_enabled";
 const _lastHashKey = "backup_remote_last_hash";
 const _lastCheckKey = "backup_remote_last_check";
+const _followNameKey = "backup_remote_follow_name";
 
 /// Keeps this device in sync with a backup file published at a URL
 /// (e.g. on Home Assistant, a NAS or any web server): the file is downloaded
@@ -23,6 +24,7 @@ class RemoteSyncService extends ChangeNotifier {
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
   final http.Client _client;
+  final Future<Uri?> Function(String name)? _locate;
 
   Timer? _startupTimer;
   Timer? _periodicTimer;
@@ -30,8 +32,16 @@ class RemoteSyncService extends ChangeNotifier {
   String? _lastError;
   BackupImportResult? _lastResult;
 
-  RemoteSyncService(this._sharedPreferences, this._backupService, {http.Client? client, bool schedule = true})
-      : _client = client ?? http.Client() {
+  /// [locate] finds the current address of a followed device by its name (see [follow]),
+  /// so syncing keeps working when that device gets a new IP address.
+  RemoteSyncService(
+    this._sharedPreferences,
+    this._backupService, {
+    http.Client? client,
+    Future<Uri?> Function(String name)? locate,
+    bool schedule = true,
+  })  : _client = client ?? http.Client(),
+        _locate = locate {
     if (schedule) {
       _reschedule(startup: true);
     }
@@ -42,6 +52,9 @@ class RemoteSyncService extends ChangeNotifier {
   bool get enabled => url.isNotEmpty && (_sharedPreferences.getBool(_enabledKey) ?? false);
 
   bool get syncing => _syncing;
+
+  /// Name of the device being followed, `null` when syncing from a plain address.
+  String? get followedName => _sharedPreferences.getString(_followNameKey);
 
   /// Error of the last attempt, `null` when it succeeded.
   String? get lastError => _lastError;
@@ -61,6 +74,7 @@ class RemoteSyncService extends ChangeNotifier {
     }
     await _sharedPreferences.setString(_urlKey, trimmed);
     await _sharedPreferences.remove(_lastHashKey);
+    await _sharedPreferences.remove(_followNameKey);
     _lastError = null;
     _reschedule();
     notifyListeners();
@@ -73,6 +87,13 @@ class RemoteSyncService extends ChangeNotifier {
     if (enabled) {
       await syncNow();
     }
+  }
+
+  /// Follows the device shared as [name] at [backupUrl] and syncs right away.
+  Future<void> follow(String name, Uri backupUrl) async {
+    await setUrl(backupUrl.toString());
+    await _sharedPreferences.setString(_followNameKey, name);
+    await setEnabled(true);
   }
 
   void _reschedule({bool startup = false}) {
@@ -105,11 +126,7 @@ class RemoteSyncService extends ChangeNotifier {
     _syncing = true;
     notifyListeners();
     try {
-      final response = await _client.get(Uri.parse(url)).timeout(timeout);
-      if (response.statusCode != 200) {
-        throw http.ClientException("HTTP ${response.statusCode}", Uri.parse(url));
-      }
-      final body = utf8.decode(response.bodyBytes);
+      final body = await _downloadFollowingMoves();
       final hash = contentHash(body);
       await _sharedPreferences.setString(_lastCheckKey, DateTime.now().toUtc().toIso8601String());
       _lastError = null;
@@ -126,6 +143,30 @@ class RemoteSyncService extends ChangeNotifier {
     } finally {
       _syncing = false;
       notifyListeners();
+    }
+  }
+
+  Future<String> _download() async {
+    final response = await _client.get(Uri.parse(url)).timeout(timeout);
+    if (response.statusCode != 200) {
+      throw http.ClientException("HTTP ${response.statusCode}", Uri.parse(url));
+    }
+    return utf8.decode(response.bodyBytes);
+  }
+
+  /// Downloads from [url]; when that fails for a followed device, looks the device up
+  /// by name and retries once at its new address.
+  Future<String> _downloadFollowingMoves() async {
+    try {
+      return await _download();
+    } catch (_) {
+      final name = followedName;
+      final moved = (name == null || _locate == null) ? null : await _locate(name);
+      if (moved == null || moved.toString() == url) {
+        rethrow;
+      }
+      await _sharedPreferences.setString(_urlKey, moved.toString());
+      return await _download();
     }
   }
 

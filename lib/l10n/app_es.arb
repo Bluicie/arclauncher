@@ -280,5 +280,14 @@
     "remoteSyncNow": "Sincronizar ahora",
     "remoteSyncInProgress": "Sincronizando…",
     "remoteSyncLastCheck": "Última comprobación: {time}",
-    "remoteSyncFailed": "Error de sincronización: {error}"
+    "remoteSyncFailed": "Error de sincronización: {error}",
+    "layoutShareTitle": "Compartir con otros televisores",
+    "layoutShareSwitch": "Compartir este diseño",
+    "layoutShareDescription": "Otros televisores de tu red pueden seguir a este",
+    "layoutShareActive": "Compartido como «{name}»",
+    "layoutShareFailed": "Error al compartir: {error}",
+    "layoutFollowTv": "Seguir a otro televisor",
+    "layoutFollowSearching": "Buscando en tu red…",
+    "layoutFollowNoneFound": "No se encontraron televisores. Activa «Compartir este diseño» en el televisor que quieres seguir.",
+    "layoutFollowing": "Siguiendo a {name}"
 }

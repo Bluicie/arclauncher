@@ -223,5 +223,14 @@
     "remoteSyncNow": "Şimdi eşitle",
     "remoteSyncInProgress": "Eşitleniyor…",
     "remoteSyncLastCheck": "Son kontrol: {time}",
-    "remoteSyncFailed": "Eşitleme başarısız: {error}"
+    "remoteSyncFailed": "Eşitleme başarısız: {error}",
+    "layoutShareTitle": "Diğer TV'lerle paylaş",
+    "layoutShareSwitch": "Bu düzeni paylaş",
+    "layoutShareDescription": "Ağınızdaki diğer TV'ler bu TV'yi takip edebilir",
+    "layoutShareActive": "“{name}” olarak paylaşılıyor",
+    "layoutShareFailed": "Paylaşma başarısız: {error}",
+    "layoutFollowTv": "Başka bir TV'yi takip et",
+    "layoutFollowSearching": "Ağınız aranıyor…",
+    "layoutFollowNoneFound": "TV bulunamadı. Takip etmek istediğiniz TV'de “Bu düzeni paylaş”ı açın.",
+    "layoutFollowing": "{name} takip ediliyor"
 }

@@ -872,4 +872,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String remoteSyncFailed(String error) {
     return 'Error de sincronización: $error';
   }
+
+  @override
+  String get layoutShareTitle => 'Compartir con otros televisores';
+
+  @override
+  String get layoutShareSwitch => 'Compartir este diseño';
+
+  @override
+  String get layoutShareDescription =>
+      'Otros televisores de tu red pueden seguir a este';
+
+  @override
+  String layoutShareActive(String name) {
+    return 'Compartido como «$name»';
+  }
+
+  @override
+  String layoutShareFailed(String error) {
+    return 'Error al compartir: $error';
+  }
+
+  @override
+  String get layoutFollowTv => 'Seguir a otro televisor';
+
+  @override
+  String get layoutFollowSearching => 'Buscando en tu red…';
+
+  @override
+  String get layoutFollowNoneFound =>
+      'No se encontraron televisores. Activa «Compartir este diseño» en el televisor que quieres seguir.';
+
+  @override
+  String layoutFollowing(String name) {
+    return 'Siguiendo a $name';
+  }
 }

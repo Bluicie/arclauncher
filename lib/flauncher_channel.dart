@@ -131,6 +131,9 @@ class FLauncherChannel {
     }
   }
 
+  /// The name the user gave this device (Settings > Device name), or its model.
+  Future<String> getDeviceName() async => await _methodChannel.invokeMethod<String>('getDeviceName') ?? '';
+
   Future<bool> installApk(String apkPath) async =>
       await _methodChannel.invokeMethod("installApk", apkPath);
 

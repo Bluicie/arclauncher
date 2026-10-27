@@ -445,5 +445,35 @@
           "type": "String"
         }
       }
+    },
+    "layoutShareTitle": "Share with other TVs",
+    "layoutShareSwitch": "Share this layout",
+    "layoutShareDescription": "Other TVs on your network can follow this one",
+    "layoutShareActive": "Shared as “{name}”",
+    "layoutShareFailed": "Sharing failed: {error}",
+    "layoutFollowTv": "Follow another TV",
+    "layoutFollowSearching": "Searching your network…",
+    "layoutFollowNoneFound": "No TVs found. Turn on “Share this layout” on the TV you want to follow.",
+    "layoutFollowing": "Following {name}",
+    "@layoutShareActive": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "@layoutShareFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
+    },
+    "@layoutFollowing": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
     }
 }

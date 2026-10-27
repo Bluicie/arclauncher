@@ -30,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -50,10 +52,52 @@ jobs:
       - run: flutter pub get
       - name: Check generated localizations
         run: git diff --exit-code -- lib/l10n || echo "::warning::lib/l10n differs from gen-l10n output; commit the regenerated files"
+      # Problems are reported as annotations (readable without signing in); for files changed
+      # compared to upstream develop every finding is shown, elsewhere only errors.
       - name: Analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: |
+          git fetch --quiet https://github.com/meddouribadis/arclauncher.git develop
+          git diff --name-only FETCH_HEAD...HEAD > changed-files.txt
+          set +e
+          flutter analyze --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1
+          status=$?
+          set -e
+          cat analyze.txt
+          python3 - <<'PY'
+          import re
+          changed = set(open("changed-files.txt").read().split())
+          for line in open("analyze.txt", encoding="utf-8"):
+              m = re.match(r"\s*(error|warning|info) [•-] (.*) [•-] (\S+):(\d+):(\d+) [•-] (\S+)", line)
+              if not m:
+                  continue
+              level, msg, path, row, col, code = m.groups()
+              if level != "error" and path not in changed:
+                  continue
+              kind = {"error": "error", "warning": "warning", "info": "notice"}[level]
+              print(f"::{kind} file={path},line={row},col={col},title={code}::{msg}")
+          PY
+          exit $status
       - name: Test
-        run: flutter test
+        run: flutter test --file-reporter json:test-results.json
+      - name: Report test failures
+        if: failure()
+        run: |
+          test -f test-results.json || exit 0
+          python3 - <<'PY'
+          import json
+          names = {}
+          for line in open("test-results.json", encoding="utf-8"):
+              try:
+                  event = json.loads(line)
+              except ValueError:
+                  continue
+              if event.get("type") == "testStart":
+                  names[event["test"]["id"]] = event["test"]["name"]
+              elif event.get("type") == "error":
+                  text = (event.get("error", "") + chr(10) + event.get("stackTrace", ""))[:1500]
+                  text = text.replace("%", "%25").replace(chr(13), "").replace(chr(10), "%0A")
+                  print(f"::error title=Test failed: {names.get(event.get('testID'), '?')}::{text}")
+          PY
       - name: Setup signing
         env:
           SIGNING_JKS_FILE_BASE64: ${{ secrets.SIGNING_JKS_FILE_BASE64 }}

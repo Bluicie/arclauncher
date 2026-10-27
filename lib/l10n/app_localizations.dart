@@ -1511,6 +1511,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'10 PM - 6 AM'**
   String get brightnessSlotNight;
+
+  /// No description provided for @backupAndRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & restore'**
+  String get backupAndRestore;
+
+  /// No description provided for @backupAutoExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic backup'**
+  String get backupAutoExport;
+
+  /// No description provided for @backupAutoExportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a backup after every change'**
+  String get backupAutoExportDescription;
+
+  /// No description provided for @backupExportNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get backupExportNow;
+
+  /// No description provided for @backupRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore a backup'**
+  String get backupRestore;
+
+  /// No description provided for @backupNoBackups.
+  ///
+  /// In en, this message translates to:
+  /// **'No backups found'**
+  String get backupNoBackups;
+
+  /// No description provided for @backupFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup folder: {path}'**
+  String backupFolder(String path);
+
+  /// No description provided for @backupExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved: {fileName}'**
+  String backupExported(String fileName);
+
+  /// No description provided for @backupExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup failed: {error}'**
+  String backupExportFailed(String error);
+
+  /// No description provided for @backupRestoreConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this backup?'**
+  String get backupRestoreConfirmTitle;
+
+  /// No description provided for @backupRestoreConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sections, app order and settings will be replaced by {fileName}.'**
+  String backupRestoreConfirmMessage(String fileName);
+
+  /// No description provided for @backupRestoreButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get backupRestoreButton;
+
+  /// No description provided for @backupCancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get backupCancelButton;
+
+  /// No description provided for @backupRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored {sections} sections with {apps} apps'**
+  String backupRestored(int sections, int apps);
+
+  /// No description provided for @backupMissingApps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} apps from the backup are not installed on this device'**
+  String backupMissingApps(int count);
+
+  /// No description provided for @backupRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore failed: {error}'**
+  String backupRestoreFailed(String error);
 }
 
 class _AppLocalizationsDelegate

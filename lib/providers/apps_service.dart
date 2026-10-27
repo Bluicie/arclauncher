@@ -264,6 +264,9 @@ class AppsService extends ChangeNotifier
     });
   }
 
+  /// Reloads apps and sections from the database, e.g. after restoring a backup.
+  Future<void> refresh() => _refreshState();
+
   Future<void> _refreshState({bool shouldNotifyListeners = true}) async {
     Future<List<App>> appsFromDatabaseFuture = _database.getApplications();
     Future<List<AppCategory>> appsCategoriesFuture = _database.getAppsCategories();

@@ -254,5 +254,21 @@
     "redditSubredditAdded": "Subreddit añadido",
     "redditSubredditInvalid": "Introduce un nombre de subreddit válido",
     "redditWallpaperUpdated": "Fondo de pantalla actualizado con éxito",
-    "redditWallpaperFailed": "Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes."
+    "redditWallpaperFailed": "Error al obtener el fondo. Si persiste, añade un ID de cliente de Reddit en los ajustes.",
+    "backupAndRestore": "Copia de seguridad y restauración",
+    "backupAutoExport": "Copia de seguridad automática",
+    "backupAutoExportDescription": "Guardar una copia tras cada cambio",
+    "backupExportNow": "Hacer copia ahora",
+    "backupRestore": "Restaurar una copia",
+    "backupNoBackups": "No se encontraron copias",
+    "backupFolder": "Carpeta de copias: {path}",
+    "backupExported": "Copia guardada: {fileName}",
+    "backupExportFailed": "Error en la copia: {error}",
+    "backupRestoreConfirmTitle": "¿Restaurar esta copia?",
+    "backupRestoreConfirmMessage": "Tus secciones, el orden de las apps y los ajustes se sustituirán por {fileName}.",
+    "backupRestoreButton": "Restaurar",
+    "backupCancelButton": "Cancelar",
+    "backupRestored": "Restauradas {sections} secciones con {apps} apps",
+    "backupMissingApps": "{count} apps de la copia no están instaladas en este dispositivo",
+    "backupRestoreFailed": "Error al restaurar: {error}"
 }

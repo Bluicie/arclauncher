@@ -21,6 +21,7 @@ import 'dart:async';
 import 'package:flauncher/database.dart';
 import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/providers/apps_service.dart';
+import 'package:flauncher/providers/backup_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
 import 'package:flauncher/providers/network_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
@@ -64,6 +65,21 @@ Future<void> main() async {
             create: (context) {
               final settingsService = Provider.of<SettingsService>(context, listen: false);
               return WatchNextService(fLauncherChannel, settingsService: settingsService);
+            },
+            lazy: false
+        ),
+        ChangeNotifierProvider(
+            create: (context) {
+              final settingsService = Provider.of<SettingsService>(context, listen: false);
+              final appsService = Provider.of<AppsService>(context, listen: false);
+              return BackupService(
+                fLauncherDatabase,
+                sharedPreferences,
+                onRestored: () async {
+                  await appsService.refresh();
+                  settingsService.reload();
+                },
+              )..watchForChanges(Listenable.merge([settingsService, appsService]));
             },
             lazy: false
         ),

@@ -256,6 +256,19 @@ class FLauncherDatabase extends _$FLauncherDatabase
   Future<void> replaceAppsCategories(List<AppsCategoriesCompanion> value) =>
       batch((batch) => batch.replaceAll(appsCategories, value));
 
+  /// Removes all sections (categories, spacers) and their app assignments.
+  Future<void> deleteLayout() async {
+    await delete(appsCategories).go();
+    await delete(categories).go();
+    await delete(launcherSpacers).go();
+  }
+
+  Future<void> setHiddenApps(Set<String> packageNames) async {
+    await update(apps).write(const AppsCompanion(hidden: Value(false)));
+    await (update(apps)..where((tbl) => tbl.packageName.isIn(packageNames)))
+        .write(const AppsCompanion(hidden: Value(true)));
+  }
+
   Future<int> insertSpacer(Insertable<LauncherSpacer> spacer) => into(launcherSpacers).insert(spacer);
 
   Future<int> deleteSpacer(int spacerId) => (delete(launcherSpacers)..where(

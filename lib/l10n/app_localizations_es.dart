@@ -773,4 +773,67 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '10 PM - 6 AM';
+
+  @override
+  String get backupAndRestore => 'Copia de seguridad y restauración';
+
+  @override
+  String get backupAutoExport => 'Copia de seguridad automática';
+
+  @override
+  String get backupAutoExportDescription =>
+      'Guardar una copia tras cada cambio';
+
+  @override
+  String get backupExportNow => 'Hacer copia ahora';
+
+  @override
+  String get backupRestore => 'Restaurar una copia';
+
+  @override
+  String get backupNoBackups => 'No se encontraron copias';
+
+  @override
+  String backupFolder(String path) {
+    return 'Carpeta de copias: $path';
+  }
+
+  @override
+  String backupExported(String fileName) {
+    return 'Copia guardada: $fileName';
+  }
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Error en la copia: $error';
+  }
+
+  @override
+  String get backupRestoreConfirmTitle => '¿Restaurar esta copia?';
+
+  @override
+  String backupRestoreConfirmMessage(String fileName) {
+    return 'Tus secciones, el orden de las apps y los ajustes se sustituirán por $fileName.';
+  }
+
+  @override
+  String get backupRestoreButton => 'Restaurar';
+
+  @override
+  String get backupCancelButton => 'Cancelar';
+
+  @override
+  String backupRestored(int sections, int apps) {
+    return 'Restauradas $sections secciones con $apps apps';
+  }
+
+  @override
+  String backupMissingApps(int count) {
+    return '$count apps de la copia no están instaladas en este dispositivo';
+  }
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Error al restaurar: $error';
+  }
 }

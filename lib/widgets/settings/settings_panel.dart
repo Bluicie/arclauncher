@@ -18,6 +18,7 @@
 
 import 'package:flauncher/widgets/side_panel_dialog.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
+import 'package:flauncher/widgets/settings/backup_panel_page.dart';
 import 'package:flauncher/widgets/settings/launcher_sections_panel_page.dart';
 import 'package:flauncher/widgets/settings/gradient_panel_page.dart';
 import 'package:flauncher/widgets/settings/reddit_subreddits_panel_page.dart';
@@ -139,6 +140,8 @@ class _SettingsPanelState extends State<SettingsPanel> {
                       return _FastPageRoute(builder: (_) => AccentColorPage());
                     case BrightnessSettingsPage.routeName:
                       return _FastPageRoute(builder: (_) => BrightnessSettingsPage());
+                    case BackupPanelPage.routeName:
+                      return _FastPageRoute(builder: (_) => const BackupPanelPage());
                     case AppDetailsPage.routeName:
                       return _FastPageRoute(builder: (_) => AppDetailsPage(application: settings.arguments as App));
                     default:

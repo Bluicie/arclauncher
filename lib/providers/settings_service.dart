@@ -164,6 +164,9 @@ class SettingsService extends ChangeNotifier {
 
   SettingsService(this._sharedPreferences);
 
+  /// Notifies listeners after the underlying preferences were changed directly, e.g. by a backup restore.
+  void reload() => notifyListeners();
+
   Future<void> set(String key, bool value) async {
     await _sharedPreferences.setBool(key, value);
     notifyListeners();

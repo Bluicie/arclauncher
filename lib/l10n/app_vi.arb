@@ -234,5 +234,21 @@
   "brightnessSlotDay": "9:00–15:00",
   "brightnessSlotAfternoon": "15:00–18:00",
   "brightnessSlotEvening": "18:00–22:00",
-  "brightnessSlotNight": "22:00–6:00"
+  "brightnessSlotNight": "22:00–6:00",
+  "backupAndRestore": "Sao lưu và khôi phục",
+  "backupAutoExport": "Tự động sao lưu",
+  "backupAutoExportDescription": "Lưu bản sao lưu sau mỗi thay đổi",
+  "backupExportNow": "Sao lưu ngay",
+  "backupRestore": "Khôi phục bản sao lưu",
+  "backupNoBackups": "Không tìm thấy bản sao lưu",
+  "backupFolder": "Thư mục sao lưu: {path}",
+  "backupExported": "Đã lưu bản sao lưu: {fileName}",
+  "backupExportFailed": "Sao lưu thất bại: {error}",
+  "backupRestoreConfirmTitle": "Khôi phục bản sao lưu này?",
+  "backupRestoreConfirmMessage": "Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế bằng {fileName}.",
+  "backupRestoreButton": "Khôi phục",
+  "backupCancelButton": "Hủy",
+  "backupRestored": "Đã khôi phục {sections} mục với {apps} ứng dụng",
+  "backupMissingApps": "{count} ứng dụng trong bản sao lưu chưa được cài trên thiết bị này",
+  "backupRestoreFailed": "Khôi phục thất bại: {error}"
 }

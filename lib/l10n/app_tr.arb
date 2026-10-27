@@ -197,5 +197,21 @@
     "redditSubredditAdded": "Subreddit eklendi",
     "redditSubredditInvalid": "Lütfen geçerli bir subreddit adı girin",
     "redditWallpaperUpdated": "Duvar kağıdı başarıyla güncellendi",
-    "redditWallpaperFailed": "Duvar kağıdı alınamadı. Sorun devam ederse ayarlardan bir Reddit İstemci Kimliği girin."
+    "redditWallpaperFailed": "Duvar kağıdı alınamadı. Sorun devam ederse ayarlardan bir Reddit İstemci Kimliği girin.",
+    "backupAndRestore": "Yedekleme ve geri yükleme",
+    "backupAutoExport": "Otomatik yedekleme",
+    "backupAutoExportDescription": "Her değişiklikten sonra yedek kaydet",
+    "backupExportNow": "Şimdi yedekle",
+    "backupRestore": "Yedeği geri yükle",
+    "backupNoBackups": "Yedek bulunamadı",
+    "backupFolder": "Yedek klasörü: {path}",
+    "backupExported": "Yedek kaydedildi: {fileName}",
+    "backupExportFailed": "Yedekleme başarısız: {error}",
+    "backupRestoreConfirmTitle": "Bu yedek geri yüklensin mi?",
+    "backupRestoreConfirmMessage": "Bölümleriniz, uygulama sıralamanız ve ayarlarınız {fileName} ile değiştirilecek.",
+    "backupRestoreButton": "Geri yükle",
+    "backupCancelButton": "İptal",
+    "backupRestored": "{sections} bölüm ve {apps} uygulama geri yüklendi",
+    "backupMissingApps": "Yedekteki {count} uygulama bu cihazda yüklü değil",
+    "backupRestoreFailed": "Geri yükleme başarısız: {error}"
 }

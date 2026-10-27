@@ -833,4 +833,40 @@ class AppLocalizationsVi extends AppLocalizations {
   String backupRestoreFailed(String error) {
     return 'Khôi phục thất bại: $error';
   }
+
+  @override
+  String get remoteSyncTitle => 'Đồng bộ từ địa chỉ';
+
+  @override
+  String get remoteSyncAddress => 'Địa chỉ';
+
+  @override
+  String get remoteSyncAddressNotSet => 'Chưa đặt';
+
+  @override
+  String get remoteSyncAddressHelp =>
+      'Địa chỉ web của tệp sao lưu, ví dụ http://192.168.1.10:8123/local/arc-launcher/backup.json. Để trống để tắt đồng bộ.';
+
+  @override
+  String get remoteSyncAutomatic => 'Tự động đồng bộ';
+
+  @override
+  String get remoteSyncAutomaticDescription =>
+      'Kiểm tra khi khởi động và mỗi 6 giờ; thay thế bố cục và cài đặt của thiết bị này khi tệp thay đổi';
+
+  @override
+  String get remoteSyncNow => 'Đồng bộ ngay';
+
+  @override
+  String get remoteSyncInProgress => 'Đang đồng bộ…';
+
+  @override
+  String remoteSyncLastCheck(String time) {
+    return 'Lần kiểm tra cuối: $time';
+  }
+
+  @override
+  String remoteSyncFailed(String error) {
+    return 'Đồng bộ thất bại: $error';
+  }
 }

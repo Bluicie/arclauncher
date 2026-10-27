@@ -1607,6 +1607,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore failed: {error}'**
   String backupRestoreFailed(String error);
+
+  /// No description provided for @remoteSyncTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync from address'**
+  String get remoteSyncTitle;
+
+  /// No description provided for @remoteSyncAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get remoteSyncAddress;
+
+  /// No description provided for @remoteSyncAddressNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get remoteSyncAddressNotSet;
+
+  /// No description provided for @remoteSyncAddressHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Web address of a backup file, e.g. http://192.168.1.10:8123/local/arc-launcher/backup.json. Leave empty to turn syncing off.'**
+  String get remoteSyncAddressHelp;
+
+  /// No description provided for @remoteSyncAutomatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync automatically'**
+  String get remoteSyncAutomatic;
+
+  /// No description provided for @remoteSyncAutomaticDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Checks at startup and every 6 hours; replaces this device's layout and settings when the file changed'**
+  String get remoteSyncAutomaticDescription;
+
+  /// No description provided for @remoteSyncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get remoteSyncNow;
+
+  /// No description provided for @remoteSyncInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get remoteSyncInProgress;
+
+  /// No description provided for @remoteSyncLastCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Last checked: {time}'**
+  String remoteSyncLastCheck(String time);
+
+  /// No description provided for @remoteSyncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed: {error}'**
+  String remoteSyncFailed(String error);
 }
 
 class _AppLocalizationsDelegate

@@ -827,4 +827,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String backupRestoreFailed(String error) {
     return 'Restore failed: $error';
   }
+
+  @override
+  String get remoteSyncTitle => 'Sync from address';
+
+  @override
+  String get remoteSyncAddress => 'Address';
+
+  @override
+  String get remoteSyncAddressNotSet => 'Not set';
+
+  @override
+  String get remoteSyncAddressHelp =>
+      'Web address of a backup file, e.g. http://192.168.1.10:8123/local/arc-launcher/backup.json. Leave empty to turn syncing off.';
+
+  @override
+  String get remoteSyncAutomatic => 'Sync automatically';
+
+  @override
+  String get remoteSyncAutomaticDescription =>
+      'Checks at startup and every 6 hours; replaces this device\'s layout and settings when the file changed';
+
+  @override
+  String get remoteSyncNow => 'Sync now';
+
+  @override
+  String get remoteSyncInProgress => 'Syncing…';
+
+  @override
+  String remoteSyncLastCheck(String time) {
+    return 'Last checked: $time';
+  }
+
+  @override
+  String remoteSyncFailed(String error) {
+    return 'Sync failed: $error';
+  }
 }

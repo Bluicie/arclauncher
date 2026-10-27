@@ -771,4 +771,66 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '22:00–6:00';
+
+  @override
+  String get backupAndRestore => 'Sao lưu và khôi phục';
+
+  @override
+  String get backupAutoExport => 'Tự động sao lưu';
+
+  @override
+  String get backupAutoExportDescription => 'Lưu bản sao lưu sau mỗi thay đổi';
+
+  @override
+  String get backupExportNow => 'Sao lưu ngay';
+
+  @override
+  String get backupRestore => 'Khôi phục bản sao lưu';
+
+  @override
+  String get backupNoBackups => 'Không tìm thấy bản sao lưu';
+
+  @override
+  String backupFolder(String path) {
+    return 'Thư mục sao lưu: $path';
+  }
+
+  @override
+  String backupExported(String fileName) {
+    return 'Đã lưu bản sao lưu: $fileName';
+  }
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Sao lưu thất bại: $error';
+  }
+
+  @override
+  String get backupRestoreConfirmTitle => 'Khôi phục bản sao lưu này?';
+
+  @override
+  String backupRestoreConfirmMessage(String fileName) {
+    return 'Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế bằng $fileName.';
+  }
+
+  @override
+  String get backupRestoreButton => 'Khôi phục';
+
+  @override
+  String get backupCancelButton => 'Hủy';
+
+  @override
+  String backupRestored(int sections, int apps) {
+    return 'Đã khôi phục $sections mục với $apps ứng dụng';
+  }
+
+  @override
+  String backupMissingApps(int count) {
+    return '$count ứng dụng trong bản sao lưu chưa được cài trên thiết bị này';
+  }
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Khôi phục thất bại: $error';
+  }
 }

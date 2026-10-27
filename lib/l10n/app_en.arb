@@ -353,5 +353,73 @@
           "type": "String"
         }
       }
+    },
+    "backupAndRestore": "Backup & restore",
+    "backupAutoExport": "Automatic backup",
+    "backupAutoExportDescription": "Save a backup after every change",
+    "backupExportNow": "Back up now",
+    "backupRestore": "Restore a backup",
+    "backupNoBackups": "No backups found",
+    "backupFolder": "Backup folder: {path}",
+    "backupExported": "Backup saved: {fileName}",
+    "backupExportFailed": "Backup failed: {error}",
+    "backupRestoreConfirmTitle": "Restore this backup?",
+    "backupRestoreConfirmMessage": "Your sections, app order and settings will be replaced by {fileName}.",
+    "backupRestoreButton": "Restore",
+    "backupCancelButton": "Cancel",
+    "backupRestored": "Restored {sections} sections with {apps} apps",
+    "backupMissingApps": "{count} apps from the backup are not installed on this device",
+    "backupRestoreFailed": "Restore failed: {error}",
+    "@backupFolder": {
+      "placeholders": {
+        "path": {
+          "type": "String"
+        }
+      }
+    },
+    "@backupExported": {
+      "placeholders": {
+        "fileName": {
+          "type": "String"
+        }
+      }
+    },
+    "@backupExportFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
+    },
+    "@backupRestoreConfirmMessage": {
+      "placeholders": {
+        "fileName": {
+          "type": "String"
+        }
+      }
+    },
+    "@backupRestored": {
+      "placeholders": {
+        "sections": {
+          "type": "int"
+        },
+        "apps": {
+          "type": "int"
+        }
+      }
+    },
+    "@backupMissingApps": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "@backupRestoreFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
     }
 }

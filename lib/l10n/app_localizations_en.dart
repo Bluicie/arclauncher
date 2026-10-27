@@ -765,4 +765,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '10 PM - 6 AM';
+
+  @override
+  String get backupAndRestore => 'Backup & restore';
+
+  @override
+  String get backupAutoExport => 'Automatic backup';
+
+  @override
+  String get backupAutoExportDescription => 'Save a backup after every change';
+
+  @override
+  String get backupExportNow => 'Back up now';
+
+  @override
+  String get backupRestore => 'Restore a backup';
+
+  @override
+  String get backupNoBackups => 'No backups found';
+
+  @override
+  String backupFolder(String path) {
+    return 'Backup folder: $path';
+  }
+
+  @override
+  String backupExported(String fileName) {
+    return 'Backup saved: $fileName';
+  }
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Backup failed: $error';
+  }
+
+  @override
+  String get backupRestoreConfirmTitle => 'Restore this backup?';
+
+  @override
+  String backupRestoreConfirmMessage(String fileName) {
+    return 'Your sections, app order and settings will be replaced by $fileName.';
+  }
+
+  @override
+  String get backupRestoreButton => 'Restore';
+
+  @override
+  String get backupCancelButton => 'Cancel';
+
+  @override
+  String backupRestored(int sections, int apps) {
+    return 'Restored $sections sections with $apps apps';
+  }
+
+  @override
+  String backupMissingApps(int count) {
+    return '$count apps from the backup are not installed on this device';
+  }
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Restore failed: $error';
+  }
 }

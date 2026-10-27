@@ -20,6 +20,7 @@ import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/update_service.dart';
 import 'package:flauncher/build_flags.dart';
 import 'package:flauncher/widgets/settings/applications_panel_page.dart';
+import 'package:flauncher/widgets/settings/backup_panel_page.dart';
 import 'package:flauncher/widgets/settings/flauncher_about_dialog.dart';
 import 'package:flauncher/widgets/settings/interface_settings_page.dart';
 import 'package:flauncher/widgets/settings/update_dialogs.dart';
@@ -65,6 +66,12 @@ class SettingsPanelPage extends StatelessWidget {
                   leading: const Icon(Icons.settings_suggest_outlined),
                   title: Text(localizations.system, style: Theme.of(context).textTheme.bodyMedium),
                   onPressed: () => Navigator.of(context).pushNamed(GeneralSettingsPage.routeName),
+                ),
+                FocusableSettingsTile(
+                  showChevron: true,
+                  leading: const Icon(Icons.settings_backup_restore),
+                  title: Text(localizations.backupAndRestore, style: Theme.of(context).textTheme.bodyMedium),
+                  onPressed: () => Navigator.of(context).pushNamed(BackupPanelPage.routeName),
                 ),
                 const SettingsSectionDivider(),
                 FocusableSettingsTile(

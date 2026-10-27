@@ -767,4 +767,67 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '10 PM - 6 AM';
+
+  @override
+  String get backupAndRestore => 'Yedekleme ve geri yükleme';
+
+  @override
+  String get backupAutoExport => 'Otomatik yedekleme';
+
+  @override
+  String get backupAutoExportDescription =>
+      'Her değişiklikten sonra yedek kaydet';
+
+  @override
+  String get backupExportNow => 'Şimdi yedekle';
+
+  @override
+  String get backupRestore => 'Yedeği geri yükle';
+
+  @override
+  String get backupNoBackups => 'Yedek bulunamadı';
+
+  @override
+  String backupFolder(String path) {
+    return 'Yedek klasörü: $path';
+  }
+
+  @override
+  String backupExported(String fileName) {
+    return 'Yedek kaydedildi: $fileName';
+  }
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Yedekleme başarısız: $error';
+  }
+
+  @override
+  String get backupRestoreConfirmTitle => 'Bu yedek geri yüklensin mi?';
+
+  @override
+  String backupRestoreConfirmMessage(String fileName) {
+    return 'Bölümleriniz, uygulama sıralamanız ve ayarlarınız $fileName ile değiştirilecek.';
+  }
+
+  @override
+  String get backupRestoreButton => 'Geri yükle';
+
+  @override
+  String get backupCancelButton => 'İptal';
+
+  @override
+  String backupRestored(int sections, int apps) {
+    return '$sections bölüm ve $apps uygulama geri yüklendi';
+  }
+
+  @override
+  String backupMissingApps(int count) {
+    return 'Yedekteki $count uygulama bu cihazda yüklü değil';
+  }
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Geri yükleme başarısız: $error';
+  }
 }

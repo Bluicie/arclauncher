@@ -235,6 +235,8 @@ class AppsService extends ChangeNotifier
     final defaultFavoriteLauncherPackageNames = [
       'com.omeda.arc',
       'com.omeda.arc.debug',
+      'com.bluicie.arc',
+      'com.bluicie.arc.debug',
     ];
 
     return _database.transaction(() async {

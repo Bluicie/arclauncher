@@ -80,7 +80,7 @@ class BrightnessSettingsPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: SelectableText(
-                                  'adb shell appops set com.omeda.arc WRITE_SETTINGS allow', // Command for Manual Grant
+                                  'adb shell appops set com.bluicie.arc WRITE_SETTINGS allow', // Command for Manual Grant
                                   style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
                                 ),
                               ),

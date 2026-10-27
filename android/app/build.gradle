@@ -64,7 +64,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.omeda.arc"
+        applicationId "com.bluicie.arc"
         compileSdk 36
         minSdkVersion flutter.minSdkVersion
         targetSdk 35

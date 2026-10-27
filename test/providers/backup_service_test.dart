@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:drift/drift.dart' hide isNull;
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flauncher/database.dart';
 import 'package:flauncher/models/category.dart';
 import 'package:flauncher/providers/backup_service.dart';

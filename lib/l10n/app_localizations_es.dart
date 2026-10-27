@@ -907,4 +907,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String layoutFollowing(String name) {
     return 'Siguiendo a $name';
   }
+
+  @override
+  String get controlSwitch => 'Permitir el control desde otras apps';
+
+  @override
+  String get controlDescription =>
+      'Apps como Home Assistant pueden sincronizar, hacer copias y cambiar estos ajustes tras emparejarse con un código';
+
+  @override
+  String get controlPairedApps => 'Apps emparejadas';
+
+  @override
+  String get controlNoPairedApps => 'Aún no hay apps emparejadas';
+
+  @override
+  String controlRemoveTitle(String name) {
+    return '¿Quitar $name?';
+  }
+
+  @override
+  String get controlRemoveMessage =>
+      'Esta app ya no podrá controlar este televisor hasta que se vuelva a emparejar.';
+
+  @override
+  String get controlRemoveButton => 'Quitar';
+
+  @override
+  String pairingTitle(String client) {
+    return 'Emparejar con $client';
+  }
+
+  @override
+  String pairingMessage(String client) {
+    return 'Introduce este código en $client para permitirle controlar este televisor:';
+  }
 }

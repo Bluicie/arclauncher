@@ -225,6 +225,8 @@ class BackupService extends ChangeNotifier {
 
   /// Replaces the current layout and settings with [backup].
   /// Apps that are not installed on this device are skipped and reported in the result.
+  /// Hidden apps and settings are left alone when the backup has no "hiddenApps" or "settings" entry
+  /// (a layout-only backup).
   Future<BackupImportResult> applyBackup(Map<String, dynamic> backup) async {
     if (backup["format"] != format) {
       throw const FormatException("Not a launcher backup.");
@@ -295,10 +297,12 @@ class BackupService extends ChangeNotifier {
         await _database.insertAppsCategories(appsCategories);
         placedApps = appsCategories.length;
 
-        await _database.setHiddenApps(hiddenApps);
+        if (backup.containsKey("hiddenApps")) {
+          await _database.setHiddenApps(hiddenApps);
+        }
       });
 
-      final settingCount = await _applySettings(settings);
+      final settingCount = backup.containsKey("settings") ? await _applySettings(settings) : 0;
       await _onRestored?.call();
 
       return BackupImportResult(

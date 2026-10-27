@@ -1721,6 +1721,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Following {name}'**
   String layoutFollowing(String name);
+
+  /// No description provided for @controlSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow control from other apps'**
+  String get controlSwitch;
+
+  /// No description provided for @controlDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps like Home Assistant can sync, back up and change these settings after pairing with a code'**
+  String get controlDescription;
+
+  /// No description provided for @controlPairedApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Paired apps'**
+  String get controlPairedApps;
+
+  /// No description provided for @controlNoPairedApps.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps paired yet'**
+  String get controlNoPairedApps;
+
+  /// No description provided for @controlRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String controlRemoveTitle(String name);
+
+  /// No description provided for @controlRemoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This app can no longer control this TV until it is paired again.'**
+  String get controlRemoveMessage;
+
+  /// No description provided for @controlRemoveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get controlRemoveButton;
+
+  /// No description provided for @pairingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair with {client}'**
+  String pairingTitle(String client);
+
+  /// No description provided for @pairingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter this code in {client} to allow it to control this TV:'**
+  String pairingMessage(String client);
 }
 
 class _AppLocalizationsDelegate

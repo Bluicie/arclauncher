@@ -191,7 +191,55 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
         subtitle: Text(subtitle, style: captionStyle),
         secondary: const Icon(Icons.cast_connected),
       ),
+      RoundedSwitchListTile(
+        value: layoutShareService.controlEnabled,
+        onChanged: (value) => layoutShareService.setControlEnabled(value),
+        title: Text(localizations.controlSwitch, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(localizations.controlDescription, style: captionStyle),
+        secondary: const Icon(Icons.settings_remote),
+      ),
+      if (layoutShareService.controlEnabled) ...[
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 4),
+          child: Text(localizations.controlPairedApps, style: captionStyle),
+        ),
+        if (layoutShareService.clients.isEmpty)
+          Text(localizations.controlNoPairedApps, style: captionStyle)
+        else
+          for (final client in layoutShareService.clients)
+            FocusableSettingsTile(
+              leading: const Icon(Icons.link_off),
+              title: Text(client.name, style: Theme.of(context).textTheme.bodyMedium),
+              subtitle: Text(DateFormat.yMd().format(client.created.toLocal()), style: captionStyle),
+              onPressed: () => _removeClient(context, localizations, layoutShareService, client),
+            ),
+      ],
     ];
+  }
+
+  Future<void> _removeClient(BuildContext context, AppLocalizations localizations,
+      LayoutShareService layoutShareService, PairedClient client) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(localizations.controlRemoveTitle(client.name)),
+        content: Text(localizations.controlRemoveMessage),
+        actions: [
+          TextButton(
+            autofocus: true,
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(localizations.backupCancelButton),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(localizations.controlRemoveButton),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await layoutShareService.removeClient(client.token);
+    }
   }
 
   Future<void> _pickTvToFollow(

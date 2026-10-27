@@ -98,6 +98,10 @@ Future<void> main() async {
               sharedPreferences,
               Provider.of<BackupService>(context, listen: false),
               fLauncherChannel.getDeviceName,
+              remoteSyncService: Provider.of<RemoteSyncService>(context, listen: false),
+              advertise: (name, port, attributes) =>
+                  fLauncherChannel.registerNsdService(name, localApiServiceType, port, attributes),
+              stopAdvertising: fLauncherChannel.unregisterNsdService,
             ),
             lazy: false
         ),

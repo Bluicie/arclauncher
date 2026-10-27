@@ -901,4 +901,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String layoutFollowing(String name) {
     return '$name takip ediliyor';
   }
+
+  @override
+  String get controlSwitch => 'Diğer uygulamalardan kontrole izin ver';
+
+  @override
+  String get controlDescription =>
+      'Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir';
+
+  @override
+  String get controlPairedApps => 'Eşleşmiş uygulamalar';
+
+  @override
+  String get controlNoPairedApps => 'Henüz eşleşmiş uygulama yok';
+
+  @override
+  String controlRemoveTitle(String name) {
+    return '$name kaldırılsın mı?';
+  }
+
+  @override
+  String get controlRemoveMessage =>
+      'Bu uygulama yeniden eşleşene kadar bu TV\'yi kontrol edemez.';
+
+  @override
+  String get controlRemoveButton => 'Kaldır';
+
+  @override
+  String pairingTitle(String client) {
+    return '$client ile eşleştir';
+  }
+
+  @override
+  String pairingMessage(String client) {
+    return '$client uygulamasının bu TV\'yi kontrol etmesine izin vermek için bu kodu girin:';
+  }
 }

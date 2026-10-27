@@ -29,6 +29,8 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.Uri;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -79,6 +81,7 @@ public class MainActivity extends FlutterActivity {
     private static final String PERMISSION_READ_TV_LISTINGS = "android.permission.READ_TV_LISTINGS";
     private static final int REQUEST_CODE_READ_TV_LISTINGS = 1001;
     private static final String COLUMN_ASPECT_RATIO = "aspect_ratio";
+    private NsdManager.RegistrationListener nsdRegistrationListener;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -181,6 +184,15 @@ public class MainActivity extends FlutterActivity {
                     }
                 }
                 case "getDeviceName" -> result.success(getDeviceName());
+                case "registerNsdService" -> {
+                    registerNsdService(call.argument("name"), call.argument("type"), call.argument("port"),
+                            call.argument("attributes"));
+                    result.success(null);
+                }
+                case "unregisterNsdService" -> {
+                    unregisterNsdService();
+                    result.success(null);
+                }
                 case "loadContentUriImage" -> {
                     String contentUri = (String) call.arguments();
                     if (contentUri != null) {
@@ -1124,5 +1136,58 @@ public class MainActivity extends FlutterActivity {
             }
         }
         return Build.MODEL;
+    }
+
+    /** Announces a service on the local network (mDNS / DNS-SD), replacing a previous announcement. */
+    private void registerNsdService(String name, String type, Integer port, Map<String, String> attributes) {
+        unregisterNsdService();
+        NsdServiceInfo serviceInfo = new NsdServiceInfo();
+        serviceInfo.setServiceName(name);
+        serviceInfo.setServiceType(type);
+        serviceInfo.setPort(port);
+        if (attributes != null) {
+            for (Map.Entry<String, String> entry : attributes.entrySet()) {
+                serviceInfo.setAttribute(entry.getKey(), entry.getValue());
+            }
+        }
+        nsdRegistrationListener = new NsdManager.RegistrationListener() {
+            @Override
+            public void onServiceRegistered(NsdServiceInfo info) {
+            }
+
+            @Override
+            public void onRegistrationFailed(NsdServiceInfo info, int errorCode) {
+                android.util.Log.w("ArcLauncher", "mDNS registration failed: " + errorCode);
+            }
+
+            @Override
+            public void onServiceUnregistered(NsdServiceInfo info) {
+            }
+
+            @Override
+            public void onUnregistrationFailed(NsdServiceInfo info, int errorCode) {
+            }
+        };
+        NsdManager nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
+        nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, nsdRegistrationListener);
+    }
+
+    private void unregisterNsdService() {
+        if (nsdRegistrationListener == null) {
+            return;
+        }
+        NsdManager nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
+        try {
+            nsdManager.unregisterService(nsdRegistrationListener);
+        } catch (IllegalArgumentException ignored) {
+            // Was not registered (anymore).
+        }
+        nsdRegistrationListener = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterNsdService();
+        super.onDestroy();
     }
 }

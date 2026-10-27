@@ -1,0 +1,100 @@
+name: Home build
+
+# Fork-only workflow: every push to `home` builds a signed APK and publishes it as a
+# GitHub Release, so the in-app self-updater (pointed at this fork) can offer it.
+# Version: <pubspec version>.<run number>, versionCode: <pubspec build> * 1000 + <run number>.
+on:
+  push:
+    branches:
+      - home
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish a GitHub Release (otherwise build only)
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: home-build
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: "3.41.9"
+
+jobs:
+  build:
+    if: github.repository == 'Bluicie/arclauncher'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Setup signing
+        env:
+          SIGNING_JKS_FILE_BASE64: ${{ secrets.SIGNING_JKS_FILE_BASE64 }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          for name in SIGNING_JKS_FILE_BASE64 SIGNING_KEYSTORE_PASSWORD SIGNING_KEY_ALIAS SIGNING_KEY_PASSWORD; do
+            test -n "${!name:-}" || { echo "::error::Repository secret $name is not set (Settings > Secrets and variables > Actions)"; exit 1; }
+          done
+          echo -n "$SIGNING_JKS_FILE_BASE64" | base64 -d > android/app/upload-keystore.jks
+      - name: Set build metadata
+        id: meta
+        run: |
+          VERSION=$(sed -nE 's/^version:[[:space:]]*([0-9.]+)\+.*/\1/p' pubspec.yaml)
+          BUILD=$(sed -nE 's/^version:[[:space:]]*[^+]+\+([0-9]+).*/\1/p' pubspec.yaml)
+          test -n "$VERSION" && test -n "$BUILD" || { echo "Could not parse version from pubspec.yaml"; exit 1; }
+          echo "build_name=${VERSION}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "build_number=$(( BUILD * 1000 + GITHUB_RUN_NUMBER ))" >> "$GITHUB_OUTPUT"
+      - run: flutter pub get
+      - name: Build release APKs
+        env:
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          flutter build apk --release --flavor github \
+            --dart-define=ENABLE_SELF_UPDATER=true \
+            --build-number=${{ steps.meta.outputs.build_number }} \
+            --build-name=${{ steps.meta.outputs.build_name }}
+          mkdir -p dist
+          TAG="v${{ steps.meta.outputs.build_name }}"
+          for abi in universal arm64-v8a armeabi-v7a; do
+            src=$(find build/app/outputs -name "arc-launcher-${abi}-release.apk" | head -n1)
+            test -n "$src" || { echo "Missing $abi APK"; find build/app/outputs -name '*.apk'; exit 1; }
+            if [ "$abi" = universal ]; then
+              cp "$src" "dist/archome-${TAG}.apk"
+            else
+              cp "$src" "dist/archome-${TAG}-${abi}.apk"
+            fi
+          done
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+        id: build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archome-${{ steps.build.outputs.tag }}
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' || inputs.publish
+        with:
+          tag_name: ${{ steps.build.outputs.tag }}
+          name: Arc Home ${{ steps.build.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          body: |
+            Home build of `${{ github.ref_name }}` at ${{ github.sha }}.
+          files: dist/*
+          fail_on_unmatched_files: true

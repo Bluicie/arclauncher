@@ -51,7 +51,10 @@ jobs:
           echo "build_number=$(( BUILD * 1000 + GITHUB_RUN_NUMBER ))" >> "$GITHUB_OUTPUT"
       - run: flutter pub get
       - name: Check generated localizations
-        run: git diff --exit-code -- lib/l10n || echo "::warning::lib/l10n differs from gen-l10n output; commit the regenerated files"
+        run: |
+          git diff --quiet -- lib/l10n && exit 0
+          echo "::warning::lib/l10n differs from gen-l10n output; commit the regenerated files"
+          git diff -U0 -- lib/l10n | head -c 12000 | python3 -c "import sys; print('::notice title=gen-l10n diff::' + sys.stdin.read().replace('%', '%25').replace(chr(13), '').replace(chr(10), '%0A'))"
       # Problems are reported as annotations (readable without signing in); for files changed
       # compared to upstream develop every finding is shown, elsewhere only errors.
       - name: Analyze

@@ -23,6 +23,7 @@ import 'package:flauncher/flauncher_channel.dart';
 import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
+import 'package:flauncher/providers/layout_share_service.dart';
 import 'package:flauncher/providers/network_service.dart';
 import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
@@ -85,7 +86,19 @@ Future<void> main() async {
             lazy: false
         ),
         ChangeNotifierProvider(
-            create: (context) => RemoteSyncService(sharedPreferences, Provider.of<BackupService>(context, listen: false)),
+            create: (context) => RemoteSyncService(
+              sharedPreferences,
+              Provider.of<BackupService>(context, listen: false),
+              locate: (name) async => (await const LayoutDiscovery().find(name))?.backupUrl,
+            ),
+            lazy: false
+        ),
+        ChangeNotifierProvider(
+            create: (context) => LayoutShareService(
+              sharedPreferences,
+              Provider.of<BackupService>(context, listen: false),
+              fLauncherChannel.getDeviceName,
+            ),
             lazy: false
         ),
       ],

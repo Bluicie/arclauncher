@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flauncher/providers/backup_service.dart';
+import 'package:flauncher/providers/layout_share_service.dart';
 import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
@@ -126,6 +127,15 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
         child: Text(localizations.remoteSyncTitle, style: Theme.of(context).textTheme.titleSmall),
       ),
       FocusableSettingsTile(
+        showChevron: true,
+        leading: const Icon(Icons.connected_tv),
+        title: Text(localizations.layoutFollowTv, style: textStyle),
+        subtitle: remoteSyncService.followedName == null
+            ? null
+            : Text(localizations.layoutFollowing(remoteSyncService.followedName!), style: captionStyle),
+        onPressed: () => _pickTvToFollow(context, localizations, remoteSyncService),
+      ),
+      FocusableSettingsTile(
         leading: const Icon(Icons.link),
         title: Text(localizations.remoteSyncAddress, style: textStyle),
         subtitle: Text(
@@ -154,6 +164,82 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
           child: Text(status, style: captionStyle),
         ),
     ];
+  }
+
+  List<Widget> _shareTiles(BuildContext context, AppLocalizations localizations) {
+    final layoutShareService = context.watch<LayoutShareService>();
+    final captionStyle = Theme.of(context).textTheme.bodySmall;
+
+    final String subtitle;
+    if (layoutShareService.error != null) {
+      subtitle = localizations.layoutShareFailed(layoutShareService.error!);
+    } else if (layoutShareService.running && layoutShareService.name != null) {
+      subtitle = localizations.layoutShareActive(layoutShareService.name!);
+    } else {
+      subtitle = localizations.layoutShareDescription;
+    }
+
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 16, bottom: 8),
+        child: Text(localizations.layoutShareTitle, style: Theme.of(context).textTheme.titleSmall),
+      ),
+      RoundedSwitchListTile(
+        value: layoutShareService.enabled,
+        onChanged: (value) => layoutShareService.setEnabled(value),
+        title: Text(localizations.layoutShareSwitch, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(subtitle, style: captionStyle),
+        secondary: const Icon(Icons.cast_connected),
+      ),
+    ];
+  }
+
+  Future<void> _pickTvToFollow(
+      BuildContext context, AppLocalizations localizations, RemoteSyncService remoteSyncService) async {
+    final scan = const LayoutDiscovery().scan();
+    final source = await showDialog<SharedLayoutSource>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(localizations.layoutFollowTv),
+        contentPadding: const EdgeInsets.all(16),
+        children: [
+          FutureBuilder<List<SharedLayoutSource>>(
+            future: scan,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return Row(
+                  children: [
+                    const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
+                    const SizedBox(width: 16),
+                    Text(localizations.layoutFollowSearching),
+                  ],
+                );
+              }
+              final sources = snapshot.data ?? const <SharedLayoutSource>[];
+              if (sources.isEmpty) {
+                return Text(localizations.layoutFollowNoneFound);
+              }
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < sources.length; i++)
+                    FocusableSettingsTile(
+                      autofocus: i == 0,
+                      leading: const Icon(Icons.tv),
+                      title: Text(sources[i].name),
+                      subtitle: Text(sources[i].host),
+                      onPressed: () => Navigator.of(context).pop(sources[i]),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+    if (source != null) {
+      await remoteSyncService.follow(source.name, source.backupUrl);
+    }
   }
 
   Future<void> _editRemoteUrl(
@@ -225,6 +311,7 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(_status!, style: captionStyle),
                 ),
+              ..._shareTiles(context, localizations),
               ..._remoteSyncTiles(context, localizations),
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),

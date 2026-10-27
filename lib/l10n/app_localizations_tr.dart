@@ -866,4 +866,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String remoteSyncFailed(String error) {
     return 'Eşitleme başarısız: $error';
   }
+
+  @override
+  String get layoutShareTitle => 'Diğer TV\'lerle paylaş';
+
+  @override
+  String get layoutShareSwitch => 'Bu düzeni paylaş';
+
+  @override
+  String get layoutShareDescription =>
+      'Ağınızdaki diğer TV\'ler bu TV\'yi takip edebilir';
+
+  @override
+  String layoutShareActive(String name) {
+    return '“$name” olarak paylaşılıyor';
+  }
+
+  @override
+  String layoutShareFailed(String error) {
+    return 'Paylaşma başarısız: $error';
+  }
+
+  @override
+  String get layoutFollowTv => 'Başka bir TV\'yi takip et';
+
+  @override
+  String get layoutFollowSearching => 'Ağınız aranıyor…';
+
+  @override
+  String get layoutFollowNoneFound =>
+      'TV bulunamadı. Takip etmek istediğiniz TV\'de “Bu düzeni paylaş”ı açın.';
+
+  @override
+  String layoutFollowing(String name) {
+    return '$name takip ediliyor';
+  }
 }

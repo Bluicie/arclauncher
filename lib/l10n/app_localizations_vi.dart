@@ -869,4 +869,39 @@ class AppLocalizationsVi extends AppLocalizations {
   String remoteSyncFailed(String error) {
     return 'Đồng bộ thất bại: $error';
   }
+
+  @override
+  String get layoutShareTitle => 'Chia sẻ với TV khác';
+
+  @override
+  String get layoutShareSwitch => 'Chia sẻ bố cục này';
+
+  @override
+  String get layoutShareDescription =>
+      'Các TV khác trong mạng có thể theo dõi TV này';
+
+  @override
+  String layoutShareActive(String name) {
+    return 'Đang chia sẻ với tên “$name”';
+  }
+
+  @override
+  String layoutShareFailed(String error) {
+    return 'Chia sẻ thất bại: $error';
+  }
+
+  @override
+  String get layoutFollowTv => 'Theo dõi TV khác';
+
+  @override
+  String get layoutFollowSearching => 'Đang tìm trong mạng…';
+
+  @override
+  String get layoutFollowNoneFound =>
+      'Không tìm thấy TV. Hãy bật “Chia sẻ bố cục này” trên TV bạn muốn theo dõi.';
+
+  @override
+  String layoutFollowing(String name) {
+    return 'Đang theo dõi $name';
+  }
 }

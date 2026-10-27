@@ -260,5 +260,14 @@
   "remoteSyncNow": "Đồng bộ ngay",
   "remoteSyncInProgress": "Đang đồng bộ…",
   "remoteSyncLastCheck": "Lần kiểm tra cuối: {time}",
-  "remoteSyncFailed": "Đồng bộ thất bại: {error}"
+  "remoteSyncFailed": "Đồng bộ thất bại: {error}",
+  "layoutShareTitle": "Chia sẻ với TV khác",
+  "layoutShareSwitch": "Chia sẻ bố cục này",
+  "layoutShareDescription": "Các TV khác trong mạng có thể theo dõi TV này",
+  "layoutShareActive": "Đang chia sẻ với tên “{name}”",
+  "layoutShareFailed": "Chia sẻ thất bại: {error}",
+  "layoutFollowTv": "Theo dõi TV khác",
+  "layoutFollowSearching": "Đang tìm trong mạng…",
+  "layoutFollowNoneFound": "Không tìm thấy TV. Hãy bật “Chia sẻ bố cục này” trên TV bạn muốn theo dõi.",
+  "layoutFollowing": "Đang theo dõi {name}"
 }

@@ -1667,6 +1667,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sync failed: {error}'**
   String remoteSyncFailed(String error);
+
+  /// No description provided for @layoutShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with other TVs'**
+  String get layoutShareTitle;
+
+  /// No description provided for @layoutShareSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this layout'**
+  String get layoutShareSwitch;
+
+  /// No description provided for @layoutShareDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Other TVs on your network can follow this one'**
+  String get layoutShareDescription;
+
+  /// No description provided for @layoutShareActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared as “{name}”'**
+  String layoutShareActive(String name);
+
+  /// No description provided for @layoutShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing failed: {error}'**
+  String layoutShareFailed(String error);
+
+  /// No description provided for @layoutFollowTv.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow another TV'**
+  String get layoutFollowTv;
+
+  /// No description provided for @layoutFollowSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching your network…'**
+  String get layoutFollowSearching;
+
+  /// No description provided for @layoutFollowNoneFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No TVs found. Turn on “Share this layout” on the TV you want to follow.'**
+  String get layoutFollowNoneFound;
+
+  /// No description provided for @layoutFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Following {name}'**
+  String layoutFollowing(String name);
 }
 
 class _AppLocalizationsDelegate

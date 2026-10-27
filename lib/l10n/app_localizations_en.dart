@@ -863,4 +863,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String remoteSyncFailed(String error) {
     return 'Sync failed: $error';
   }
+
+  @override
+  String get layoutShareTitle => 'Share with other TVs';
+
+  @override
+  String get layoutShareSwitch => 'Share this layout';
+
+  @override
+  String get layoutShareDescription =>
+      'Other TVs on your network can follow this one';
+
+  @override
+  String layoutShareActive(String name) {
+    return 'Shared as “$name”';
+  }
+
+  @override
+  String layoutShareFailed(String error) {
+    return 'Sharing failed: $error';
+  }
+
+  @override
+  String get layoutFollowTv => 'Follow another TV';
+
+  @override
+  String get layoutFollowSearching => 'Searching your network…';
+
+  @override
+  String get layoutFollowNoneFound =>
+      'No TVs found. Turn on “Share this layout” on the TV you want to follow.';
+
+  @override
+  String layoutFollowing(String name) {
+    return 'Following $name';
+  }
 }

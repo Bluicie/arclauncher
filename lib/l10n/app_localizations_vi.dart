@@ -959,4 +959,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return 'Một tệp cài đặt có $sections mục đã được tải lên từ $source. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế.';
   }
+
+  @override
+  String get quickActionsTitle => 'Thao tác nhanh';
+
+  @override
+  String get quickActionsNone =>
+      'Chưa có. Ứng dụng đã ghép nối như Home Assistant có thể thêm nút vào đây.';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count nút do ứng dụng đã ghép nối thiết lập';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Xóa tất cả';
 }

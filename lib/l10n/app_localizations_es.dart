@@ -962,4 +962,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return 'Se subió un archivo de ajustes con $sections secciones desde $source. Tus secciones, el orden de las apps y los ajustes se sustituirán.';
   }
+
+  @override
+  String get quickActionsTitle => 'Acciones rápidas';
+
+  @override
+  String get quickActionsNone =>
+      'Ninguna todavía. Una app emparejada como Home Assistant puede añadir botones aquí.';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count botones, configurados por una app emparejada';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Quitar todas';
 }

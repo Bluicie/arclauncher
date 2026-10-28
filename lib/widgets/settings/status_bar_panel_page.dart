@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/providers/quick_actions_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
+import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
 import 'package:flauncher/widgets/settings/settings_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,10 +79,32 @@ class StatusBarPanelPage extends StatelessWidget {
                   title: Text(localizations.networkIndicator),
                   secondary: Icon(Icons.signal_wifi_4_bar)
                 ),
+                ..._quickActionTiles(context, localizations),
               ],
             ),
           ),
         ],
       );
+  }
+
+  List<Widget> _quickActionTiles(BuildContext context, AppLocalizations localizations) {
+    final quickActionsService = context.watch<QuickActionsService?>();
+    if (quickActionsService == null) {
+      return const [];
+    }
+    final count = quickActionsService.actions.length;
+    return [
+      const SettingsSectionDivider(),
+      FocusableSettingsTile(
+        leading: const Icon(Icons.touch_app_outlined),
+        title: Text(localizations.quickActionsTitle, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(
+          count == 0 ? localizations.quickActionsNone : localizations.quickActionsCount(count),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        onPressed: count == 0 ? null : () => quickActionsService.clear(),
+        trailing: count == 0 ? null : Text(localizations.quickActionsRemoveAll),
+      ),
+    ];
   }
 }

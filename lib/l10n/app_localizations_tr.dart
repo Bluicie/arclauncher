@@ -956,4 +956,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return '$source adresinden $sections bölümlü bir ayar dosyası yüklendi. Bölümleriniz, uygulama sıralamanız ve ayarlarınız değiştirilecek.';
   }
+
+  @override
+  String get quickActionsTitle => 'Hızlı işlemler';
+
+  @override
+  String get quickActionsNone =>
+      'Henüz yok. Home Assistant gibi eşleşmiş bir uygulama buraya düğme ekleyebilir.';
+
+  @override
+  String quickActionsCount(int count) {
+    return 'Eşleşmiş bir uygulamanın ayarladığı $count düğme';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Tümünü kaldır';
 }

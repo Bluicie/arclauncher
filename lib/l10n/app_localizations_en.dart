@@ -953,4 +953,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return 'A settings file with $sections sections was uploaded from $source. Your sections, app order and settings will be replaced.';
   }
+
+  @override
+  String get quickActionsTitle => 'Quick actions';
+
+  @override
+  String get quickActionsNone =>
+      'None yet. A paired app such as Home Assistant can add buttons here.';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count buttons, set up by a paired app';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Remove all';
 }

@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flauncher/providers/backup_web_page.dart';
+import 'package:flauncher/providers/quick_actions_service.dart';
 import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:path/path.dart' as path;
@@ -105,6 +106,7 @@ class LayoutShareService extends ChangeNotifier {
   static const int _maxClientNameLength = 40;
   static const int _maxBodyBytes = 16 * 1024;
   static const int _maxRestoreBytes = 4 * 1024 * 1024;
+  static const int _maxQuickActionsBytes = 64 * 1024;
   static const Duration _bodyTimeout = Duration(seconds: 15);
   static const int _maxConcurrentRequests = 8;
   static const Duration webRestoreTimeout = Duration(minutes: 2);
@@ -112,6 +114,7 @@ class LayoutShareService extends ChangeNotifier {
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
   final RemoteSyncService? _remoteSyncService;
+  final QuickActionsService? _quickActionsService;
   final Future<String> Function() _deviceName;
   final Future<void> Function(String name, int port, Map<String, String> attributes)? _advertise;
   final Future<void> Function()? _stopAdvertising;
@@ -134,11 +137,13 @@ class LayoutShareService extends ChangeNotifier {
     this._backupService,
     this._deviceName, {
     RemoteSyncService? remoteSyncService,
+    QuickActionsService? quickActionsService,
     Future<void> Function(String name, int port, Map<String, String> attributes)? advertise,
     Future<void> Function()? stopAdvertising,
     int port = layoutSharePort,
     bool start = true,
   })  : _remoteSyncService = remoteSyncService,
+        _quickActionsService = quickActionsService,
         _advertise = advertise,
         _stopAdvertising = stopAdvertising,
         _port = port {
@@ -201,11 +206,14 @@ class LayoutShareService extends ChangeNotifier {
       .toList();
 
   /// Stable random id of this device, so clients recognise it when its name or address changes.
-  String get deviceId {
-    var id = _sharedPreferences.getString(_deviceIdKey);
+  String get deviceId => deviceIdFor(_sharedPreferences);
+
+  static String deviceIdFor(SharedPreferences sharedPreferences) {
+    var id = sharedPreferences.getString(_deviceIdKey);
     if (id == null) {
-      id = List.generate(16, (_) => _random.nextInt(256).toRadixString(16).padLeft(2, "0")).join();
-      _sharedPreferences.setString(_deviceIdKey, id);
+      final random = Random.secure();
+      id = List.generate(16, (_) => random.nextInt(256).toRadixString(16).padLeft(2, "0")).join();
+      sharedPreferences.setString(_deviceIdKey, id);
     }
     return id;
   }
@@ -495,6 +503,19 @@ class LayoutShareService extends ChangeNotifier {
       } on FormatException catch (e) {
         throw _ApiException(HttpStatus.badRequest, e.message);
       }
+    } else if (route == "PUT $_apiPrefix/quick-actions") {
+      _authorize(request);
+      final quickActions = _quickActionsService;
+      if (quickActions == null) {
+        throw const _ApiException(HttpStatus.notImplemented, "Quick actions are not available");
+      }
+      final body = await _readJson(request, maxBytes: _maxQuickActionsBytes);
+      try {
+        final count = await quickActions.setActionsFromJson(body["actions"]);
+        return (HttpStatus.ok, jsonEncode({"quickActions": count}));
+      } on FormatException catch (e) {
+        throw _ApiException(HttpStatus.badRequest, e.message);
+      }
     } else if (route == "PUT $_apiPrefix/settings") {
       _authorize(request);
       await _applySettings(await _readJson(request));
@@ -522,6 +543,10 @@ class LayoutShareService extends ChangeNotifier {
       ..._info(),
       "appVersion": backup["appVersion"],
       "autoBackup": _backupService.autoExportEnabled,
+      "quickActions": [
+        for (final action in _quickActionsService?.actions ?? const <QuickAction>[])
+          {"id": action.id, "label": action.label, "icon": action.icon},
+      ],
       "sync": remoteSync == null
           ? null
           : {

@@ -283,5 +283,9 @@
   "webDescription": "Tải tệp cài đặt hoặc khôi phục từ điện thoại hay máy tính trong cùng mạng",
   "webAddress": "Mở {address} trong trình duyệt",
   "webRestoreTitle": "Khôi phục cài đặt đã tải lên?",
-  "webRestoreMessage": "Một tệp cài đặt có {sections} mục đã được tải lên từ {source}. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế."
+  "webRestoreMessage": "Một tệp cài đặt có {sections} mục đã được tải lên từ {source}. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế.",
+  "quickActionsTitle": "Thao tác nhanh",
+  "quickActionsNone": "Chưa có. Ứng dụng đã ghép nối như Home Assistant có thể thêm nút vào đây.",
+  "quickActionsCount": "{count} nút do ứng dụng đã ghép nối thiết lập",
+  "quickActionsRemoveAll": "Xóa tất cả"
 }

@@ -1805,6 +1805,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A settings file with {sections} sections was uploaded from {source}. Your sections, app order and settings will be replaced.'**
   String webRestoreMessage(String source, int sections);
+
+  /// No description provided for @quickActionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get quickActionsTitle;
+
+  /// No description provided for @quickActionsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None yet. A paired app such as Home Assistant can add buttons here.'**
+  String get quickActionsNone;
+
+  /// No description provided for @quickActionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} buttons, set up by a paired app'**
+  String quickActionsCount(int count);
+
+  /// No description provided for @quickActionsRemoveAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all'**
+  String get quickActionsRemoveAll;
 }
 
 class _AppLocalizationsDelegate

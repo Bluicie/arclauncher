@@ -25,6 +25,7 @@ import 'package:flauncher/providers/backup_service.dart';
 import 'package:flauncher/providers/launcher_state.dart';
 import 'package:flauncher/providers/layout_share_service.dart';
 import 'package:flauncher/providers/network_service.dart';
+import 'package:flauncher/providers/quick_actions_service.dart';
 import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/brightness_service.dart';
@@ -94,11 +95,20 @@ Future<void> main() async {
             lazy: false
         ),
         ChangeNotifierProvider(
+            create: (_) => QuickActionsService(
+              sharedPreferences,
+              deviceId: () => LayoutShareService.deviceIdFor(sharedPreferences),
+              deviceName: fLauncherChannel.getDeviceName,
+            ),
+            lazy: false
+        ),
+        ChangeNotifierProvider(
             create: (context) => LayoutShareService(
               sharedPreferences,
               Provider.of<BackupService>(context, listen: false),
               fLauncherChannel.getDeviceName,
               remoteSyncService: Provider.of<RemoteSyncService>(context, listen: false),
+              quickActionsService: Provider.of<QuickActionsService>(context, listen: false),
               advertise: (name, port, attributes) =>
                   fLauncherChannel.registerNsdService(name, localApiServiceType, port, attributes),
               stopAdvertising: fLauncherChannel.unregisterNsdService,

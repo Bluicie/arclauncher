@@ -9,6 +9,7 @@ import 'app_bar_focus_ring.dart';
 import 'daily_wifi_usage_widget.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
+import 'quick_actions_bar.dart';
 
 class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget
 {
@@ -112,6 +113,7 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
                 ),
               ),
               const SizedBox(width: 8),
+              const QuickActionsBar(),
               // Network indicator (conditionally shown)
               Selector<SettingsService, bool>(
                 selector: (_, settings) => settings.showNetworkIndicatorInStatusBar,

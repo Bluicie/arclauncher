@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
@@ -12,6 +13,7 @@ const _enabledKey = "backup_remote_enabled";
 const _lastHashKey = "backup_remote_last_hash";
 const _lastCheckKey = "backup_remote_last_check";
 const _followNameKey = "backup_remote_follow_name";
+const _followIdKey = "backup_remote_follow_id";
 
 /// Keeps this device in sync with a backup file published at a URL
 /// (e.g. on Home Assistant, a NAS or any web server): the file is downloaded
@@ -20,11 +22,12 @@ class RemoteSyncService extends ChangeNotifier {
   static const Duration interval = Duration(hours: 6);
   static const Duration startupDelay = Duration(seconds: 30);
   static const Duration timeout = Duration(seconds: 30);
+  static const int maxDownloadBytes = 4 * 1024 * 1024;
 
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
   final http.Client _client;
-  final Future<Uri?> Function(String name)? _locate;
+  final Future<Uri?> Function(String id)? _locate;
 
   Timer? _startupTimer;
   Timer? _periodicTimer;
@@ -32,13 +35,13 @@ class RemoteSyncService extends ChangeNotifier {
   String? _lastError;
   BackupImportResult? _lastResult;
 
-  /// [locate] finds the current address of a followed device by its name (see [follow]),
+  /// [locate] finds the current address of a followed device by its id (see [follow]),
   /// so syncing keeps working when that device gets a new IP address.
   RemoteSyncService(
     this._sharedPreferences,
     this._backupService, {
     http.Client? client,
-    Future<Uri?> Function(String name)? locate,
+    Future<Uri?> Function(String id)? locate,
     bool schedule = true,
   })  : _client = client ?? http.Client(),
         _locate = locate {
@@ -55,6 +58,9 @@ class RemoteSyncService extends ChangeNotifier {
 
   /// Name of the device being followed, `null` when syncing from a plain address.
   String? get followedName => _sharedPreferences.getString(_followNameKey);
+
+  /// Stable id of the device being followed, used to find it again when its address changes.
+  String? get followedId => _sharedPreferences.getString(_followIdKey);
 
   /// Error of the last attempt, `null` when it succeeded.
   String? get lastError => _lastError;
@@ -75,6 +81,7 @@ class RemoteSyncService extends ChangeNotifier {
     await _sharedPreferences.setString(_urlKey, trimmed);
     await _sharedPreferences.remove(_lastHashKey);
     await _sharedPreferences.remove(_followNameKey);
+    await _sharedPreferences.remove(_followIdKey);
     _lastError = null;
     _reschedule();
     notifyListeners();
@@ -90,9 +97,13 @@ class RemoteSyncService extends ChangeNotifier {
   }
 
   /// Follows the device shared as [name] at [backupUrl] and syncs right away.
-  Future<void> follow(String name, Uri backupUrl) async {
+  /// With its [id], the device is found again when its address changes.
+  Future<void> follow(String name, Uri backupUrl, {String? id}) async {
     await setUrl(backupUrl.toString());
     await _sharedPreferences.setString(_followNameKey, name);
+    if (id != null) {
+      await _sharedPreferences.setString(_followIdKey, id);
+    }
     await setEnabled(true);
   }
 
@@ -146,27 +157,40 @@ class RemoteSyncService extends ChangeNotifier {
     }
   }
 
-  Future<String> _download() async {
-    final response = await _client.get(Uri.parse(url)).timeout(timeout);
+  /// Downloads [from] (default: [url]), refusing responses larger than [maxDownloadBytes].
+  Future<String> _download([Uri? from]) async {
+    final uri = from ?? Uri.parse(url);
+    final response = await _client.send(http.Request("GET", uri)).timeout(timeout);
     if (response.statusCode != 200) {
-      throw http.ClientException("HTTP ${response.statusCode}", Uri.parse(url));
+      throw http.ClientException("HTTP ${response.statusCode}", uri);
     }
-    return utf8.decode(response.bodyBytes);
+    if ((response.contentLength ?? 0) > maxDownloadBytes) {
+      throw http.ClientException("Backup is too large", uri);
+    }
+    final bytes = BytesBuilder(copy: false);
+    await for (final chunk in response.stream.timeout(timeout)) {
+      bytes.add(chunk);
+      if (bytes.length > maxDownloadBytes) {
+        throw http.ClientException("Backup is too large", uri);
+      }
+    }
+    return utf8.decode(bytes.takeBytes());
   }
 
   /// Downloads from [url]; when that fails for a followed device, looks the device up
-  /// by name and retries once at its new address.
+  /// by its id and retries once at its new address, which is only kept when that works.
   Future<String> _downloadFollowingMoves() async {
     try {
       return await _download();
     } catch (_) {
-      final name = followedName;
-      final moved = (name == null || _locate == null) ? null : await _locate(name);
+      final id = followedId;
+      final moved = (id == null || _locate == null) ? null : await _locate(id);
       if (moved == null || moved.toString() == url) {
         rethrow;
       }
+      final body = await _download(moved);
       await _sharedPreferences.setString(_urlKey, moved.toString());
-      return await _download();
+      return body;
     }
   }
 

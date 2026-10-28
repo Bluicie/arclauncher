@@ -939,4 +939,24 @@ class AppLocalizationsVi extends AppLocalizations {
   String pairingMessage(String client) {
     return 'Nhập mã này trong $client để cho phép điều khiển TV này:';
   }
+
+  @override
+  String get webSwitch => 'Tải xuống và tải lên qua trình duyệt';
+
+  @override
+  String get webDescription =>
+      'Tải tệp cài đặt hoặc khôi phục từ điện thoại hay máy tính trong cùng mạng';
+
+  @override
+  String webAddress(String address) {
+    return 'Mở $address trong trình duyệt';
+  }
+
+  @override
+  String get webRestoreTitle => 'Khôi phục cài đặt đã tải lên?';
+
+  @override
+  String webRestoreMessage(String source, int sections) {
+    return 'Một tệp cài đặt có $sections mục đã được tải lên từ $source. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế.';
+  }
 }

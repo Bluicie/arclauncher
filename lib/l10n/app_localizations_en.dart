@@ -933,4 +933,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String pairingMessage(String client) {
     return 'Enter this code in $client to allow it to control this TV:';
   }
+
+  @override
+  String get webSwitch => 'Download & upload in a browser';
+
+  @override
+  String get webDescription =>
+      'Get the settings file or restore one from a phone or computer on the same network';
+
+  @override
+  String webAddress(String address) {
+    return 'Open $address in a browser';
+  }
+
+  @override
+  String get webRestoreTitle => 'Restore uploaded settings?';
+
+  @override
+  String webRestoreMessage(String source, int sections) {
+    return 'A settings file with $sections sections was uploaded from $source. Your sections, app order and settings will be replaced.';
+  }
 }

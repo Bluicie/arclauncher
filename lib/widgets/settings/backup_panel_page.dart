@@ -166,6 +166,26 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
     ];
   }
 
+  Widget _webTile(BuildContext context, AppLocalizations localizations) {
+    final layoutShareService = context.watch<LayoutShareService>();
+    final captionStyle = Theme.of(context).textTheme.bodySmall;
+    return RoundedSwitchListTile(
+      value: layoutShareService.webEnabled,
+      onChanged: (value) => layoutShareService.setWebEnabled(value),
+      title: Text(localizations.webSwitch, style: Theme.of(context).textTheme.bodyMedium),
+      subtitle: layoutShareService.webEnabled && layoutShareService.running
+          ? FutureBuilder<List<String>>(
+              future: layoutShareService.webAddresses(),
+              builder: (context, snapshot) => Text(
+                (snapshot.data ?? const []).map(localizations.webAddress).join("\n"),
+                style: captionStyle,
+              ),
+            )
+          : Text(localizations.webDescription, style: captionStyle),
+      secondary: const Icon(Icons.language),
+    );
+  }
+
   List<Widget> _shareTiles(BuildContext context, AppLocalizations localizations) {
     final layoutShareService = context.watch<LayoutShareService>();
     final captionStyle = Theme.of(context).textTheme.bodySmall;
@@ -354,6 +374,7 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
                 title: Text(localizations.backupExportNow, style: textStyle),
                 onPressed: _busy ? null : _exportNow,
               ),
+              _webTile(context, localizations),
               if (_status != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),

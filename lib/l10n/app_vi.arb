@@ -278,5 +278,10 @@
   "controlRemoveMessage": "Ứng dụng này sẽ không thể điều khiển TV này cho đến khi được ghép nối lại.",
   "controlRemoveButton": "Xóa",
   "pairingTitle": "Ghép nối với {client}",
-  "pairingMessage": "Nhập mã này trong {client} để cho phép điều khiển TV này:"
+  "pairingMessage": "Nhập mã này trong {client} để cho phép điều khiển TV này:",
+  "webSwitch": "Tải xuống và tải lên qua trình duyệt",
+  "webDescription": "Tải tệp cài đặt hoặc khôi phục từ điện thoại hay máy tính trong cùng mạng",
+  "webAddress": "Mở {address} trong trình duyệt",
+  "webRestoreTitle": "Khôi phục cài đặt đã tải lên?",
+  "webRestoreMessage": "Một tệp cài đặt có {sections} mục đã được tải lên từ {source}. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế."
 }

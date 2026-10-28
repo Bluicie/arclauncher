@@ -936,4 +936,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String pairingMessage(String client) {
     return '$client uygulamasının bu TV\'yi kontrol etmesine izin vermek için bu kodu girin:';
   }
+
+  @override
+  String get webSwitch => 'Tarayıcıdan indir ve yükle';
+
+  @override
+  String get webDescription =>
+      'Aynı ağdaki bir telefondan veya bilgisayardan ayar dosyasını indirin ya da geri yükleyin';
+
+  @override
+  String webAddress(String address) {
+    return 'Bir tarayıcıda $address adresini açın';
+  }
+
+  @override
+  String get webRestoreTitle => 'Yüklenen ayarlar geri yüklensin mi?';
+
+  @override
+  String webRestoreMessage(String source, int sections) {
+    return '$source adresinden $sections bölümlü bir ayar dosyası yüklendi. Bölümleriniz, uygulama sıralamanız ve ayarlarınız değiştirilecek.';
+  }
 }

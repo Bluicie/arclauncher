@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/providers/weather_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
+import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
 import 'package:flauncher/widgets/settings/settings_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,10 +79,105 @@ class StatusBarPanelPage extends StatelessWidget {
                   title: Text(localizations.networkIndicator),
                   secondary: Icon(Icons.signal_wifi_4_bar)
                 ),
+                ..._weatherTiles(context, localizations),
               ],
             ),
           ),
         ],
       );
+  }
+
+  List<Widget> _weatherTiles(BuildContext context, AppLocalizations localizations) {
+    final weatherService = context.watch<WeatherService?>();
+    if (weatherService == null) {
+      return const [];
+    }
+    final captionStyle = Theme.of(context).textTheme.bodySmall;
+    return [
+      const SettingsSectionDivider(),
+      RoundedSwitchListTile(
+        value: weatherService.enabled,
+        onChanged: (value) => weatherService.setEnabled(value),
+        title: Text(localizations.weatherTitle),
+        secondary: const Icon(Icons.wb_sunny_outlined),
+      ),
+      FocusableSettingsTile(
+        leading: const Icon(Icons.place_outlined),
+        title: Text(localizations.weatherLocation, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(weatherService.locationName ?? localizations.weatherLocationNotSet, style: captionStyle),
+        onPressed: () => _pickLocation(context, localizations, weatherService),
+      ),
+      RoundedSwitchListTile(
+        value: weatherService.fahrenheit,
+        onChanged: (value) => weatherService.setFahrenheit(value),
+        title: Text(localizations.weatherFahrenheit),
+        secondary: const Icon(Icons.thermostat_outlined),
+      ),
+    ];
+  }
+
+  Future<void> _pickLocation(
+      BuildContext context, AppLocalizations localizations, WeatherService weatherService) async {
+    final query = await showDialog<String>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        insetPadding: const EdgeInsets.only(bottom: 120),
+        contentPadding: const EdgeInsets.all(24),
+        title: Text(localizations.weatherLocation),
+        children: [
+          TextFormField(
+            autofocus: true,
+            decoration: InputDecoration(hintText: localizations.weatherSearchHint),
+            onFieldSubmitted: (value) => Navigator.of(context).pop(value),
+          ),
+        ],
+      ),
+    );
+    if (query == null || query.trim().isEmpty || !context.mounted) {
+      return;
+    }
+    final search = weatherService.search(query, language: Localizations.localeOf(context).languageCode);
+    final place = await showDialog<WeatherPlace>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(localizations.weatherLocation),
+        contentPadding: const EdgeInsets.all(16),
+        children: [
+          FutureBuilder<List<WeatherPlace>>(
+            future: search,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Text(localizations.weatherSearchFailed(snapshot.error.toString()));
+              }
+              final places = snapshot.data ?? const <WeatherPlace>[];
+              if (places.isEmpty) {
+                return Text(localizations.weatherNoPlaces);
+              }
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < places.length; i++)
+                    FocusableSettingsTile(
+                      autofocus: i == 0,
+                      leading: const Icon(Icons.place_outlined),
+                      title: Text(places[i].label),
+                      onPressed: () => Navigator.of(context).pop(places[i]),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+    if (place != null) {
+      await weatherService.setLocation(place);
+      if (!weatherService.enabled) {
+        await weatherService.setEnabled(true);
+      }
+    }
   }
 }

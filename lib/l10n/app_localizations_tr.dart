@@ -767,4 +767,27 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '10 PM - 6 AM';
+
+  @override
+  String get weatherTitle => 'Hava durumu';
+
+  @override
+  String get weatherLocation => 'Hava durumu konumu';
+
+  @override
+  String get weatherLocationNotSet => 'Ayarlanmadı';
+
+  @override
+  String get weatherSearchHint => 'Kasaba veya şehir';
+
+  @override
+  String get weatherNoPlaces => 'Yer bulunamadı';
+
+  @override
+  String weatherSearchFailed(String error) {
+    return 'Arama başarısız: $error';
+  }
+
+  @override
+  String get weatherFahrenheit => 'Sıcaklık °F olarak';
 }

@@ -197,5 +197,12 @@
     "redditSubredditAdded": "Subreddit eklendi",
     "redditSubredditInvalid": "Lütfen geçerli bir subreddit adı girin",
     "redditWallpaperUpdated": "Duvar kağıdı başarıyla güncellendi",
-    "redditWallpaperFailed": "Duvar kağıdı alınamadı. Sorun devam ederse ayarlardan bir Reddit İstemci Kimliği girin."
+    "redditWallpaperFailed": "Duvar kağıdı alınamadı. Sorun devam ederse ayarlardan bir Reddit İstemci Kimliği girin.",
+    "weatherTitle": "Hava durumu",
+    "weatherLocation": "Hava durumu konumu",
+    "weatherLocationNotSet": "Ayarlanmadı",
+    "weatherSearchHint": "Kasaba veya şehir",
+    "weatherNoPlaces": "Yer bulunamadı",
+    "weatherSearchFailed": "Arama başarısız: {error}",
+    "weatherFahrenheit": "Sıcaklık °F olarak"
 }

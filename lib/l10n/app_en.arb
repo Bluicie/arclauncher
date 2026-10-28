@@ -353,5 +353,19 @@
           "type": "String"
         }
       }
+    },
+    "weatherTitle": "Weather",
+    "weatherLocation": "Weather location",
+    "weatherLocationNotSet": "Not set",
+    "weatherSearchHint": "Town or city",
+    "weatherNoPlaces": "No places found",
+    "weatherSearchFailed": "Search failed: {error}",
+    "weatherFahrenheit": "Temperature in °F",
+    "@weatherSearchFailed": {
+      "placeholders": {
+        "error": {
+          "type": "String"
+        }
+      }
     }
 }

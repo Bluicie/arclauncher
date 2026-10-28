@@ -26,6 +26,7 @@ import 'package:flauncher/providers/network_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/brightness_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
+import 'package:flauncher/providers/weather_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,10 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
             create: (_) => BrightnessService(sharedPreferences),
+            lazy: false
+        ),
+        ChangeNotifierProvider(
+            create: (_) => WeatherService(sharedPreferences),
             lazy: false
         ),
         ChangeNotifierProvider(

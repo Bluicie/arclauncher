@@ -9,6 +9,7 @@ import 'app_bar_focus_ring.dart';
 import 'daily_wifi_usage_widget.dart';
 import 'date_time_widget.dart';
 import 'network_widget.dart';
+import 'weather_widget.dart';
 
 class FocusAwareAppBar extends StatefulWidget implements PreferredSizeWidget
 {
@@ -135,7 +136,7 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
               ),
             ],
           ),
-          // Right side: Date/Time only
+          // Right side: Weather, Date/Time
           actions: [
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 32),
@@ -164,6 +165,7 @@ class FocusAwareAppBarState extends State<FocusAwareAppBar>
                   return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      WeatherWidget(textStyle: textStyle),
                       // Date
                       if (dateTimeSettings.showDateInStatusBar)
                         DateTimeWidget(

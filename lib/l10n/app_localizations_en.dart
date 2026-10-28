@@ -953,4 +953,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return 'A settings file with $sections sections was uploaded from $source. Your sections, app order and settings will be replaced.';
   }
+
+  @override
+  String get weatherTitle => 'Weather';
+
+  @override
+  String get weatherLocation => 'Weather location';
+
+  @override
+  String get weatherLocationNotSet => 'Not set';
+
+  @override
+  String get weatherSearchHint => 'Town or city';
+
+  @override
+  String get weatherNoPlaces => 'No places found';
+
+  @override
+  String weatherSearchFailed(String error) {
+    return 'Search failed: $error';
+  }
+
+  @override
+  String get weatherFahrenheit => 'Temperature in °F';
 }

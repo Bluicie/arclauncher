@@ -283,5 +283,12 @@
   "webDescription": "Tải tệp cài đặt hoặc khôi phục từ điện thoại hay máy tính trong cùng mạng",
   "webAddress": "Mở {address} trong trình duyệt",
   "webRestoreTitle": "Khôi phục cài đặt đã tải lên?",
-  "webRestoreMessage": "Một tệp cài đặt có {sections} mục đã được tải lên từ {source}. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế."
+  "webRestoreMessage": "Một tệp cài đặt có {sections} mục đã được tải lên từ {source}. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế.",
+  "weatherTitle": "Thời tiết",
+  "weatherLocation": "Vị trí thời tiết",
+  "weatherLocationNotSet": "Chưa đặt",
+  "weatherSearchHint": "Thị trấn hoặc thành phố",
+  "weatherNoPlaces": "Không tìm thấy địa điểm",
+  "weatherSearchFailed": "Tìm kiếm thất bại: {error}",
+  "weatherFahrenheit": "Nhiệt độ theo °F"
 }

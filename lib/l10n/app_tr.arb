@@ -246,5 +246,12 @@
     "webDescription": "Aynı ağdaki bir telefondan veya bilgisayardan ayar dosyasını indirin ya da geri yükleyin",
     "webAddress": "Bir tarayıcıda {address} adresini açın",
     "webRestoreTitle": "Yüklenen ayarlar geri yüklensin mi?",
-    "webRestoreMessage": "{source} adresinden {sections} bölümlü bir ayar dosyası yüklendi. Bölümleriniz, uygulama sıralamanız ve ayarlarınız değiştirilecek."
+    "webRestoreMessage": "{source} adresinden {sections} bölümlü bir ayar dosyası yüklendi. Bölümleriniz, uygulama sıralamanız ve ayarlarınız değiştirilecek.",
+    "weatherTitle": "Hava durumu",
+    "weatherLocation": "Hava durumu konumu",
+    "weatherLocationNotSet": "Ayarlanmadı",
+    "weatherSearchHint": "Kasaba veya şehir",
+    "weatherNoPlaces": "Yer bulunamadı",
+    "weatherSearchFailed": "Arama başarısız: {error}",
+    "weatherFahrenheit": "Sıcaklık °F olarak"
 }

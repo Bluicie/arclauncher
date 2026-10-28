@@ -956,4 +956,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return '$source adresinden $sections bölümlü bir ayar dosyası yüklendi. Bölümleriniz, uygulama sıralamanız ve ayarlarınız değiştirilecek.';
   }
+
+  @override
+  String get weatherTitle => 'Hava durumu';
+
+  @override
+  String get weatherLocation => 'Hava durumu konumu';
+
+  @override
+  String get weatherLocationNotSet => 'Ayarlanmadı';
+
+  @override
+  String get weatherSearchHint => 'Kasaba veya şehir';
+
+  @override
+  String get weatherNoPlaces => 'Yer bulunamadı';
+
+  @override
+  String weatherSearchFailed(String error) {
+    return 'Arama başarısız: $error';
+  }
+
+  @override
+  String get weatherFahrenheit => 'Sıcaklık °F olarak';
 }

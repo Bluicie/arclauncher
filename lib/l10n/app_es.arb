@@ -303,5 +303,12 @@
     "webDescription": "Obtén el archivo de ajustes o restaura uno desde un móvil u ordenador de la misma red",
     "webAddress": "Abre {address} en un navegador",
     "webRestoreTitle": "¿Restaurar los ajustes subidos?",
-    "webRestoreMessage": "Se subió un archivo de ajustes con {sections} secciones desde {source}. Tus secciones, el orden de las apps y los ajustes se sustituirán."
+    "webRestoreMessage": "Se subió un archivo de ajustes con {sections} secciones desde {source}. Tus secciones, el orden de las apps y los ajustes se sustituirán.",
+    "weatherTitle": "Tiempo",
+    "weatherLocation": "Ubicación del tiempo",
+    "weatherLocationNotSet": "Sin configurar",
+    "weatherSearchHint": "Pueblo o ciudad",
+    "weatherNoPlaces": "No se encontraron lugares",
+    "weatherSearchFailed": "Error en la búsqueda: {error}",
+    "weatherFahrenheit": "Temperatura en °F"
 }

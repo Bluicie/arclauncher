@@ -1805,6 +1805,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A settings file with {sections} sections was uploaded from {source}. Your sections, app order and settings will be replaced.'**
   String webRestoreMessage(String source, int sections);
+
+  /// No description provided for @weatherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get weatherTitle;
+
+  /// No description provided for @weatherLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather location'**
+  String get weatherLocation;
+
+  /// No description provided for @weatherLocationNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get weatherLocationNotSet;
+
+  /// No description provided for @weatherSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Town or city'**
+  String get weatherSearchHint;
+
+  /// No description provided for @weatherNoPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'No places found'**
+  String get weatherNoPlaces;
+
+  /// No description provided for @weatherSearchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed: {error}'**
+  String weatherSearchFailed(String error);
+
+  /// No description provided for @weatherFahrenheit.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature in °F'**
+  String get weatherFahrenheit;
 }
 
 class _AppLocalizationsDelegate

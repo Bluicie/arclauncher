@@ -959,4 +959,27 @@ class AppLocalizationsVi extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return 'Một tệp cài đặt có $sections mục đã được tải lên từ $source. Các mục, thứ tự ứng dụng và cài đặt của bạn sẽ được thay thế.';
   }
+
+  @override
+  String get weatherTitle => 'Thời tiết';
+
+  @override
+  String get weatherLocation => 'Vị trí thời tiết';
+
+  @override
+  String get weatherLocationNotSet => 'Chưa đặt';
+
+  @override
+  String get weatherSearchHint => 'Thị trấn hoặc thành phố';
+
+  @override
+  String get weatherNoPlaces => 'Không tìm thấy địa điểm';
+
+  @override
+  String weatherSearchFailed(String error) {
+    return 'Tìm kiếm thất bại: $error';
+  }
+
+  @override
+  String get weatherFahrenheit => 'Nhiệt độ theo °F';
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
@@ -19,6 +20,7 @@ class RemoteSyncService extends ChangeNotifier {
   static const Duration interval = Duration(hours: 6);
   static const Duration startupDelay = Duration(seconds: 30);
   static const Duration timeout = Duration(seconds: 30);
+  static const int maxDownloadBytes = 4 * 1024 * 1024;
 
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
@@ -105,11 +107,7 @@ class RemoteSyncService extends ChangeNotifier {
     _syncing = true;
     notifyListeners();
     try {
-      final response = await _client.get(Uri.parse(url)).timeout(timeout);
-      if (response.statusCode != 200) {
-        throw http.ClientException("HTTP ${response.statusCode}", Uri.parse(url));
-      }
-      final body = utf8.decode(response.bodyBytes);
+      final body = await _download();
       final hash = contentHash(body);
       await _sharedPreferences.setString(_lastCheckKey, DateTime.now().toUtc().toIso8601String());
       _lastError = null;
@@ -127,6 +125,26 @@ class RemoteSyncService extends ChangeNotifier {
       _syncing = false;
       notifyListeners();
     }
+  }
+
+  /// Downloads [url], refusing responses larger than [maxDownloadBytes].
+  Future<String> _download() async {
+    final uri = Uri.parse(url);
+    final response = await _client.send(http.Request("GET", uri)).timeout(timeout);
+    if (response.statusCode != 200) {
+      throw http.ClientException("HTTP ${response.statusCode}", uri);
+    }
+    if ((response.contentLength ?? 0) > maxDownloadBytes) {
+      throw http.ClientException("Backup is too large", uri);
+    }
+    final bytes = BytesBuilder(copy: false);
+    await for (final chunk in response.stream.timeout(timeout)) {
+      bytes.add(chunk);
+      if (bytes.length > maxDownloadBytes) {
+        throw http.ClientException("Backup is too large", uri);
+      }
+    }
+    return utf8.decode(bytes.takeBytes());
   }
 
   /// 32-bit FNV-1a, stable across runs (unlike [String.hashCode]).

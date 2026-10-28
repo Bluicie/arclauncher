@@ -159,7 +159,8 @@ class SettingsService extends ChangeNotifier {
 
   Color get accentColor {
     final hex = accentColorHex;
-    return Color(int.parse("0xFF$hex"));
+    final rgb = hex.length == 6 ? int.tryParse(hex, radix: 16) : null;
+    return Color(0xFF000000 | (rgb ?? int.parse(ACCENT_COLOR_WHITE, radix: 16)));
   }
 
   SettingsService(this._sharedPreferences);

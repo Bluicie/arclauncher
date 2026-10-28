@@ -48,8 +48,14 @@ class BackupService extends ChangeNotifier {
   static const List<String> excludedSettingPrefixes = [
     "backup_",
     "brightness_",
+    "custom_banner_", // absolute file paths on this device
     "reddit_current_",
   ];
+
+  /// Extra checks for settings whose stored format matters beyond its type.
+  static final Map<String, bool Function(Object?)> settingValidators = {
+    "accent_color": (value) => value is String && RegExp(r"^[0-9A-Fa-f]{6}$").hasMatch(value),
+  };
 
   final FLauncherDatabase _database;
   final SharedPreferences _sharedPreferences;
@@ -313,7 +319,15 @@ class BackupService extends ChangeNotifier {
     }
   }
 
+  static bool _sameSettingType(Object current, Object? value) =>
+      (current is bool && value is bool) ||
+      (current is int && value is int) ||
+      (current is double && value is double) ||
+      (current is String && value is String) ||
+      (current is List && value is List);
+
   /// Mirrors the exported settings: keys missing from the backup fall back to their defaults.
+  /// Values of the wrong type or format are skipped.
   Future<int> _applySettings(Map<String, dynamic> settings) async {
     for (final key in _sharedPreferences.getKeys().where(isExportedSetting).toList()) {
       if (!settings.containsKey(key)) {
@@ -325,7 +339,17 @@ class BackupService extends ChangeNotifier {
     for (final entry in settings.entries) {
       final key = entry.key;
       final value = entry.value;
-      if (!isExportedSetting(key)) {
+      if (!isExportedSetting(key) || !(settingValidators[key]?.call(value) ?? true)) {
+        continue;
+      }
+      // Never change the type of an existing setting: its getter would fail on the next read.
+      final current = _sharedPreferences.get(key);
+      if (current is double && value is int) {
+        await _sharedPreferences.setDouble(key, value.toDouble());
+        applied++;
+        continue;
+      }
+      if (current != null && !_sameSettingType(current, value)) {
         continue;
       }
       if (value is bool) {

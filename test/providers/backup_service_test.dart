@@ -158,6 +158,33 @@ void main() {
     expect(file!.path.endsWith(BackupService.autoExportFileName), isTrue);
   });
 
+  test("skips settings with the wrong type or format and never exports banner paths", () async {
+    await _installApps(database, ["app.a"]);
+    await sharedPreferences.setBool("show_time_in_status_bar", true);
+    await sharedPreferences.setDouble("focus_border_thickness", 1.5);
+    await sharedPreferences.setString("accent_color", "00BFA5");
+    await sharedPreferences.setString("custom_banner_app.a", "/data/banner.png");
+
+    expect((await backupService.createBackup())["settings"].containsKey("custom_banner_app.a"), isFalse);
+
+    await backupService.importFromJson(jsonEncode({
+      "format": BackupService.format,
+      "version": 1,
+      "sections": [],
+      "settings": {
+        "show_time_in_status_bar": "x",
+        "focus_border_thickness": 2,
+        "accent_color": "zz",
+        "custom_banner_app.a": "/data/user/0/other/db.sqlite",
+      },
+    }));
+
+    expect(sharedPreferences.get("show_time_in_status_bar"), isA<bool>());
+    expect(sharedPreferences.getDouble("focus_border_thickness"), 2.0);
+    expect(sharedPreferences.getString("accent_color"), "00BFA5"); // invalid value skipped
+    expect(sharedPreferences.getString("custom_banner_app.a"), "/data/banner.png");
+  });
+
   test("rejects files that are not a backup or from a newer version", () async {
     expect(() => backupService.importFromJson('{"format": "something-else", "version": 1}'),
         throwsA(isA<FormatException>()));

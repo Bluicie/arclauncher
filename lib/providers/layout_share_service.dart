@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flauncher/providers/backup_service.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // "backup_" prefix: device-specific, never exported by BackupService.
 const _shareEnabledKey = "backup_share_enabled";
+const _deviceIdKey = "backup_device_id";
 
 const int layoutSharePort = 47474;
 const String layoutShareInfoPath = "/arc-launcher/v1/info";
@@ -16,10 +18,13 @@ const String layoutShareBackupPath = "/arc-launcher/v1/backup";
 /// A device on the local network that shares its layout.
 class SharedLayoutSource {
   final String name;
+
+  /// Stable id of the device, `null` for devices that do not report one.
+  final String? id;
   final String host;
   final Uri backupUrl;
 
-  const SharedLayoutSource({required this.name, required this.host, required this.backupUrl});
+  const SharedLayoutSource({required this.name, this.id, required this.host, required this.backupUrl});
 }
 
 /// Shares this device's current layout and settings on the local network, so other devices
@@ -57,6 +62,17 @@ class LayoutShareService extends ChangeNotifier {
   String? get name => _name;
 
   String? get error => _error;
+
+  /// Stable random id of this device, so followers recognise it when its name or address changes.
+  String get deviceId {
+    var id = _sharedPreferences.getString(_deviceIdKey);
+    if (id == null) {
+      final random = Random.secure();
+      id = List.generate(16, (_) => random.nextInt(256).toRadixString(16).padLeft(2, "0")).join();
+      _sharedPreferences.setString(_deviceIdKey, id);
+    }
+    return id;
+  }
 
   Future<void> setEnabled(bool value) async {
     await _sharedPreferences.setBool(_shareEnabledKey, value);
@@ -105,7 +121,7 @@ class LayoutShareService extends ChangeNotifier {
       if (request.method != "GET") {
         response.statusCode = HttpStatus.methodNotAllowed;
       } else if (request.uri.path == layoutShareInfoPath) {
-        _writeJson(response, jsonEncode({"app": "arc-launcher", "name": _name, "sharing": true}));
+        _writeJson(response, jsonEncode({"app": "arc-launcher", "name": _name, "id": deviceId, "sharing": true}));
       } else if (request.uri.path == layoutShareBackupPath) {
         _writeJson(response, BackupService.encode(await _backupService.createBackup()));
       } else {
@@ -125,6 +141,8 @@ class LayoutShareService extends ChangeNotifier {
 
 /// Finds devices that share their layout by probing the local /24 networks on [port].
 class LayoutDiscovery {
+  static const int _maxInfoBytes = 4096;
+
   final int port;
   final Duration timeout;
 
@@ -136,16 +154,21 @@ class LayoutDiscovery {
     const batchSize = 32;
     for (var start = 0; start < candidates.length; start += batchSize) {
       final batch = candidates.skip(start).take(batchSize);
-      found.addAll((await Future.wait(batch.map(probe))).whereType<SharedLayoutSource>());
+      for (final source in (await Future.wait(batch.map(probe))).whereType<SharedLayoutSource>()) {
+        // A device on two networks (e.g. Ethernet and Wi-Fi) answers on both addresses.
+        if (source.id == null || found.every((other) => other.id != source.id)) {
+          found.add(source);
+        }
+      }
     }
     found.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return found;
   }
 
-  /// Looks for the device shared as [name], e.g. after its address changed.
-  Future<SharedLayoutSource?> find(String name, {List<String>? hosts}) async {
+  /// Looks for the device with this [id], e.g. after its address changed.
+  Future<SharedLayoutSource?> find(String id, {List<String>? hosts}) async {
     for (final source in await scan(hosts: hosts)) {
-      if (source.name == name) {
+      if (source.id == id) {
         return source;
       }
     }
@@ -160,12 +183,23 @@ class LayoutDiscovery {
       if (response.statusCode != HttpStatus.ok) {
         return null;
       }
-      final info = jsonDecode(await utf8.decodeStream(response).timeout(timeout * 2));
+      if (response.contentLength > _maxInfoBytes) {
+        return null;
+      }
+      final bytes = BytesBuilder(copy: false);
+      await for (final chunk in response.timeout(timeout * 2)) {
+        bytes.add(chunk);
+        if (bytes.length > _maxInfoBytes) {
+          return null;
+        }
+      }
+      final info = jsonDecode(utf8.decode(bytes.takeBytes()));
       if (info is! Map || info["app"] != "arc-launcher" || info["sharing"] != true) {
         return null;
       }
       return SharedLayoutSource(
         name: info["name"] is String ? info["name"] as String : host,
+        id: info["id"] is String ? info["id"] as String : null,
         host: host,
         backupUrl: Uri(scheme: "http", host: host, port: port, path: layoutShareBackupPath),
       );

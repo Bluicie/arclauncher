@@ -66,14 +66,16 @@ void main() {
     expect(await LayoutDiscovery(port: source.backupUrl.port).probe("127.0.0.1"), isNull);
   });
 
-  test("discovery finds sharing devices by name and ignores other hosts", () async {
+  test("discovery finds sharing devices once each, by id, and ignores other hosts", () async {
     await shareService.setEnabled(true);
     final discovery = LayoutDiscovery(port: shareService.port!, timeout: const Duration(milliseconds: 300));
 
     final sources = await discovery.scan(hosts: ["127.0.0.1", "127.0.0.2"]);
     expect(sources.map((s) => s.name), ["Woonkamer TV"]);
-    expect((await discovery.find("Woonkamer TV", hosts: ["127.0.0.1"]))?.host, "127.0.0.1");
-    expect(await discovery.find("Kinder TV", hosts: ["127.0.0.1"]), isNull);
+    // 127.0.0.1 and 127.0.0.2 both reach the same server: listed once.
+    expect(sources.single.id, shareService.deviceId);
+    expect((await discovery.find(shareService.deviceId, hosts: ["127.0.0.1"]))?.host, "127.0.0.1");
+    expect(await discovery.find("another-id", hosts: ["127.0.0.1"]), isNull);
   });
 
   test("a follower syncs from the leader and finds it again after its address changed", () async {
@@ -85,13 +87,14 @@ void main() {
       sharedPreferences,
       followerBackup,
       schedule: false,
-      locate: (name) async => name == source.name ? source.backupUrl : null,
+      locate: (id) async => id == source.id ? source.backupUrl : null,
     );
 
-    await remoteSync.follow(source.name, source.backupUrl.replace(port: 1));
+    await remoteSync.follow(source.name, source.backupUrl.replace(port: 1), id: source.id);
 
     expect(remoteSync.lastError, isNull);
     expect(remoteSync.followedName, "Woonkamer TV");
+    expect(remoteSync.followedId, shareService.deviceId);
     expect(remoteSync.url, source.backupUrl.toString());
     expect((await followerDatabase.getCategories()).single.name, "Favorites");
     remoteSync.dispose();

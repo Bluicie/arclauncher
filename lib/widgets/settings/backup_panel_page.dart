@@ -238,7 +238,7 @@ class _BackupPanelPageState extends State<BackupPanelPage> {
       ),
     );
     if (source != null) {
-      await remoteSyncService.follow(source.name, source.backupUrl);
+      await remoteSyncService.follow(source.name, source.backupUrl, id: source.id);
     }
   }
 

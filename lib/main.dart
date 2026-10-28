@@ -89,7 +89,7 @@ Future<void> main() async {
             create: (context) => RemoteSyncService(
               sharedPreferences,
               Provider.of<BackupService>(context, listen: false),
-              locate: (name) async => (await const LayoutDiscovery().find(name))?.backupUrl,
+              locate: (id) async => (await const LayoutDiscovery().find(id))?.backupUrl,
             ),
             lazy: false
         ),

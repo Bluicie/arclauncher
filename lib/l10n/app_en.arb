@@ -505,5 +505,27 @@
           "type": "String"
         }
       }
+    },
+    "webSwitch": "Download & upload in a browser",
+    "webDescription": "Get the settings file or restore one from a phone or computer on the same network",
+    "webAddress": "Open {address} in a browser",
+    "webRestoreTitle": "Restore uploaded settings?",
+    "webRestoreMessage": "A settings file with {sections} sections was uploaded from {source}. Your sections, app order and settings will be replaced.",
+    "@webAddress": {
+      "placeholders": {
+        "address": {
+          "type": "String"
+        }
+      }
+    },
+    "@webRestoreMessage": {
+      "placeholders": {
+        "source": {
+          "type": "String"
+        },
+        "sections": {
+          "type": "int"
+        }
+      }
     }
 }

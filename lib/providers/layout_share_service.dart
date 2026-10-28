@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flauncher/providers/backup_service.dart';
+import 'package:flauncher/providers/backup_web_page.dart';
 import 'package:flauncher/providers/remote_sync_service.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:path/path.dart' as path;
@@ -14,6 +15,7 @@ const _shareEnabledKey = "backup_share_enabled";
 const _controlEnabledKey = "backup_control_enabled";
 const _clientsKey = "backup_api_clients";
 const _deviceIdKey = "backup_device_id";
+const _webEnabledKey = "backup_web_enabled";
 
 const int layoutSharePort = 47474;
 const int localApiVersion = 1;
@@ -21,6 +23,8 @@ const String localApiServiceType = "_arclauncher._tcp";
 const String _apiPrefix = "/arc-launcher/v1";
 const String layoutShareInfoPath = "$_apiPrefix/info";
 const String layoutShareBackupPath = "$_apiPrefix/backup";
+const String _webBackupPath = "/arc-launcher/web/backup.json";
+const String _webRestorePath = "/arc-launcher/web/restore";
 
 /// A device on the local network that shares its layout.
 class SharedLayoutSource {
@@ -65,6 +69,15 @@ class PairingRequest {
   const PairingRequest({required this.client, required this.code, required this.expires});
 }
 
+/// A settings file uploaded through the web page, waiting to be confirmed on the TV.
+class WebRestoreRequest {
+  final String source;
+  final int sections;
+  final DateTime expires;
+
+  const WebRestoreRequest({required this.source, required this.sections, required this.expires});
+}
+
 class _ApiException implements Exception {
   final int status;
   final String message;
@@ -80,7 +93,10 @@ class _ApiException implements Exception {
 ///   start a sync or backup, restore a layout and change the sync settings. Pairing shows a code on screen
 ///   that has to be entered in the app, which then gets its own token.
 ///
-/// Only `GET /arc-launcher/v1/info` is public; it tells which of the two is enabled.
+/// * **Web page** ("Download & upload in a browser"): `http://<device>:47474/` lets a phone or computer download
+///   the settings file or upload one; an upload is only applied after it is confirmed on the TV.
+///
+/// Only `GET /arc-launcher/v1/info` is public; it tells which features are enabled.
 class LayoutShareService extends ChangeNotifier {
   static const Duration pairingTimeout = Duration(minutes: 2);
   static const int maxPairingAttempts = 5;
@@ -91,6 +107,7 @@ class LayoutShareService extends ChangeNotifier {
   static const int _maxRestoreBytes = 4 * 1024 * 1024;
   static const Duration _bodyTimeout = Duration(seconds: 15);
   static const int _maxConcurrentRequests = 8;
+  static const Duration webRestoreTimeout = Duration(minutes: 2);
 
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
@@ -109,6 +126,8 @@ class LayoutShareService extends ChangeNotifier {
   int _pairingBlocks = 0;
   DateTime? _pairingBlockedUntil;
   int _requestsInFlight = 0;
+  WebRestoreRequest? _webRestoreRequest;
+  Completer<bool>? _webRestoreAnswer;
 
   LayoutShareService(
     this._sharedPreferences,
@@ -133,6 +152,26 @@ class LayoutShareService extends ChangeNotifier {
 
   /// "Allow control from other apps".
   bool get controlEnabled => _sharedPreferences.getBool(_controlEnabledKey) ?? false;
+
+  /// "Download & upload in a browser".
+  bool get webEnabled => _sharedPreferences.getBool(_webEnabledKey) ?? false;
+
+  /// The uploaded settings file waiting for confirmation on the TV, if any.
+  WebRestoreRequest? get webRestoreRequest => _webRestoreRequest;
+
+  /// Addresses of the web page on this device's local networks.
+  Future<List<String>> webAddresses() async {
+    final port = _server?.port;
+    if (port == null) {
+      return const [];
+    }
+    final interfaces = await NetworkInterface.list(type: InternetAddressType.IPv4);
+    return [
+      for (final interface in interfaces)
+        for (final address in interface.addresses)
+          if (!address.isLoopback) "http://${address.address}:$port"
+    ];
+  }
 
   bool get running => _server != null;
 
@@ -191,6 +230,22 @@ class LayoutShareService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setWebEnabled(bool value) async {
+    await _sharedPreferences.setBool(_webEnabledKey, value);
+    if (!value) {
+      answerWebRestore(false);
+    }
+    await _updateServer();
+  }
+
+  /// Applies ([approved]) or rejects the uploaded settings file shown in [webRestoreRequest].
+  void answerWebRestore(bool approved) {
+    final answer = _webRestoreAnswer;
+    if (answer != null && !answer.isCompleted) {
+      answer.complete(approved);
+    }
+  }
+
   void cancelPairing() {
     _pairingRequest = null;
     notifyListeners();
@@ -200,7 +255,7 @@ class LayoutShareService extends ChangeNotifier {
       _clientsKey, clients.map((client) => jsonEncode(client.toJson())).toList());
 
   Future<void> _updateServer() async {
-    if (enabled || controlEnabled) {
+    if (enabled || controlEnabled || webEnabled) {
       await startServer();
       await _announce();
     } else {
@@ -249,6 +304,7 @@ class LayoutShareService extends ChangeNotifier {
         "api": "$localApiVersion",
         "share": enabled ? "1" : "0",
         "control": controlEnabled ? "1" : "0",
+        "web": webEnabled ? "1" : "0",
       });
     } catch (_) {
       // Discovery is a convenience; the API keeps working without it.
@@ -276,11 +332,13 @@ class LayoutShareService extends ChangeNotifier {
         throw const _ApiException(HttpStatus.serviceUnavailable, "Busy");
       }
       _checkRequestSource(request);
-      final result = await _route(request);
-      response.statusCode = result.$1;
-      if (result.$2 != null) {
-        response.headers.contentType = ContentType.json;
-        response.write(result.$2);
+      if (!await _handleWeb(request)) {
+        final result = await _route(request);
+        response.statusCode = result.$1;
+        if (result.$2 != null) {
+          response.headers.contentType = ContentType.json;
+          response.write(result.$2);
+        }
       }
     } on _ApiException catch (e) {
       response.statusCode = e.status;
@@ -296,10 +354,12 @@ class LayoutShareService extends ChangeNotifier {
     await response.close();
   }
 
-  /// Only answers clients that talk to this device directly: web pages cannot use the API, neither
-  /// cross-site (they send an Origin header) nor through DNS rebinding (their Host is a domain name).
+  /// Only answers clients that talk to this device directly: other web pages cannot use the API, neither
+  /// cross-site (they send a foreign Origin header) nor through DNS rebinding (their Host is a domain name).
+  /// The device's own web page (same origin) is allowed.
   static void _checkRequestSource(HttpRequest request) {
-    if (request.headers.value("origin") != null) {
+    final origin = request.headers.value("origin");
+    if (origin != null && origin != "http://${request.headers.value(HttpHeaders.hostHeader)}") {
       throw const _ApiException(HttpStatus.forbidden, "Not available to web pages");
     }
     final host = request.headers.host;
@@ -308,6 +368,82 @@ class LayoutShareService extends ChangeNotifier {
         !host.endsWith(".local") &&
         InternetAddress.tryParse(host.replaceAll("[", "").replaceAll("]", "")) == null) {
       throw const _ApiException(HttpStatus.forbidden, "Unknown host");
+    }
+  }
+
+  /// Serves the web page and its download/upload routes; returns whether [request] was one of them.
+  Future<bool> _handleWeb(HttpRequest request) async {
+    if (!webEnabled) {
+      return false;
+    }
+    final route = "${request.method} ${request.uri.path}";
+    final response = request.response;
+    if (route == "GET /") {
+      response.headers.contentType = ContentType.html;
+      response.headers.set(HttpHeaders.cacheControlHeader, "no-store");
+      response.write(backupWebPage(_name ?? "Arc Launcher"));
+      return true;
+    }
+    if (route == "GET $_webBackupPath") {
+      final backup = BackupService.encode(await _backupService.createBackup());
+      final name =
+          (_name ?? "tv").toLowerCase().replaceAll(RegExp(r"[^a-z0-9]+"), "-").replaceAll(RegExp(r"^-+|-+$"), "");
+      final date = DateTime.now().toIso8601String().substring(0, 10);
+      response.headers.contentType = ContentType.json;
+      response.headers.set("Content-Disposition", 'attachment; filename="arc-launcher-$name-$date.json"');
+      response.write(backup);
+      return true;
+    }
+    if (route == "POST $_webRestorePath") {
+      final body = await _readJson(request, maxBytes: _maxRestoreBytes);
+      final result = await _confirmAndRestore(body, request.connectionInfo?.remoteAddress.address ?? "?");
+      response.headers.contentType = ContentType.json;
+      response.write(jsonEncode(result));
+      return true;
+    }
+    return false;
+  }
+
+  /// Asks for confirmation on the TV and restores [backup] when it is given.
+  Future<Map<String, dynamic>> _confirmAndRestore(Map<String, dynamic> backup, String source) async {
+    if (backup["format"] != BackupService.format) {
+      throw const _ApiException(HttpStatus.badRequest, "This is not an Arc Launcher settings file");
+    }
+    if (_webRestoreRequest != null) {
+      throw const _ApiException(HttpStatus.conflict, "Another upload is waiting for confirmation on the TV");
+    }
+    final answer = Completer<bool>();
+    _webRestoreAnswer = answer;
+    _webRestoreRequest = WebRestoreRequest(
+      source: source,
+      sections: backup["sections"] is List ? (backup["sections"] as List).length : 0,
+      expires: DateTime.now().add(webRestoreTimeout),
+    );
+    notifyListeners();
+    bool approved;
+    try {
+      approved = await answer.future.timeout(webRestoreTimeout);
+    } on TimeoutException {
+      throw const _ApiException(HttpStatus.requestTimeout, "Not confirmed on the TV in time");
+    } finally {
+      _webRestoreRequest = null;
+      _webRestoreAnswer = null;
+      notifyListeners();
+    }
+    if (!approved) {
+      throw const _ApiException(HttpStatus.forbidden, "The restore was cancelled on the TV");
+    }
+    try {
+      final result = await _backupService.applyBackup(backup);
+      return {
+        "categories": result.categories,
+        "spacers": result.spacers,
+        "settings": result.settings,
+        "placedApps": result.placedApps,
+        "missingApps": result.missingApps,
+      };
+    } on FormatException catch (e) {
+      throw _ApiException(HttpStatus.badRequest, e.message);
     }
   }
 
@@ -374,6 +510,7 @@ class LayoutShareService extends ChangeNotifier {
         "api": localApiVersion,
         "sharing": enabled,
         "control": controlEnabled,
+        "web": webEnabled,
       };
 
   /// What paired clients see: sharing/sync settings, last sync and a fingerprint of the current layout.

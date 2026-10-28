@@ -1775,6 +1775,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter this code in {client} to allow it to control this TV:'**
   String pairingMessage(String client);
+
+  /// No description provided for @webSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Download & upload in a browser'**
+  String get webSwitch;
+
+  /// No description provided for @webDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the settings file or restore one from a phone or computer on the same network'**
+  String get webDescription;
+
+  /// No description provided for @webAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {address} in a browser'**
+  String webAddress(String address);
+
+  /// No description provided for @webRestoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore uploaded settings?'**
+  String get webRestoreTitle;
+
+  /// No description provided for @webRestoreMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A settings file with {sections} sections was uploaded from {source}. Your sections, app order and settings will be replaced.'**
+  String webRestoreMessage(String source, int sections);
 }
 
 class _AppLocalizationsDelegate

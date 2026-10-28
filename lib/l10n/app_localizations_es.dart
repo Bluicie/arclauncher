@@ -942,4 +942,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String pairingMessage(String client) {
     return 'Introduce este código en $client para permitirle controlar este televisor:';
   }
+
+  @override
+  String get webSwitch => 'Descargar y subir desde un navegador';
+
+  @override
+  String get webDescription =>
+      'Obtén el archivo de ajustes o restaura uno desde un móvil u ordenador de la misma red';
+
+  @override
+  String webAddress(String address) {
+    return 'Abre $address en un navegador';
+  }
+
+  @override
+  String get webRestoreTitle => '¿Restaurar los ajustes subidos?';
+
+  @override
+  String webRestoreMessage(String source, int sections) {
+    return 'Se subió un archivo de ajustes con $sections secciones desde $source. Tus secciones, el orden de las apps y los ajustes se sustituirán.';
+  }
 }

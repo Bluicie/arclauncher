@@ -907,7 +907,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get controlDescription =>
-      'Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir';
+      'Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir. Bunu kapatmak tüm uygulamaların eşleşmesini kaldırır.';
 
   @override
   String get controlPairedApps => 'Eşleşmiş uygulamalar';

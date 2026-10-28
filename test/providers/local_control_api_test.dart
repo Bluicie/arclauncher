@@ -143,6 +143,51 @@ void main() {
     expect((await call("POST", "/arc-launcher/v1/pair", body: {"client": "x"})).$1, 429);
   });
 
+  test("a new pairing cannot replace one that is waiting, so codes cannot be cycled", () async {
+    await service.setControlEnabled(true);
+    expect((await call("POST", "/arc-launcher/v1/pair", body: {"client": "x"})).$1, 202);
+    for (var i = 0; i < LayoutShareService.maxPairingAttempts - 1; i++) {
+      expect((await call("POST", "/arc-launcher/v1/pair/confirm", body: {"code": "000000x"})).$1, 401);
+    }
+    expect((await call("POST", "/arc-launcher/v1/pair", body: {"client": "x"})).$1, 409);
+    expect((await call("POST", "/arc-launcher/v1/pair/confirm", body: {"code": "000000x"})).$1, 401);
+    expect((await call("POST", "/arc-launcher/v1/pair", body: {"client": "x"})).$1, 429);
+  });
+
+  test("long or odd client names are shortened, and turning control off unpairs everything", () async {
+    await service.setControlEnabled(true);
+    await call("POST", "/arc-launcher/v1/pair", body: {"client": "Home\nAssistant ${"x" * 500}"});
+    expect(service.pairingRequest!.client, hasLength(40));
+    expect(service.pairingRequest!.client.contains("\n"), isFalse);
+    await call("POST", "/arc-launcher/v1/pair/confirm", body: {"code": service.pairingRequest!.code});
+    expect(service.clients, hasLength(1));
+
+    await service.setControlEnabled(false);
+    await service.setControlEnabled(true);
+    expect(service.clients, isEmpty);
+  });
+
+  test("refuses requests from web pages and unknown host names", () async {
+    await service.setControlEnabled(true);
+    final client = HttpClient();
+    try {
+      Future<int> status(void Function(HttpHeaders headers) setHeaders) async {
+        final request = await client.getUrl(Uri.parse("http://127.0.0.1:${service.port}/arc-launcher/v1/info"));
+        setHeaders(request.headers);
+        final response = await request.close();
+        await response.drain<void>();
+        return response.statusCode;
+      }
+
+      expect(await status((_) {}), 200);
+      expect(await status((headers) => headers.set("origin", "http://evil.example")), 403);
+      expect(await status((headers) => headers.host = "evil.example"), 403);
+      expect(await status((headers) => headers.host = "woonkamer-tv.local"), 200);
+    } finally {
+      client.close(force: true);
+    }
+  });
+
   test("settings, backup and restore endpoints", () async {
     await service.setControlEnabled(true);
     final token = await pair();

@@ -271,7 +271,7 @@
   "layoutFollowNoneFound": "Không tìm thấy TV. Hãy bật “Chia sẻ bố cục này” trên TV bạn muốn theo dõi.",
   "layoutFollowing": "Đang theo dõi {name}",
   "controlSwitch": "Cho phép ứng dụng khác điều khiển",
-  "controlDescription": "Các ứng dụng như Home Assistant có thể đồng bộ, sao lưu và thay đổi các cài đặt này sau khi ghép nối bằng mã",
+  "controlDescription": "Các ứng dụng như Home Assistant có thể đồng bộ, sao lưu và thay đổi các cài đặt này sau khi ghép nối bằng mã. Tắt tùy chọn này sẽ hủy ghép nối tất cả ứng dụng.",
   "controlPairedApps": "Ứng dụng đã ghép nối",
   "controlNoPairedApps": "Chưa có ứng dụng nào được ghép nối",
   "controlRemoveTitle": "Xóa {name}?",

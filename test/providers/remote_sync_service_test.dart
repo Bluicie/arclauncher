@@ -108,6 +108,15 @@ void main() {
     expect(await database.getCategories(), isEmpty);
   });
 
+  test("refuses backups larger than the download limit", () async {
+    final service = createService();
+    await service.setUrl(_url);
+    served = "x" * (RemoteSyncService.maxDownloadBytes + 1);
+
+    expect(await service.syncNow(), isFalse);
+    expect(service.lastError, contains("too large"));
+  });
+
   test("is only enabled with an address and rejects invalid addresses", () async {
     final service = createService();
     await sharedPreferences.setBool("backup_remote_enabled", true);

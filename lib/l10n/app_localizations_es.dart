@@ -913,7 +913,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get controlDescription =>
-      'Apps como Home Assistant pueden sincronizar, hacer copias y cambiar estos ajustes tras emparejarse con un código';
+      'Apps como Home Assistant pueden sincronizar, hacer copias y cambiar estos ajustes tras emparejarse con un código. Al desactivarlo se desemparejan todas las apps.';
 
   @override
   String get controlPairedApps => 'Apps emparejadas';

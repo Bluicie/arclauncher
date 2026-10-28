@@ -291,7 +291,7 @@
     "layoutFollowNoneFound": "No se encontraron televisores. Activa «Compartir este diseño» en el televisor que quieres seguir.",
     "layoutFollowing": "Siguiendo a {name}",
     "controlSwitch": "Permitir el control desde otras apps",
-    "controlDescription": "Apps como Home Assistant pueden sincronizar, hacer copias y cambiar estos ajustes tras emparejarse con un código",
+    "controlDescription": "Apps como Home Assistant pueden sincronizar, hacer copias y cambiar estos ajustes tras emparejarse con un código. Al desactivarlo se desemparejan todas las apps.",
     "controlPairedApps": "Apps emparejadas",
     "controlNoPairedApps": "Aún no hay apps emparejadas",
     "controlRemoveTitle": "¿Quitar {name}?",

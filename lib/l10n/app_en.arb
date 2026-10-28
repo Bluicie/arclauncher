@@ -477,7 +477,7 @@
       }
     },
     "controlSwitch": "Allow control from other apps",
-    "controlDescription": "Apps like Home Assistant can sync, back up and change these settings after pairing with a code",
+    "controlDescription": "Apps like Home Assistant can sync, back up and change these settings after pairing with a code. Turning this off unpairs all apps.",
     "controlPairedApps": "Paired apps",
     "controlNoPairedApps": "No apps paired yet",
     "controlRemoveTitle": "Remove {name}?",

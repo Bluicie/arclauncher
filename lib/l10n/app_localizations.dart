@@ -1641,7 +1641,7 @@ abstract class AppLocalizations {
   /// No description provided for @remoteSyncAutomaticDescription.
   ///
   /// In en, this message translates to:
-  /// **'Checks at startup and every 6 hours; replaces this device's layout and settings when the file changed'**
+  /// **'Checks at startup and every 6 hours; replaces this device\'s layout and settings when the file changed'**
   String get remoteSyncAutomaticDescription;
 
   /// No description provided for @remoteSyncNow.
@@ -1731,7 +1731,7 @@ abstract class AppLocalizations {
   /// No description provided for @controlDescription.
   ///
   /// In en, this message translates to:
-  /// **'Apps like Home Assistant can sync, back up and change these settings after pairing with a code'**
+  /// **'Apps like Home Assistant can sync, back up and change these settings after pairing with a code. Turning this off unpairs all apps.'**
   String get controlDescription;
 
   /// No description provided for @controlPairedApps.

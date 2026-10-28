@@ -1731,7 +1731,7 @@ abstract class AppLocalizations {
   /// No description provided for @controlDescription.
   ///
   /// In en, this message translates to:
-  /// **'Apps like Home Assistant can sync, back up and change these settings after pairing with a code'**
+  /// **'Apps like Home Assistant can sync, back up and change these settings after pairing with a code. Turning this off unpairs all apps.'**
   String get controlDescription;
 
   /// No description provided for @controlPairedApps.

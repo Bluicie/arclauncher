@@ -85,7 +85,12 @@ class LayoutShareService extends ChangeNotifier {
   static const Duration pairingTimeout = Duration(minutes: 2);
   static const int maxPairingAttempts = 5;
   static const Duration pairingBlockTime = Duration(minutes: 5);
-  static const int _maxBodyBytes = 4 * 1024 * 1024;
+  static const Duration _maxPairingBlockTime = Duration(hours: 1);
+  static const int _maxClientNameLength = 40;
+  static const int _maxBodyBytes = 16 * 1024;
+  static const int _maxRestoreBytes = 4 * 1024 * 1024;
+  static const Duration _bodyTimeout = Duration(seconds: 15);
+  static const int _maxConcurrentRequests = 8;
 
   final SharedPreferences _sharedPreferences;
   final BackupService _backupService;
@@ -101,7 +106,9 @@ class LayoutShareService extends ChangeNotifier {
   String? _error;
   PairingRequest? _pairingRequest;
   int _failedPairingAttempts = 0;
+  int _pairingBlocks = 0;
   DateTime? _pairingBlockedUntil;
+  int _requestsInFlight = 0;
 
   LayoutShareService(
     this._sharedPreferences,
@@ -172,7 +179,9 @@ class LayoutShareService extends ChangeNotifier {
   Future<void> setControlEnabled(bool value) async {
     await _sharedPreferences.setBool(_controlEnabledKey, value);
     if (!value) {
+      // Turning control off revokes every paired app; they have to pair again.
       _pairingRequest = null;
+      await _sharedPreferences.remove(_clientsKey);
     }
     await _updateServer();
   }
@@ -261,7 +270,12 @@ class LayoutShareService extends ChangeNotifier {
 
   Future<void> _handle(HttpRequest request) async {
     final response = request.response;
+    _requestsInFlight++;
     try {
+      if (_requestsInFlight > _maxConcurrentRequests) {
+        throw const _ApiException(HttpStatus.serviceUnavailable, "Busy");
+      }
+      _checkRequestSource(request);
       final result = await _route(request);
       response.statusCode = result.$1;
       if (result.$2 != null) {
@@ -272,12 +286,29 @@ class LayoutShareService extends ChangeNotifier {
       response.statusCode = e.status;
       response.headers.contentType = ContentType.json;
       response.write(jsonEncode({"error": e.message}));
-    } catch (e) {
+    } catch (_) {
       response.statusCode = HttpStatus.internalServerError;
       response.headers.contentType = ContentType.json;
-      response.write(jsonEncode({"error": e.toString()}));
+      response.write(jsonEncode({"error": "Internal error"}));
+    } finally {
+      _requestsInFlight--;
     }
     await response.close();
+  }
+
+  /// Only answers clients that talk to this device directly: web pages cannot use the API, neither
+  /// cross-site (they send an Origin header) nor through DNS rebinding (their Host is a domain name).
+  static void _checkRequestSource(HttpRequest request) {
+    if (request.headers.value("origin") != null) {
+      throw const _ApiException(HttpStatus.forbidden, "Not available to web pages");
+    }
+    final host = request.headers.host;
+    if (host != null &&
+        host != "localhost" &&
+        !host.endsWith(".local") &&
+        InternetAddress.tryParse(host.replaceAll("[", "").replaceAll("]", "")) == null) {
+      throw const _ApiException(HttpStatus.forbidden, "Unknown host");
+    }
   }
 
   /// Returns the status code and the JSON body (if any).
@@ -291,8 +322,12 @@ class LayoutShareService extends ChangeNotifier {
       }
       return (HttpStatus.ok, BackupService.encode(await _backupService.createBackup()));
     } else if (route == "POST $_apiPrefix/pair") {
+      _checkPairingAllowed();
       return _startPairing(await _readJson(request));
     } else if (route == "POST $_apiPrefix/pair/confirm") {
+      if (!controlEnabled) {
+        throw const _ApiException(HttpStatus.forbidden, "Control from other apps is turned off on this device");
+      }
       return _confirmPairing(await _readJson(request));
     } else if (route == "GET $_apiPrefix/status") {
       _authorize(request);
@@ -310,7 +345,7 @@ class LayoutShareService extends ChangeNotifier {
     } else if (route == "POST $_apiPrefix/restore") {
       _authorize(request);
       try {
-        final result = await _backupService.applyBackup(await _readJson(request));
+        final result = await _backupService.applyBackup(await _readJson(request, maxBytes: _maxRestoreBytes));
         return (
           HttpStatus.ok,
           jsonEncode({
@@ -382,9 +417,14 @@ class LayoutShareService extends ChangeNotifier {
       if (follow == null) {
         await remoteSync.setUrl("");
       } else if (follow is Map && follow["name"] is String && follow["url"] is String) {
-        await remoteSync.follow(follow["name"] as String, Uri.parse(follow["url"] as String));
+        final url = Uri.tryParse(follow["url"] as String);
+        if (url == null || !url.hasScheme) {
+          throw const _ApiException(HttpStatus.badRequest, "follow.url is not a valid address");
+        }
+        await remoteSync.follow(follow["name"] as String, url,
+            id: follow["id"] is String ? follow["id"] as String : null);
       } else {
-        throw const _ApiException(HttpStatus.badRequest, "follow must be null or {name, url}");
+        throw const _ApiException(HttpStatus.badRequest, "follow must be null or {name, url, id}");
       }
     }
     if (settings["autoSync"] is bool) {
@@ -392,7 +432,9 @@ class LayoutShareService extends ChangeNotifier {
     }
   }
 
-  (int, String?) _startPairing(Map<String, dynamic> body) {
+  /// A new pairing can only start when control is on, no pairing is waiting for its code and pairing
+  /// is not blocked after wrong codes - so each code allows at most [maxPairingAttempts] guesses.
+  void _checkPairingAllowed() {
     if (!controlEnabled) {
       throw const _ApiException(HttpStatus.forbidden, "Control from other apps is turned off on this device");
     }
@@ -400,15 +442,26 @@ class LayoutShareService extends ChangeNotifier {
     if (blockedUntil != null && blockedUntil.isAfter(DateTime.now())) {
       throw const _ApiException(HttpStatus.tooManyRequests, "Too many wrong codes, try again later");
     }
-    final client = body["client"] is String && (body["client"] as String).trim().isNotEmpty
-        ? (body["client"] as String).trim()
-        : "Unknown app";
+    if (pairingRequest != null) {
+      throw const _ApiException(HttpStatus.conflict, "A pairing is already waiting for its code");
+    }
+  }
+
+  (int, String?) _startPairing(Map<String, dynamic> body) {
+    _checkPairingAllowed();
+    final name = body["client"] is String
+        ? String.fromCharCodes((body["client"] as String).runes.where((c) => c >= 0x20 && c != 0x7F)).trim()
+        : "";
+    final client = name.isEmpty
+        ? "Unknown app"
+        : name.length > _maxClientNameLength
+            ? name.substring(0, _maxClientNameLength)
+            : name;
     _pairingRequest = PairingRequest(
       client: client,
       code: List.generate(6, (_) => _random.nextInt(10)).join(),
       expires: DateTime.now().add(pairingTimeout),
     );
-    _failedPairingAttempts = 0;
     notifyListeners();
     return (HttpStatus.accepted, jsonEncode({"expiresIn": pairingTimeout.inSeconds}));
   }
@@ -421,8 +474,13 @@ class LayoutShareService extends ChangeNotifier {
     if (!_constantTimeEquals("${body["code"]}", request.code)) {
       _failedPairingAttempts++;
       if (_failedPairingAttempts >= maxPairingAttempts) {
+        // Each further block lasts twice as long, up to an hour.
+        final blockTime = pairingBlockTime * (1 << _pairingBlocks.clamp(0, 4));
+        _pairingBlocks++;
+        _failedPairingAttempts = 0;
         _pairingRequest = null;
-        _pairingBlockedUntil = DateTime.now().add(pairingBlockTime);
+        _pairingBlockedUntil =
+            DateTime.now().add(blockTime > _maxPairingBlockTime ? _maxPairingBlockTime : blockTime);
         notifyListeners();
       }
       throw const _ApiException(HttpStatus.unauthorized, "Wrong code");
@@ -430,6 +488,8 @@ class LayoutShareService extends ChangeNotifier {
     final token = base64Url.encode(List.generate(32, (_) => _random.nextInt(256))).replaceAll("=", "");
     await _saveClients([...clients, PairedClient(name: request.client, token: token, created: DateTime.now())]);
     _pairingRequest = null;
+    _failedPairingAttempts = 0;
+    _pairingBlocks = 0;
     notifyListeners();
     return (HttpStatus.ok, jsonEncode({"token": token, "id": deviceId, "name": _name}));
   }
@@ -453,19 +513,27 @@ class LayoutShareService extends ChangeNotifier {
     return remoteSync;
   }
 
-  static Future<Map<String, dynamic>> _readJson(HttpRequest request, {bool optional = false}) async {
-    final bytes = <int>[];
-    await for (final chunk in request) {
-      bytes.addAll(chunk);
-      if (bytes.length > _maxBodyBytes) {
-        throw const _ApiException(HttpStatus.requestEntityTooLarge, "Request too large");
+  static Future<Map<String, dynamic>> _readJson(HttpRequest request,
+      {bool optional = false, int maxBytes = _maxBodyBytes}) async {
+    if (request.contentLength > maxBytes) {
+      throw const _ApiException(HttpStatus.requestEntityTooLarge, "Request too large");
+    }
+    final bytes = BytesBuilder(copy: false);
+    try {
+      await for (final chunk in request.timeout(_bodyTimeout)) {
+        bytes.add(chunk);
+        if (bytes.length > maxBytes) {
+          throw const _ApiException(HttpStatus.requestEntityTooLarge, "Request too large");
+        }
       }
+    } on TimeoutException {
+      throw const _ApiException(HttpStatus.requestTimeout, "Request body too slow");
     }
     if (bytes.isEmpty && optional) {
       return {};
     }
     try {
-      final decoded = jsonDecode(utf8.decode(bytes));
+      final decoded = jsonDecode(utf8.decode(bytes.takeBytes()));
       if (decoded is Map<String, dynamic>) {
         return decoded;
       }

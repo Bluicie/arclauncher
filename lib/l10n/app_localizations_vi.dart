@@ -910,7 +910,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get controlDescription =>
-      'Các ứng dụng như Home Assistant có thể đồng bộ, sao lưu và thay đổi các cài đặt này sau khi ghép nối bằng mã';
+      'Các ứng dụng như Home Assistant có thể đồng bộ, sao lưu và thay đổi các cài đặt này sau khi ghép nối bằng mã. Tắt tùy chọn này sẽ hủy ghép nối tất cả ứng dụng.';
 
   @override
   String get controlPairedApps => 'Ứng dụng đã ghép nối';

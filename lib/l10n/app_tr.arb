@@ -234,7 +234,7 @@
     "layoutFollowNoneFound": "TV bulunamadı. Takip etmek istediğiniz TV'de “Bu düzeni paylaş”ı açın.",
     "layoutFollowing": "{name} takip ediliyor",
     "controlSwitch": "Diğer uygulamalardan kontrole izin ver",
-    "controlDescription": "Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir",
+    "controlDescription": "Home Assistant gibi uygulamalar bir kodla eşleştikten sonra eşitleyebilir, yedekleyebilir ve bu ayarları değiştirebilir. Bunu kapatmak tüm uygulamaların eşleşmesini kaldırır.",
     "controlPairedApps": "Eşleşmiş uygulamalar",
     "controlNoPairedApps": "Henüz eşleşmiş uygulama yok",
     "controlRemoveTitle": "{name} kaldırılsın mı?",

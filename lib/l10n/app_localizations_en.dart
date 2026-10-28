@@ -904,7 +904,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get controlDescription =>
-      'Apps like Home Assistant can sync, back up and change these settings after pairing with a code';
+      'Apps like Home Assistant can sync, back up and change these settings after pairing with a code. Turning this off unpairs all apps.';
 
   @override
   String get controlPairedApps => 'Paired apps';

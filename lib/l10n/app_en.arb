@@ -541,5 +541,16 @@
           "type": "String"
         }
       }
+    },
+    "quickActionsTitle": "Quick actions",
+    "quickActionsNone": "None yet. A paired app such as Home Assistant can add buttons here.",
+    "quickActionsCount": "{count} buttons, set up by a paired app",
+    "quickActionsRemoveAll": "Remove all",
+    "@quickActionsCount": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
     }
 }

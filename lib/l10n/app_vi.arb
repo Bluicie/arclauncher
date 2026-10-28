@@ -290,5 +290,9 @@
   "weatherSearchHint": "Thị trấn hoặc thành phố",
   "weatherNoPlaces": "Không tìm thấy địa điểm",
   "weatherSearchFailed": "Tìm kiếm thất bại: {error}",
-  "weatherFahrenheit": "Nhiệt độ theo °F"
+  "weatherFahrenheit": "Nhiệt độ theo °F",
+  "quickActionsTitle": "Thao tác nhanh",
+  "quickActionsNone": "Chưa có. Ứng dụng đã ghép nối như Home Assistant có thể thêm nút vào đây.",
+  "quickActionsCount": "{count} nút do ứng dụng đã ghép nối thiết lập",
+  "quickActionsRemoveAll": "Xóa tất cả"
 }

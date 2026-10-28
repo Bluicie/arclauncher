@@ -982,4 +982,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Nhiệt độ theo °F';
+
+  @override
+  String get quickActionsTitle => 'Thao tác nhanh';
+
+  @override
+  String get quickActionsNone =>
+      'Chưa có. Ứng dụng đã ghép nối như Home Assistant có thể thêm nút vào đây.';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count nút do ứng dụng đã ghép nối thiết lập';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Xóa tất cả';
 }

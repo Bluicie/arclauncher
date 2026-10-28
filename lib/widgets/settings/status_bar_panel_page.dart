@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flauncher/providers/quick_actions_service.dart';
 import 'package:flauncher/providers/weather_service.dart';
 import 'package:flauncher/widgets/rounded_switch_list_tile.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
@@ -80,6 +81,7 @@ class StatusBarPanelPage extends StatelessWidget {
                   secondary: Icon(Icons.signal_wifi_4_bar)
                 ),
                 ..._weatherTiles(context, localizations),
+                ..._quickActionTiles(context, localizations),
               ],
             ),
           ),
@@ -179,5 +181,26 @@ class StatusBarPanelPage extends StatelessWidget {
         await weatherService.setEnabled(true);
       }
     }
+  }
+
+  List<Widget> _quickActionTiles(BuildContext context, AppLocalizations localizations) {
+    final quickActionsService = context.watch<QuickActionsService?>();
+    if (quickActionsService == null) {
+      return const [];
+    }
+    final count = quickActionsService.actions.length;
+    return [
+      const SettingsSectionDivider(),
+      FocusableSettingsTile(
+        leading: const Icon(Icons.touch_app_outlined),
+        title: Text(localizations.quickActionsTitle, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(
+          count == 0 ? localizations.quickActionsNone : localizations.quickActionsCount(count),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        onPressed: count == 0 ? null : () => quickActionsService.clear(),
+        trailing: count == 0 ? null : Text(localizations.quickActionsRemoveAll),
+      ),
+    ];
   }
 }

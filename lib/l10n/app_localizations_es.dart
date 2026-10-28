@@ -985,4 +985,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Temperatura en °F';
+
+  @override
+  String get quickActionsTitle => 'Acciones rápidas';
+
+  @override
+  String get quickActionsNone =>
+      'Ninguna todavía. Una app emparejada como Home Assistant puede añadir botones aquí.';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count botones, configurados por una app emparejada';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Quitar todas';
 }

@@ -253,5 +253,9 @@
     "weatherSearchHint": "Kasaba veya şehir",
     "weatherNoPlaces": "Yer bulunamadı",
     "weatherSearchFailed": "Arama başarısız: {error}",
-    "weatherFahrenheit": "Sıcaklık °F olarak"
+    "weatherFahrenheit": "Sıcaklık °F olarak",
+    "quickActionsTitle": "Hızlı işlemler",
+    "quickActionsNone": "Henüz yok. Home Assistant gibi eşleşmiş bir uygulama buraya düğme ekleyebilir.",
+    "quickActionsCount": "Eşleşmiş bir uygulamanın ayarladığı {count} düğme",
+    "quickActionsRemoveAll": "Tümünü kaldır"
 }

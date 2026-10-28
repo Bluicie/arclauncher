@@ -310,5 +310,9 @@
     "weatherSearchHint": "Pueblo o ciudad",
     "weatherNoPlaces": "No se encontraron lugares",
     "weatherSearchFailed": "Error en la búsqueda: {error}",
-    "weatherFahrenheit": "Temperatura en °F"
+    "weatherFahrenheit": "Temperatura en °F",
+    "quickActionsTitle": "Acciones rápidas",
+    "quickActionsNone": "Ninguna todavía. Una app emparejada como Home Assistant puede añadir botones aquí.",
+    "quickActionsCount": "{count} botones, configurados por una app emparejada",
+    "quickActionsRemoveAll": "Quitar todas"
 }

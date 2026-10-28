@@ -979,4 +979,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Sıcaklık °F olarak';
+
+  @override
+  String get quickActionsTitle => 'Hızlı işlemler';
+
+  @override
+  String get quickActionsNone =>
+      'Henüz yok. Home Assistant gibi eşleşmiş bir uygulama buraya düğme ekleyebilir.';
+
+  @override
+  String quickActionsCount(int count) {
+    return 'Eşleşmiş bir uygulamanın ayarladığı $count düğme';
+  }
+
+  @override
+  String get quickActionsRemoveAll => 'Tümünü kaldır';
 }

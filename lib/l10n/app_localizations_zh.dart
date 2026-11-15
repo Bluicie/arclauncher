@@ -932,4 +932,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String webRestoreMessage(String source, int sections) {
     return '已从 $source 上传包含 $sections 个分区的设置文件。您的分区、应用顺序和设置将被替换。';
   }
+
+  @override
+  String get quickActionsTitle => '快捷操作';
+
+  @override
+  String get quickActionsNone => '暂无。已配对的应用（如 Home Assistant）可以在此添加按钮。';
+
+  @override
+  String quickActionsCount(int count) {
+    return '$count 个按钮，由已配对的应用设置';
+  }
+
+  @override
+  String get quickActionsRemoveAll => '全部移除';
 }

@@ -283,5 +283,9 @@
   "webDescription": "从同一网络中的手机或电脑获取设置文件或恢复设置",
   "webAddress": "在浏览器中打开 {address}",
   "webRestoreTitle": "恢复上传的设置？",
-  "webRestoreMessage": "已从 {source} 上传包含 {sections} 个分区的设置文件。您的分区、应用顺序和设置将被替换。"
+  "webRestoreMessage": "已从 {source} 上传包含 {sections} 个分区的设置文件。您的分区、应用顺序和设置将被替换。",
+  "quickActionsTitle": "快捷操作",
+  "quickActionsNone": "暂无。已配对的应用（如 Home Assistant）可以在此添加按钮。",
+  "quickActionsCount": "{count} 个按钮，由已配对的应用设置",
+  "quickActionsRemoveAll": "全部移除"
 }

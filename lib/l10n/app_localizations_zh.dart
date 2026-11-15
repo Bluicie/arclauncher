@@ -748,4 +748,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '夜间 10 点 - 早上 6 点';
+
+  @override
+  String get weatherTitle => '天气';
+
+  @override
+  String get weatherLocation => '天气位置';
+
+  @override
+  String get weatherLocationNotSet => '未设置';
+
+  @override
+  String get weatherSearchHint => '城镇或城市';
+
+  @override
+  String get weatherNoPlaces => '未找到地点';
+
+  @override
+  String weatherSearchFailed(String error) {
+    return '搜索失败：$error';
+  }
+
+  @override
+  String get weatherFahrenheit => '以 °F 显示温度';
 }

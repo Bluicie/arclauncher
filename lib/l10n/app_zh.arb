@@ -234,5 +234,12 @@
   "brightnessSlotDay": "上午 9 点 - 下午 3 点",
   "brightnessSlotAfternoon": "下午 3 点 - 下午 6 点",
   "brightnessSlotEvening": "下午 6 点 - 晚上 10 点",
-  "brightnessSlotNight": "夜间 10 点 - 早上 6 点"
+  "brightnessSlotNight": "夜间 10 点 - 早上 6 点",
+  "weatherTitle": "天气",
+  "weatherLocation": "天气位置",
+  "weatherLocationNotSet": "未设置",
+  "weatherSearchHint": "城镇或城市",
+  "weatherNoPlaces": "未找到地点",
+  "weatherSearchFailed": "搜索失败：{error}",
+  "weatherFahrenheit": "以 °F 显示温度"
 }

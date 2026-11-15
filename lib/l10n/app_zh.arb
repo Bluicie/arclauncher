@@ -234,5 +234,21 @@
   "brightnessSlotDay": "上午 9 点 - 下午 3 点",
   "brightnessSlotAfternoon": "下午 3 点 - 下午 6 点",
   "brightnessSlotEvening": "下午 6 点 - 晚上 10 点",
-  "brightnessSlotNight": "夜间 10 点 - 早上 6 点"
+  "brightnessSlotNight": "夜间 10 点 - 早上 6 点",
+  "backupAndRestore": "备份与恢复",
+  "backupAutoExport": "自动备份",
+  "backupAutoExportDescription": "每次更改后保存备份",
+  "backupExportNow": "立即备份",
+  "backupRestore": "恢复备份",
+  "backupNoBackups": "未找到备份",
+  "backupFolder": "备份文件夹：{path}",
+  "backupExported": "备份已保存：{fileName}",
+  "backupExportFailed": "备份失败：{error}",
+  "backupRestoreConfirmTitle": "恢复此备份？",
+  "backupRestoreConfirmMessage": "您的分区、应用顺序和设置将被 {fileName} 替换。",
+  "backupRestoreButton": "恢复",
+  "backupCancelButton": "取消",
+  "backupRestored": "已恢复 {sections} 个分区，共 {apps} 个应用",
+  "backupMissingApps": "备份中有 {count} 个应用未安装在此设备上",
+  "backupRestoreFailed": "恢复失败：{error}"
 }

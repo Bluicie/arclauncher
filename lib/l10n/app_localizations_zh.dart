@@ -748,4 +748,66 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get brightnessSlotNight => '夜间 10 点 - 早上 6 点';
+
+  @override
+  String get backupAndRestore => '备份与恢复';
+
+  @override
+  String get backupAutoExport => '自动备份';
+
+  @override
+  String get backupAutoExportDescription => '每次更改后保存备份';
+
+  @override
+  String get backupExportNow => '立即备份';
+
+  @override
+  String get backupRestore => '恢复备份';
+
+  @override
+  String get backupNoBackups => '未找到备份';
+
+  @override
+  String backupFolder(String path) {
+    return '备份文件夹：$path';
+  }
+
+  @override
+  String backupExported(String fileName) {
+    return '备份已保存：$fileName';
+  }
+
+  @override
+  String backupExportFailed(String error) {
+    return '备份失败：$error';
+  }
+
+  @override
+  String get backupRestoreConfirmTitle => '恢复此备份？';
+
+  @override
+  String backupRestoreConfirmMessage(String fileName) {
+    return '您的分区、应用顺序和设置将被 $fileName 替换。';
+  }
+
+  @override
+  String get backupRestoreButton => '恢复';
+
+  @override
+  String get backupCancelButton => '取消';
+
+  @override
+  String backupRestored(int sections, int apps) {
+    return '已恢复 $sections 个分区，共 $apps 个应用';
+  }
+
+  @override
+  String backupMissingApps(int count) {
+    return '备份中有 $count 个应用未安装在此设备上';
+  }
+
+  @override
+  String backupRestoreFailed(String error) {
+    return '恢复失败：$error';
+  }
 }

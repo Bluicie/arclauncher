@@ -846,4 +846,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String remoteSyncFailed(String error) {
     return '同步失败：$error';
   }
+
+  @override
+  String get layoutShareTitle => '与其他电视共享';
+
+  @override
+  String get layoutShareSwitch => '共享此布局';
+
+  @override
+  String get layoutShareDescription => '网络中的其他电视可以跟随这台电视';
+
+  @override
+  String layoutShareActive(String name) {
+    return '已共享为“$name”';
+  }
+
+  @override
+  String layoutShareFailed(String error) {
+    return '共享失败：$error';
+  }
+
+  @override
+  String get layoutFollowTv => '跟随另一台电视';
+
+  @override
+  String get layoutFollowSearching => '正在搜索网络…';
+
+  @override
+  String get layoutFollowNoneFound => '未找到电视。请在要跟随的电视上打开“共享此布局”。';
+
+  @override
+  String layoutFollowing(String name) {
+    return '正在跟随 $name';
+  }
 }

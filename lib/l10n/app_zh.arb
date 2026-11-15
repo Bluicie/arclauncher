@@ -260,5 +260,14 @@
   "remoteSyncNow": "立即同步",
   "remoteSyncInProgress": "正在同步…",
   "remoteSyncLastCheck": "上次检查：{time}",
-  "remoteSyncFailed": "同步失败：{error}"
+  "remoteSyncFailed": "同步失败：{error}",
+  "layoutShareTitle": "与其他电视共享",
+  "layoutShareSwitch": "共享此布局",
+  "layoutShareDescription": "网络中的其他电视可以跟随这台电视",
+  "layoutShareActive": "已共享为“{name}”",
+  "layoutShareFailed": "共享失败：{error}",
+  "layoutFollowTv": "跟随另一台电视",
+  "layoutFollowSearching": "正在搜索网络…",
+  "layoutFollowNoneFound": "未找到电视。请在要跟随的电视上打开“共享此布局”。",
+  "layoutFollowing": "正在跟随 {name}"
 }

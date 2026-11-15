@@ -913,4 +913,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String pairingMessage(String client) {
     return '在 $client 中输入此代码，以允许其控制这台电视：';
   }
+
+  @override
+  String get webSwitch => '在浏览器中下载和上传';
+
+  @override
+  String get webDescription => '从同一网络中的手机或电脑获取设置文件或恢复设置';
+
+  @override
+  String webAddress(String address) {
+    return '在浏览器中打开 $address';
+  }
+
+  @override
+  String get webRestoreTitle => '恢复上传的设置？';
+
+  @override
+  String webRestoreMessage(String source, int sections) {
+    return '已从 $source 上传包含 $sections 个分区的设置文件。您的分区、应用顺序和设置将被替换。';
+  }
 }

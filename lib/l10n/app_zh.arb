@@ -278,5 +278,10 @@
   "controlRemoveMessage": "在重新配对之前，此应用将无法再控制这台电视。",
   "controlRemoveButton": "移除",
   "pairingTitle": "与 {client} 配对",
-  "pairingMessage": "在 {client} 中输入此代码，以允许其控制这台电视："
+  "pairingMessage": "在 {client} 中输入此代码，以允许其控制这台电视：",
+  "webSwitch": "在浏览器中下载和上传",
+  "webDescription": "从同一网络中的手机或电脑获取设置文件或恢复设置",
+  "webAddress": "在浏览器中打开 {address}",
+  "webRestoreTitle": "恢复上传的设置？",
+  "webRestoreMessage": "已从 {source} 上传包含 {sections} 个分区的设置文件。您的分区、应用顺序和设置将被替换。"
 }

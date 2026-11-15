@@ -18,6 +18,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class FLauncherChannel {
@@ -26,6 +27,16 @@ class FLauncherChannel {
   static const _networkEventChannel = EventChannel('me.efesser.flauncher/event_network');
 
   static const _watchNextMaxItems = 50;
+
+  /// Called when HOME is pressed while the launcher is already on screen.
+  static void setHomePressedHandler(VoidCallback? onHomePressed) =>
+      _methodChannel.setMethodCallHandler(
+        onHomePressed == null
+            ? null
+            : (call) async {
+                if (call.method == 'homePressed') onHomePressed();
+              },
+      );
 
   Future<List<Map<dynamic, dynamic>>> getApplications() async {
     List<Map<dynamic, dynamic>>? applications = await _methodChannel.invokeListMethod("getApplications");
@@ -106,6 +117,18 @@ class FLauncherChannel {
 
   Future<bool> checkMediaPermissions() async =>
       await _methodChannel.invokeMethod("checkMediaPermissions");
+
+  Future<bool> areMediaPermissionsAvailable() async {
+    try {
+      final bool? result =
+          await _methodChannel.invokeMethod<bool>("areMediaPermissionsAvailable");
+      return result ?? false;
+    } on PlatformException {
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
 
   Future<void> requestMediaPermissions() async =>
       await _methodChannel.invokeMethod("requestMediaPermissions");

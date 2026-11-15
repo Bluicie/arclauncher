@@ -810,4 +810,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String backupRestoreFailed(String error) {
     return '恢复失败：$error';
   }
+
+  @override
+  String get remoteSyncTitle => '从地址同步';
+
+  @override
+  String get remoteSyncAddress => '地址';
+
+  @override
+  String get remoteSyncAddressNotSet => '未设置';
+
+  @override
+  String get remoteSyncAddressHelp =>
+      '备份文件的网址，例如 http://192.168.1.10:8123/local/arc-launcher/backup.json。留空则关闭同步。';
+
+  @override
+  String get remoteSyncAutomatic => '自动同步';
+
+  @override
+  String get remoteSyncAutomaticDescription =>
+      '启动时及每 6 小时检查一次；文件有变化时替换此设备的布局和设置';
+
+  @override
+  String get remoteSyncNow => '立即同步';
+
+  @override
+  String get remoteSyncInProgress => '正在同步…';
+
+  @override
+  String remoteSyncLastCheck(String time) {
+    return '上次检查：$time';
+  }
+
+  @override
+  String remoteSyncFailed(String error) {
+    return '同步失败：$error';
+  }
 }

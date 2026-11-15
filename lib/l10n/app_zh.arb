@@ -250,5 +250,15 @@
   "backupCancelButton": "取消",
   "backupRestored": "已恢复 {sections} 个分区，共 {apps} 个应用",
   "backupMissingApps": "备份中有 {count} 个应用未安装在此设备上",
-  "backupRestoreFailed": "恢复失败：{error}"
+  "backupRestoreFailed": "恢复失败：{error}",
+  "remoteSyncTitle": "从地址同步",
+  "remoteSyncAddress": "地址",
+  "remoteSyncAddressNotSet": "未设置",
+  "remoteSyncAddressHelp": "备份文件的网址，例如 http://192.168.1.10:8123/local/arc-launcher/backup.json。留空则关闭同步。",
+  "remoteSyncAutomatic": "自动同步",
+  "remoteSyncAutomaticDescription": "启动时及每 6 小时检查一次；文件有变化时替换此设备的布局和设置",
+  "remoteSyncNow": "立即同步",
+  "remoteSyncInProgress": "正在同步…",
+  "remoteSyncLastCheck": "上次检查：{time}",
+  "remoteSyncFailed": "同步失败：{error}"
 }

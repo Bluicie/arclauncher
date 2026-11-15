@@ -80,13 +80,27 @@ public class MainActivity extends FlutterActivity {
     private static final int REQUEST_CODE_READ_TV_LISTINGS = 1001;
     private static final String COLUMN_ASPECT_RATIO = "aspect_ratio";
 
+    private MethodChannel methodChannel;
+
+    // singleTask: a repeated HOME press with the launcher on screen arrives here, not in onResume.
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_MAIN.equals(intent.getAction())
+                && intent.hasCategory(Intent.CATEGORY_HOME)
+                && methodChannel != null) {
+            methodChannel.invokeMethod("homePressed", null);
+        }
+    }
+
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
 
         BinaryMessenger messenger = flutterEngine.getDartExecutor().getBinaryMessenger();
 
-        new MethodChannel(messenger, METHOD_CHANNEL).setMethodCallHandler((call, result) -> {
+        methodChannel = new MethodChannel(messenger, METHOD_CHANNEL);
+        methodChannel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
                 case "getApplications" -> result.success(getApplications());
                 case "getApplicationBanner" -> result.success(getApplicationBanner(call.arguments()));
@@ -155,6 +169,7 @@ public class MainActivity extends FlutterActivity {
                         id != null ? id.longValue() : -1, path));
                 }
                 case "checkMediaPermissions" -> result.success(checkMediaPermissions());
+                case "areMediaPermissionsAvailable" -> result.success(areMediaPermissionsAvailable());
                 case "requestMediaPermissions" -> {
                     requestMediaPermissions();
                     result.success(null);
@@ -355,8 +370,8 @@ public class MainActivity extends FlutterActivity {
         }
 
         try {
-            getPackageManager().getApplicationInfo(packageName, flags);
-            return true;
+            // Disabled packages remain installed but cannot supply launcher rows.
+            return getPackageManager().getApplicationInfo(packageName, flags).enabled;
         } catch (PackageManager.NameNotFoundException ignored) {
             return false;
         }
@@ -471,11 +486,13 @@ public class MainActivity extends FlutterActivity {
     }
 
     private boolean checkForGetContentAvailability() {
-        List<ResolveInfo> intentActivities = getPackageManager().queryIntentActivities(
-                new Intent(Intent.ACTION_GET_CONTENT, null).setTypeAndNormalize("image/*"),
-                0);
-
-        return !intentActivities.isEmpty();
+        Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT, null).setTypeAndNormalize("image/*");
+        List<ResolveInfo> intentActivities = getPackageManager().queryIntentActivities(getContentIntent, 0);
+        if (!intentActivities.isEmpty()) {
+            return true;
+        }
+        Intent openDocIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, null).setTypeAndNormalize("image/*");
+        return !getPackageManager().queryIntentActivities(openDocIntent, 0).isEmpty();
     }
 
     private boolean isDefaultLauncher() {
@@ -980,6 +997,23 @@ public class MainActivity extends FlutterActivity {
     }
 
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 9001;
+
+    private boolean areMediaPermissionsAvailable() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    getPackageName(), PackageManager.GET_PERMISSIONS);
+            if (info.requestedPermissions != null) {
+                for (String p : info.requestedPermissions) {
+                    if (Manifest.permission.READ_MEDIA_IMAGES.equals(p) ||
+                        Manifest.permission.READ_EXTERNAL_STORAGE.equals(p)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 
     private boolean checkMediaPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

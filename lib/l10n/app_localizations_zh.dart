@@ -879,4 +879,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String layoutFollowing(String name) {
     return '正在跟随 $name';
   }
+
+  @override
+  String get controlSwitch => '允许其他应用控制';
+
+  @override
+  String get controlDescription =>
+      '使用配对码配对后，Home Assistant 等应用可以同步、备份和更改这些设置。关闭此项将取消所有应用的配对。';
+
+  @override
+  String get controlPairedApps => '已配对的应用';
+
+  @override
+  String get controlNoPairedApps => '尚未配对任何应用';
+
+  @override
+  String controlRemoveTitle(String name) {
+    return '移除 $name？';
+  }
+
+  @override
+  String get controlRemoveMessage => '在重新配对之前，此应用将无法再控制这台电视。';
+
+  @override
+  String get controlRemoveButton => '移除';
+
+  @override
+  String pairingTitle(String client) {
+    return '与 $client 配对';
+  }
+
+  @override
+  String pairingMessage(String client) {
+    return '在 $client 中输入此代码，以允许其控制这台电视：';
+  }
 }

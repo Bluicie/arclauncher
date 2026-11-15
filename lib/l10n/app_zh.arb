@@ -269,5 +269,14 @@
   "layoutFollowTv": "跟随另一台电视",
   "layoutFollowSearching": "正在搜索网络…",
   "layoutFollowNoneFound": "未找到电视。请在要跟随的电视上打开“共享此布局”。",
-  "layoutFollowing": "正在跟随 {name}"
+  "layoutFollowing": "正在跟随 {name}",
+  "controlSwitch": "允许其他应用控制",
+  "controlDescription": "使用配对码配对后，Home Assistant 等应用可以同步、备份和更改这些设置。关闭此项将取消所有应用的配对。",
+  "controlPairedApps": "已配对的应用",
+  "controlNoPairedApps": "尚未配对任何应用",
+  "controlRemoveTitle": "移除 {name}？",
+  "controlRemoveMessage": "在重新配对之前，此应用将无法再控制这台电视。",
+  "controlRemoveButton": "移除",
+  "pairingTitle": "与 {client} 配对",
+  "pairingMessage": "在 {client} 中输入此代码，以允许其控制这台电视："
 }

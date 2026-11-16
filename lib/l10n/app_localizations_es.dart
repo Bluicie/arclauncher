@@ -836,4 +836,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sceneEvening => 'Atardecer';
+
+  @override
+  String get sceneSetAdventure => 'Aventura';
 }

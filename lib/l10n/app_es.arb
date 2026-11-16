@@ -274,5 +274,6 @@
     "sceneSetIsland": "Isla pixelada",
     "sceneMorning": "Mañana",
     "sceneAfternoon": "Tarde",
-    "sceneEvening": "Atardecer"
+    "sceneEvening": "Atardecer",
+    "sceneSetAdventure": "Aventura"
 }

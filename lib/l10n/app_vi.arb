@@ -254,5 +254,6 @@
   "sceneSetIsland": "Đảo pixel",
   "sceneMorning": "Buổi sáng",
   "sceneAfternoon": "Buổi chiều",
-  "sceneEvening": "Buổi tối"
+  "sceneEvening": "Buổi tối",
+  "sceneSetAdventure": "Phiêu lưu"
 }

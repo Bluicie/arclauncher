@@ -380,5 +380,6 @@
     "sceneSetIsland": "Pixel island",
     "sceneMorning": "Morning",
     "sceneAfternoon": "Afternoon",
-    "sceneEvening": "Evening"
+    "sceneEvening": "Evening",
+    "sceneSetAdventure": "Adventure"
 }

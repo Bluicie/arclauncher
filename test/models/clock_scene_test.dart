@@ -52,6 +52,19 @@ void main() {
     expect(clockSceneSetById("nope").id, "landscapes");
   });
 
+  test("the adventure set keeps its afternoon world through the evening", () {
+    final adventure = clockSceneSetById("adventure");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 3, 45), latitude: lat, longitude: lon, set: adventure),
+        "adventure-backyard");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 19, 30), latitude: lat, longitude: lon, set: adventure),
+        "adventure-platform");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 0, 30), latitude: lat, longitude: lon, set: adventure),
+        "adventure-blocks");
+    for (final id in adventure.sceneIds) {
+      expect(clockSceneById(id).id, id);
+    }
+  });
+
   test("solar noon altitude is about 90 - latitude + declination", () {
     final summer = solarPosition(lat, lon, DateTime.utc(2026, 6, 21, 11, 40));
     expect(summer.altitude, closeTo(90 - lat + 23.45, 1.5));

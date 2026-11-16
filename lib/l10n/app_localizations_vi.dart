@@ -834,4 +834,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sceneEvening => 'Buổi tối';
+
+  @override
+  String get sceneSetAdventure => 'Phiêu lưu';
 }

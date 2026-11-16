@@ -810,4 +810,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sceneEvening => '傍晚';
+
+  @override
+  String get sceneSetAdventure => '冒险';
 }

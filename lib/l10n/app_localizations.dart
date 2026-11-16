@@ -1633,6 +1633,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Evening'**
   String get sceneEvening;
+
+  /// No description provided for @sceneSetAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get sceneSetAdventure;
 }
 
 class _AppLocalizationsDelegate

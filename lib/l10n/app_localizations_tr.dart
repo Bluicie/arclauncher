@@ -830,4 +830,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sceneEvening => 'Akşam';
+
+  @override
+  String get sceneSetAdventure => 'Macera';
 }

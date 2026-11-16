@@ -446,6 +446,41 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     }
   }
 
+  static const double _minDeltaToScroll = 24.0;
+
+  /// Scrolls the vertical [position] only as far as needed to show [renderObject] between the app bar
+  /// and the bottom edge; nothing when it already is.
+  void _revealNearEdges(RenderObject renderObject, RenderAbstractViewport viewport, ScrollPosition position) {
+    const topEdgePadding = kToolbarHeight + 24.0;
+    const bottomEdgePadding = 96.0;
+    final topTargetOffset = (viewport.getOffsetToReveal(renderObject, 0).offset - topEdgePadding).clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    );
+    if (position.pixels - topTargetOffset >= _minDeltaToScroll) {
+      position.animateTo(
+        topTargetOffset,
+        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 220),
+      );
+      return;
+    }
+
+    final bottomTargetOffset = (viewport.getOffsetToReveal(renderObject, 1).offset + bottomEdgePadding).clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    );
+    if (bottomTargetOffset - position.pixels < _minDeltaToScroll) {
+      return;
+    }
+
+    position.animateTo(
+      bottomTargetOffset,
+      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 220),
+    );
+  }
+
   void _ensureVisibleIfNeeded(BuildContext context, {required double alignment, bool onlyWhenNearBottom = false}) {
     final renderObject = context.findRenderObject();
     final scrollable = Scrollable.maybeOf(context);
@@ -456,42 +491,34 @@ class _AppCardState extends State<AppCard> with SingleTickerProviderStateMixin {
     final viewport = RenderAbstractViewport.of(renderObject);
 
     final position = scrollable.position;
-    const minDeltaToScroll = 24.0;
     if (onlyWhenNearBottom &&
         (position.axisDirection == AxisDirection.down || position.axisDirection == AxisDirection.up)) {
-      const topEdgePadding = kToolbarHeight + 24.0;
-      const bottomEdgePadding = 96.0;
-      final topTargetOffset = (viewport.getOffsetToReveal(renderObject, 0).offset - topEdgePadding).clamp(
-        position.minScrollExtent,
-        position.maxScrollExtent,
-      );
-      if (position.pixels - topTargetOffset >= minDeltaToScroll) {
-        position.animateTo(
-          topTargetOffset,
-          curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 220),
-        );
-        return;
-      }
+      _revealNearEdges(renderObject, viewport, position);
+      return;
+    }
 
-      final bottomTargetOffset = (viewport.getOffsetToReveal(renderObject, 1).offset + bottomEdgePadding).clamp(
-        position.minScrollExtent,
-        position.maxScrollExtent,
-      );
-      if (bottomTargetOffset - position.pixels < minDeltaToScroll) {
-        return;
+    if (position.axis == Axis.horizontal) {
+      // A single-line row: slide the row only. Scrollable.ensureVisible would also re-align every
+      // scrollable above it, so the whole page moved up or down a little on each step (more so with
+      // the focus zoom, which changes the card's painted size). The page only scrolls when the row
+      // is partly off screen.
+      final rowTarget = viewport
+          .getOffsetToReveal(renderObject, alignment)
+          .offset
+          .clamp(position.minScrollExtent, position.maxScrollExtent);
+      if ((rowTarget - position.pixels).abs() >= _minDeltaToScroll) {
+        position.animateTo(rowTarget, curve: Curves.easeInOut, duration: const Duration(milliseconds: 220));
       }
-
-      position.animateTo(
-        bottomTargetOffset,
-        curve: Curves.easeInOut,
-        duration: const Duration(milliseconds: 220),
-      );
+      final outer = Scrollable.maybeOf(scrollable.context);
+      final outerRenderObject = scrollable.context.findRenderObject();
+      if (outer != null && outerRenderObject != null) {
+        _revealNearEdges(renderObject, RenderAbstractViewport.of(outerRenderObject), outer.position);
+      }
       return;
     }
 
     final targetOffset = viewport.getOffsetToReveal(renderObject, alignment).offset;
-    if ((targetOffset - position.pixels).abs() < minDeltaToScroll) {
+    if ((targetOffset - position.pixels).abs() < _minDeltaToScroll) {
       return;
     }
 

@@ -37,6 +37,21 @@ void main() {
     });
   });
 
+  test("the pixel island set follows the day, with its afternoon for grey weather", () {
+    final island = clockSceneSetById("island");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 3, 45), latitude: lat, longitude: lon, set: island), "island-dawn");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 12), latitude: lat, longitude: lon, set: island), "island-day");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 12), latitude: lat, longitude: lon, weatherCode: 61, set: island),
+        "island-day");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 19, 30), latitude: lat, longitude: lon, set: island), "island-golden");
+    expect(sceneForTime(DateTime.utc(2026, 6, 21, 0, 30), latitude: lat, longitude: lon, set: island), "island-night");
+    expect(island.sceneIds, ["island-dawn", "island-day", "island-golden", "island-night"]);
+    for (final id in island.sceneIds) {
+      expect(clockSceneById(id).id, id);
+    }
+    expect(clockSceneSetById("nope").id, "landscapes");
+  });
+
   test("solar noon altitude is about 90 - latitude + declination", () {
     final summer = solarPosition(lat, lon, DateTime.utc(2026, 6, 21, 11, 40));
     expect(summer.altitude, closeTo(90 - lat + 23.45, 1.5));

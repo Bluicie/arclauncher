@@ -212,5 +212,10 @@
     "sceneDawn": "Şafak",
     "sceneWater": "Göl",
     "sceneFog": "Sis",
-    "sceneGolden": "Altın saat"
+    "sceneGolden": "Altın saat",
+    "sceneSetLandscapes": "Manzaralar",
+    "sceneSetIsland": "Piksel ada",
+    "sceneMorning": "Sabah",
+    "sceneAfternoon": "Öğleden sonra",
+    "sceneEvening": "Akşam"
 }

@@ -66,6 +66,7 @@ void main() {
     when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
     when(settingsService.sceneClockEnabled).thenReturn(true);
     when(settingsService.sceneClockScene).thenReturn("fog");
+    when(settingsService.sceneClockSet).thenReturn("landscapes");
 
     await tester.pumpWidget(
       MultiProvider(
@@ -85,10 +86,44 @@ void main() {
     expect(find.text('Scene with glass clock'), findsOneWidget);
     expect(find.text('Follow the day'), findsOneWidget);
     expect(find.text('Golden hour'), findsOneWidget);
-    expect(find.byIcon(Icons.check), findsOneWidget);
+    // One check for the scene set, one for the scene.
+    expect(find.byIcon(Icons.check), findsNWidgets(2));
+    expect(find.text('Pixel island'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Golden hour'));
     await tester.tap(find.text('Golden hour'));
     verify(settingsService.setSceneClockScene("golden"));
+  });
+
+  testWidgets("the pixel island set lists its four times of day", (tester) async {
+    final settingsService = MockSettingsService();
+    final wallpaperService = MockWallpaperService();
+    when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+    when(settingsService.sceneClockEnabled).thenReturn(true);
+    when(settingsService.sceneClockScene).thenReturn("auto");
+    when(settingsService.sceneClockSet).thenReturn("island");
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<SettingsService>.value(value: settingsService),
+          ChangeNotifierProvider<WallpaperService>.value(value: wallpaperService),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(body: WallpaperPanelPage()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    for (final label in ['Morning', 'Afternoon', 'Evening', 'Night']) {
+      expect(find.text(label), findsOneWidget, reason: label);
+    }
+    expect(find.text('Lake'), findsNothing);
+
+    await tester.tap(find.text('Landscapes'));
+    verify(settingsService.setSceneClockSet("landscapes"));
   });
 }

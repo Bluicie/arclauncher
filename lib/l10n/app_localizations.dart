@@ -1603,6 +1603,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Golden hour'**
   String get sceneGolden;
+
+  /// No description provided for @sceneSetLandscapes.
+  ///
+  /// In en, this message translates to:
+  /// **'Landscapes'**
+  String get sceneSetLandscapes;
+
+  /// No description provided for @sceneSetIsland.
+  ///
+  /// In en, this message translates to:
+  /// **'Pixel island'**
+  String get sceneSetIsland;
+
+  /// No description provided for @sceneMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get sceneMorning;
+
+  /// No description provided for @sceneAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get sceneAfternoon;
+
+  /// No description provided for @sceneEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get sceneEvening;
 }
 
 class _AppLocalizationsDelegate

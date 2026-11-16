@@ -249,5 +249,10 @@
   "sceneDawn": "Bình minh",
   "sceneWater": "Hồ",
   "sceneFog": "Sương mù",
-  "sceneGolden": "Giờ vàng"
+  "sceneGolden": "Giờ vàng",
+  "sceneSetLandscapes": "Phong cảnh",
+  "sceneSetIsland": "Đảo pixel",
+  "sceneMorning": "Buổi sáng",
+  "sceneAfternoon": "Buổi chiều",
+  "sceneEvening": "Buổi tối"
 }

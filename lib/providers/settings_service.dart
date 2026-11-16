@@ -313,6 +313,16 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Which scenes "Follow the day" uses: "landscapes" or "island".
+  String get sceneClockSet => _sharedPreferences.getString("scene_clock_set") ?? "landscapes";
+
+  /// Changes the scene set and goes back to following the day.
+  Future<void> setSceneClockSet(String set) async {
+    await _sharedPreferences.setString("scene_clock_set", set);
+    await _sharedPreferences.setString("scene_clock_scene", "auto");
+    notifyListeners();
+  }
+
   /// The scene behind the glass clock: a scene id, or "auto" to follow the day.
   String get sceneClockScene => _sharedPreferences.getString("scene_clock_scene") ?? "auto";
 

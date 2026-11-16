@@ -1846,6 +1846,19 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as bool);
 
   @override
+  String get sceneClockSet => (super.noSuchMethod(
+        Invocation.getter(#sceneClockSet),
+        returnValue: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#sceneClockSet),
+        ),
+        returnValueForMissingStub: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#sceneClockSet),
+        ),
+      ) as String);
+
+  @override
   String get sceneClockScene => (super.noSuchMethod(
         Invocation.getter(#sceneClockScene),
         returnValue: _i19.dummyValue<String>(
@@ -2303,6 +2316,16 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
         Invocation.method(
           #setSceneClockEnabled,
           [enabled],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setSceneClockSet(String? set) => (super.noSuchMethod(
+        Invocation.method(
+          #setSceneClockSet,
+          [set],
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),

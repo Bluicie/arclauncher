@@ -795,4 +795,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sceneGolden => '黄金时刻';
+
+  @override
+  String get sceneSetLandscapes => '风景';
+
+  @override
+  String get sceneSetIsland => '像素岛';
+
+  @override
+  String get sceneMorning => '早晨';
+
+  @override
+  String get sceneAfternoon => '下午';
+
+  @override
+  String get sceneEvening => '傍晚';
 }

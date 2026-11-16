@@ -815,4 +815,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sceneGolden => 'Altın saat';
+
+  @override
+  String get sceneSetLandscapes => 'Manzaralar';
+
+  @override
+  String get sceneSetIsland => 'Piksel ada';
+
+  @override
+  String get sceneMorning => 'Sabah';
+
+  @override
+  String get sceneAfternoon => 'Öğleden sonra';
+
+  @override
+  String get sceneEvening => 'Akşam';
 }

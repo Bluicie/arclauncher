@@ -1016,4 +1016,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneGolden => 'Golden hour';
+
+  @override
+  String get sceneSetLandscapes => 'Landscapes';
+
+  @override
+  String get sceneSetIsland => 'Pixel island';
+
+  @override
+  String get sceneMorning => 'Morning';
+
+  @override
+  String get sceneAfternoon => 'Afternoon';
+
+  @override
+  String get sceneEvening => 'Evening';
 }

@@ -104,7 +104,57 @@ const List<ClockScene> clockScenes = [
     clockTop: 0.141,
     clockSize: 0.361,
   ),
+  // Pixel island: a 16-bit island at four times of day, made for this launcher (see CREDITS.md).
+  ClockScene(
+    id: "island-dawn",
+    image: "assets/scenes/scene-island-dawn.jpg",
+    foreground: "assets/scenes/scene-island-dawn-fg.webp",
+  ),
+  ClockScene(
+    id: "island-day",
+    image: "assets/scenes/scene-island-day.jpg",
+    foreground: "assets/scenes/scene-island-day-fg.webp",
+  ),
+  ClockScene(
+    id: "island-golden",
+    image: "assets/scenes/scene-island-golden.jpg",
+    foreground: "assets/scenes/scene-island-golden-fg.webp",
+  ),
+  ClockScene(
+    id: "island-night",
+    image: "assets/scenes/scene-island-night.jpg",
+    foreground: "assets/scenes/scene-island-night-fg.webp",
+    // The night sky is dark navy: brighter glass keeps the digits readable.
+    glassBrightness: 1.7,
+    rim: Color(0x99D7E6FF),
+  ),
 ];
+
+/// A family of scenes that "Follow the day" picks from, one per time of day.
+class ClockSceneSet {
+  final String id;
+
+  /// Scene ids for "dawn", "day", "fog", "golden" and "night"; a missing time of day uses "day".
+  final Map<String, String> phases;
+
+  const ClockSceneSet(this.id, this.phases);
+
+  String sceneFor(String phase) => phases[phase] ?? phases["day"]!;
+
+  /// The scenes of this set, in the order of the day.
+  List<String> get sceneIds => [
+        for (final phase in const ["dawn", "day", "fog", "golden", "night"])
+          if (phases[phase] != null) phases[phase]!,
+      ];
+}
+
+const List<ClockSceneSet> clockSceneSets = [
+  ClockSceneSet("landscapes", {"dawn": "dawn", "day": "water", "fog": "fog", "golden": "golden", "night": "night"}),
+  ClockSceneSet("island", {"dawn": "island-dawn", "day": "island-day", "golden": "island-golden", "night": "island-night"}),
+];
+
+ClockSceneSet clockSceneSetById(String id) =>
+    clockSceneSets.firstWhere((set) => set.id == id, orElse: () => clockSceneSets.first);
 
 ClockScene clockSceneById(String id) =>
     clockScenes.firstWhere((scene) => scene.id == id, orElse: () => clockScenes.first);
@@ -132,11 +182,16 @@ ClockScene clockSceneById(String id) =>
 /// scene becomes the misty one.
 const Set<int> _greyWeatherCodes = {3, 45, 48, 51, 53, 55, 61, 63, 65, 80, 81, 82};
 
-/// Picks the scene for [time]: dawn and golden hour while the sun is low, the
-/// lake by day (fog when the weather is grey), night once the sun is 6° under
-/// the horizon. Without a place it falls back to fixed hours.
-String sceneForTime(DateTime time, {double? latitude, double? longitude, int? weatherCode}) {
-  final daytime = weatherCode != null && _greyWeatherCodes.contains(weatherCode) ? "fog" : "water";
+/// Picks the scene of [set] (landscapes by default) for [time]: dawn and golden hour while the sun
+/// is low, day (fog when the weather is grey) when it is up, night once the sun is 6° under the
+/// horizon. Without a place it falls back to fixed hours.
+String sceneForTime(DateTime time, {double? latitude, double? longitude, int? weatherCode, ClockSceneSet? set}) =>
+    (set ?? clockSceneSets.first)
+        .sceneFor(dayPhase(time, latitude: latitude, longitude: longitude, weatherCode: weatherCode));
+
+/// The time of day for [time]: "dawn", "day", "fog", "golden" or "night".
+String dayPhase(DateTime time, {double? latitude, double? longitude, int? weatherCode}) {
+  final daytime = weatherCode != null && _greyWeatherCodes.contains(weatherCode) ? "fog" : "day";
   if (latitude == null || longitude == null) {
     final hour = time.hour;
     if (hour >= 5 && hour < 8) return "dawn";

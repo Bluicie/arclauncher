@@ -101,12 +101,14 @@ class _SceneClockBackgroundState extends State<SceneClockBackground> with Single
     if (setting != autoClockScene) {
       return clockSceneById(setting).id;
     }
+    final set = context.select<SettingsService, String>((s) => s.sceneClockSet);
     final weather = context.watch<WeatherService?>();
     return sceneForTime(
       _now,
       latitude: weather?.latitude,
       longitude: weather?.longitude,
       weatherCode: weather?.current?.code,
+      set: clockSceneSetById(set),
     );
   }
 

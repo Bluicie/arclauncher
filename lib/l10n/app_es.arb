@@ -322,5 +322,10 @@
     "sceneDawn": "Amanecer",
     "sceneWater": "Lago",
     "sceneFog": "Niebla",
-    "sceneGolden": "Hora dorada"
+    "sceneGolden": "Hora dorada",
+    "sceneSetLandscapes": "Paisajes",
+    "sceneSetIsland": "Isla pixelada",
+    "sceneMorning": "Mañana",
+    "sceneAfternoon": "Tarde",
+    "sceneEvening": "Atardecer"
 }

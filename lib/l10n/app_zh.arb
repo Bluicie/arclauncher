@@ -302,5 +302,10 @@
   "sceneDawn": "黎明",
   "sceneWater": "湖泊",
   "sceneFog": "雾",
-  "sceneGolden": "黄金时刻"
+  "sceneGolden": "黄金时刻",
+  "sceneSetLandscapes": "风景",
+  "sceneSetIsland": "像素岛",
+  "sceneMorning": "早晨",
+  "sceneAfternoon": "下午",
+  "sceneEvening": "傍晚"
 }

@@ -7,3 +7,7 @@ were made with an AI image model from text only, are not real places, and are fr
 
 The clock font, Antonio (`assets/fonts/Antonio.ttf`), is by Vernon Adams and is licensed under the
 SIL Open Font License 1.1 (`assets/fonts/Antonio-OFL.txt`).
+
+`scene-island-<time>.jpg` and `scene-island-<time>-fg.webp` (morning, afternoon, evening and night of a pixel
+art island) were made for this launcher with Google Gemini from text prompts, then cropped to 16:9, resized to
+1920x1080, and the island and sea cut out from the sky.

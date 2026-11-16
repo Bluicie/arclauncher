@@ -560,5 +560,10 @@
     "sceneDawn": "Dawn",
     "sceneWater": "Lake",
     "sceneFog": "Fog",
-    "sceneGolden": "Golden hour"
+    "sceneGolden": "Golden hour",
+    "sceneSetLandscapes": "Landscapes",
+    "sceneSetIsland": "Pixel island",
+    "sceneMorning": "Morning",
+    "sceneAfternoon": "Afternoon",
+    "sceneEvening": "Evening"
 }

@@ -1022,4 +1022,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sceneGolden => 'Giờ vàng';
+
+  @override
+  String get sceneSetLandscapes => 'Phong cảnh';
+
+  @override
+  String get sceneSetIsland => 'Đảo pixel';
+
+  @override
+  String get sceneMorning => 'Buổi sáng';
+
+  @override
+  String get sceneAfternoon => 'Buổi chiều';
+
+  @override
+  String get sceneEvening => 'Buổi tối';
 }

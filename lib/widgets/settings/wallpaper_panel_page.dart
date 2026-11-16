@@ -58,8 +58,18 @@ class WallpaperPanelPage extends StatelessWidget {
                       value: settings.sceneClockEnabled,
                       onChanged: (value) => settings.setSceneClockEnabled(value),
                     ),
+                    if (settings.sceneClockEnabled) ...[
+                      for (final (id, label) in _sceneSets(localizations))
+                        FocusableSettingsTile(
+                          leading: Icon(id == "island" ? Icons.grid_4x4 : Icons.terrain),
+                          title: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+                          trailing: settings.sceneClockSet == id ? const Icon(Icons.check) : null,
+                          onPressed: () => settings.setSceneClockSet(id),
+                        ),
+                      const SettingsSectionDivider(),
+                    ],
                     if (settings.sceneClockEnabled)
-                      for (final (id, label) in _sceneChoices(localizations))
+                      for (final (id, label) in _sceneChoices(localizations, settings.sceneClockSet))
                         FocusableSettingsTile(
                           leading: Icon(id == autoClockScene ? Icons.wb_twilight : Icons.image_outlined),
                           title: Text(label, style: Theme.of(context).textTheme.bodyMedium),
@@ -156,14 +166,28 @@ class WallpaperPanelPage extends StatelessWidget {
     );
   }
 
-  List<(String, String)> _sceneChoices(AppLocalizations localizations) => [
-        (autoClockScene, localizations.sceneFollowDay),
-        ("night", localizations.sceneNight),
-        ("dawn", localizations.sceneDawn),
-        ("water", localizations.sceneWater),
-        ("fog", localizations.sceneFog),
-        ("golden", localizations.sceneGolden),
+  List<(String, String)> _sceneSets(AppLocalizations localizations) => [
+        ("landscapes", localizations.sceneSetLandscapes),
+        ("island", localizations.sceneSetIsland),
       ];
+
+  /// "Follow the day", then the scenes of [set] in the order of the day.
+  List<(String, String)> _sceneChoices(AppLocalizations localizations, String set) => [
+        (autoClockScene, localizations.sceneFollowDay),
+        for (final id in clockSceneSetById(set).sceneIds) (id, _sceneLabel(localizations, id)),
+      ];
+
+  String _sceneLabel(AppLocalizations localizations, String id) => switch (id) {
+        "dawn" => localizations.sceneDawn,
+        "water" => localizations.sceneWater,
+        "fog" => localizations.sceneFog,
+        "golden" => localizations.sceneGolden,
+        "night" || "island-night" => localizations.sceneNight,
+        "island-dawn" => localizations.sceneMorning,
+        "island-day" => localizations.sceneAfternoon,
+        "island-golden" => localizations.sceneEvening,
+        _ => id,
+      };
 
   Future<void> _pickWallpaper(
     BuildContext context,

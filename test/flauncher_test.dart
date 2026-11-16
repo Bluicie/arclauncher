@@ -87,6 +87,25 @@ void main() {
     expect(findAppCard("me.efesser.flauncher.1"), findsOneWidget);
   });
 
+  testWidgets("The dock shows as many favorites as the Favorites column count", (tester) async {
+    for (final (columns, shown) in [(6, 6), (8, 8)]) {
+      final appsService = mkAppService();
+      final favorites = fakeCategory(name: "Favorites", order: 0, type: CategoryType.row, columnsCount: columns);
+      when(appsService.categoriesWithApps).thenReturn([
+        CategoryWithApps(favorites, [
+          for (int i = 0; i < 8; i++) fakeApp(packageName: "dock.app.$i", name: "App $i"),
+        ]),
+      ]);
+
+      await _pumpWidgetWith(tester, appsService);
+      await tester.pumpAndSettle();
+
+      for (int i = 0; i < 8; i++) {
+        expect(findAppCard("dock.app.$i"), i < shown ? findsOneWidget : findsNothing, reason: "$columns columns, app $i");
+      }
+    }
+  });
+
   testWidgets("Home page shows category empty-state", (tester) async {
     final appsService = mkAppService();
     when(appsService.categoriesWithApps).thenReturn([]);

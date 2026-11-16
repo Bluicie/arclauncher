@@ -1031,4 +1031,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneEvening => 'Evening';
+
+  @override
+  String get sceneSetAdventure => 'Adventure';
 }

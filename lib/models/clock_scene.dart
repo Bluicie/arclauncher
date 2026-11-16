@@ -128,6 +128,24 @@ const List<ClockScene> clockScenes = [
     glassBrightness: 1.7,
     rim: Color(0x99D7E6FF),
   ),
+  // Adventure: a different cartoon world for each time of day (see CREDITS.md).
+  ClockScene(
+    id: "adventure-backyard",
+    image: "assets/scenes/scene-adventure-backyard.jpg",
+    foreground: "assets/scenes/scene-adventure-backyard-fg.webp",
+  ),
+  ClockScene(
+    id: "adventure-platform",
+    image: "assets/scenes/scene-adventure-platform.jpg",
+    foreground: "assets/scenes/scene-adventure-platform-fg.webp",
+  ),
+  ClockScene(
+    id: "adventure-blocks",
+    image: "assets/scenes/scene-adventure-blocks.jpg",
+    foreground: "assets/scenes/scene-adventure-blocks-fg.webp",
+    glassBrightness: 1.7,
+    rim: Color(0x99D7E6FF),
+  ),
 ];
 
 /// A family of scenes that "Follow the day" picks from, one per time of day.
@@ -151,6 +169,8 @@ class ClockSceneSet {
 const List<ClockSceneSet> clockSceneSets = [
   ClockSceneSet("landscapes", {"dawn": "dawn", "day": "water", "fog": "fog", "golden": "golden", "night": "night"}),
   ClockSceneSet("island", {"dawn": "island-dawn", "day": "island-day", "golden": "island-golden", "night": "island-night"}),
+  // No evening scene yet: the afternoon stays until night.
+  ClockSceneSet("adventure", {"dawn": "adventure-backyard", "day": "adventure-platform", "night": "adventure-blocks"}),
 ];
 
 ClockSceneSet clockSceneSetById(String id) =>

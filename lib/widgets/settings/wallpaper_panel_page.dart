@@ -61,7 +61,11 @@ class WallpaperPanelPage extends StatelessWidget {
                     if (settings.sceneClockEnabled) ...[
                       for (final (id, label) in _sceneSets(localizations))
                         FocusableSettingsTile(
-                          leading: Icon(id == "island" ? Icons.grid_4x4 : Icons.terrain),
+                          leading: Icon(switch (id) {
+                            "island" => Icons.grid_4x4,
+                            "adventure" => Icons.toys_outlined,
+                            _ => Icons.terrain,
+                          }),
                           title: Text(label, style: Theme.of(context).textTheme.bodyMedium),
                           trailing: settings.sceneClockSet == id ? const Icon(Icons.check) : null,
                           onPressed: () => settings.setSceneClockSet(id),
@@ -169,6 +173,7 @@ class WallpaperPanelPage extends StatelessWidget {
   List<(String, String)> _sceneSets(AppLocalizations localizations) => [
         ("landscapes", localizations.sceneSetLandscapes),
         ("island", localizations.sceneSetIsland),
+        ("adventure", localizations.sceneSetAdventure),
       ];
 
   /// "Follow the day", then the scenes of [set] in the order of the day.
@@ -186,6 +191,9 @@ class WallpaperPanelPage extends StatelessWidget {
         "island-dawn" => localizations.sceneMorning,
         "island-day" => localizations.sceneAfternoon,
         "island-golden" => localizations.sceneEvening,
+        "adventure-backyard" => localizations.sceneMorning,
+        "adventure-platform" => localizations.sceneAfternoon,
+        "adventure-blocks" => localizations.sceneNight,
         _ => id,
       };
 

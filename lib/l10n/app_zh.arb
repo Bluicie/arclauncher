@@ -307,5 +307,6 @@
   "sceneSetIsland": "像素岛",
   "sceneMorning": "早晨",
   "sceneAfternoon": "下午",
-  "sceneEvening": "傍晚"
+  "sceneEvening": "傍晚",
+  "sceneSetAdventure": "冒险"
 }

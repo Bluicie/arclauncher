@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flauncher/l10n/app_localizations.dart';
 import 'package:flauncher/models/watch_next_item.dart';
+import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/watch_next_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -74,6 +76,47 @@ void main() {
       after!.context?.findAncestorWidgetOfExactType<WatchNextRow>(),
       isNotNull,
     );
+  });
+
+  testWidgets('scene clock mode shows the compact row and tracks the focused item', (tester) async {
+    final settings = MockSettingsService();
+    when(settings.showWatchNextSection).thenReturn(true);
+    when(settings.watchNextBigPictureMode).thenReturn(false);
+    when(settings.sceneClockEnabled).thenReturn(true);
+    when(settings.showFocusBorders).thenReturn(true);
+    when(settings.focusBorderThickness).thenReturn(1.5);
+    when(settings.appKeyClickEnabled).thenReturn(false);
+
+    final service = TestWatchNextService();
+    service.testItems = [
+      WatchNextItem(id: 1, title: 'One', packageName: 'com.netflix.ninja', progressPercent: 40),
+      WatchNextItem(id: 2, title: 'Two'),
+    ];
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<SettingsService>.value(value: settings),
+          ChangeNotifierProvider<WatchNextService>.value(value: service),
+          ChangeNotifierProvider<AppsService>(create: (_) => TestAppsService()),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: WatchNextRow(isFirstSection: true)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('One'), findsOneWidget);
+    expect(find.text('NETFLIX'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    expect(service.focusedItem?.id, 1);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pumpAndSettle();
+    expect(service.focusedItem?.id, 2);
   });
 
   test('section stays visible and keeps its reserved space while refreshing', () async {

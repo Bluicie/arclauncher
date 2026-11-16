@@ -292,7 +292,8 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
 
     if (favoriteApps.isEmpty && otherSections.isEmpty) return _emptyState(context);
 
-    final watchNextSpace = watchNextBigPicture ? 385 : 410;
+    final sceneClock = context.select<SettingsService, bool>((s) => s.sceneClockEnabled);
+    final watchNextSpace = _watchNextSpace(bigPicture: watchNextBigPicture, sceneClock: sceneClock);
 
     return CustomScrollView(
       controller: _scrollController,
@@ -349,8 +350,18 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
   /// [_tvOSLayout]: the scene clock stays above it.
   double _homeContentTop(BuildContext context, SettingsService settings, WatchNextService watchNext) {
     final reserveWatchNextSpace = settings.showWatchNextSection && watchNext.hasVisibleSection;
-    final reserved = reserveWatchNextSpace ? (settings.watchNextBigPictureMode ? 385 : 410) : 150;
+    final reserved = reserveWatchNextSpace
+        ? _watchNextSpace(bigPicture: settings.watchNextBigPictureMode, sceneClock: settings.sceneClockEnabled)
+        : 150;
     return MediaQuery.sizeOf(context).height - reserved;
+  }
+
+  /// The height kept free at the bottom of the first screen for Watch Next and the dock.
+  double _watchNextSpace({required bool bigPicture, required bool sceneClock}) {
+    if (bigPicture) return 385;
+    // The compact row of the scene clock, with room for the dock under it.
+    if (sceneClock) return kCompactWatchNextSectionHeight + 150;
+    return 410;
   }
 
   double _bottomScrollPadding(BuildContext context, {required bool hasDock}) {

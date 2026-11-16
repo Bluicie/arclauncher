@@ -75,6 +75,20 @@ class WatchNextService extends ChangeNotifier {
     return true;
   }
 
+  WatchNextItem? _focusedItem;
+
+  /// The recommendation that has the focus in the compact row, `null` when the focus is elsewhere.
+  WatchNextItem? get focusedItem => _focusedItem;
+
+  void setFocusedItem(WatchNextItem? item) {
+    if (_focusedItem?.id == item?.id) return;
+    _focusedItem = item;
+    if (item != null) {
+      ensurePosterLoaded(getPosterUriForItem(item));
+    }
+    notifyListeners();
+  }
+
   void setActiveHeroIndex(int index) {
     if (_items.isEmpty) return;
     final clamped = index.clamp(0, _items.length - 1);

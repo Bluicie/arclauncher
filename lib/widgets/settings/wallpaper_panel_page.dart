@@ -18,6 +18,7 @@
 
 import 'dart:io';
 
+import 'package:flauncher/models/clock_scene.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/widgets/settings/focusable_settings_tile.dart';
@@ -47,6 +48,31 @@ class WallpaperPanelPage extends StatelessWidget {
         Expanded(
           child: ListView(
             children: [
+              Consumer<SettingsService>(
+                builder: (_, settings, __) => Column(
+                  children: [
+                    RoundedSwitchListTile(
+                      autofocus: true,
+                      title: Text(localizations.sceneClock),
+                      secondary: const Icon(Icons.landscape_outlined),
+                      value: settings.sceneClockEnabled,
+                      onChanged: (value) => settings.setSceneClockEnabled(value),
+                    ),
+                    if (settings.sceneClockEnabled)
+                      for (final (id, label) in _sceneChoices(localizations))
+                        FocusableSettingsTile(
+                          leading: Icon(id == autoClockScene ? Icons.wb_twilight : Icons.image_outlined),
+                          title: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+                          subtitle: id == autoClockScene
+                              ? Text(localizations.sceneClockHint, style: Theme.of(context).textTheme.bodySmall)
+                              : null,
+                          trailing: settings.sceneClockScene == id ? const Icon(Icons.check) : null,
+                          onPressed: () => settings.setSceneClockScene(id),
+                        ),
+                    const SettingsSectionDivider(),
+                  ],
+                ),
+              ),
               Consumer<SettingsService>(
                 builder: (_, settings, __) {
                   return RoundedSwitchListTile(
@@ -92,7 +118,6 @@ class WallpaperPanelPage extends StatelessWidget {
                     return Column(
                       children: [
                         FocusableSettingsTile(
-                          autofocus: true,
                           leading: Icon(Icons.gradient),
                           title: Text(localizations.gradient, style: Theme.of(context).textTheme.bodyMedium),
                           onPressed: () => Navigator.of(context).pushNamed(GradientPanelPage.routeName),
@@ -130,6 +155,15 @@ class WallpaperPanelPage extends StatelessWidget {
       ],
     );
   }
+
+  List<(String, String)> _sceneChoices(AppLocalizations localizations) => [
+        (autoClockScene, localizations.sceneFollowDay),
+        ("night", localizations.sceneNight),
+        ("dawn", localizations.sceneDawn),
+        ("water", localizations.sceneWater),
+        ("fog", localizations.sceneFog),
+        ("golden", localizations.sceneGolden),
+      ];
 
   Future<void> _pickWallpaper(
     BuildContext context,

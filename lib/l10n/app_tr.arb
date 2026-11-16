@@ -257,5 +257,13 @@
     "quickActionsTitle": "Hızlı işlemler",
     "quickActionsNone": "Henüz yok. Home Assistant gibi eşleşmiş bir uygulama buraya düğme ekleyebilir.",
     "quickActionsCount": "Eşleşmiş bir uygulamanın ayarladığı {count} düğme",
-    "quickActionsRemoveAll": "Tümünü kaldır"
+    "quickActionsRemoveAll": "Tümünü kaldır",
+    "sceneClock": "Cam saatli sahne",
+    "sceneClockHint": "Durum çubuğu, Hava durumu'ndaki konuma göre günü takip eder",
+    "sceneFollowDay": "Günü takip et",
+    "sceneNight": "Gece",
+    "sceneDawn": "Şafak",
+    "sceneWater": "Göl",
+    "sceneFog": "Sis",
+    "sceneGolden": "Altın saat"
 }

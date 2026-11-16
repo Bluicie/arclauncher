@@ -969,4 +969,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get quickActionsRemoveAll => '全部移除';
+
+  @override
+  String get sceneClock => '玻璃时钟场景';
+
+  @override
+  String get sceneClockHint => '根据状态栏天气中的位置跟随一天的变化';
+
+  @override
+  String get sceneFollowDay => '跟随一天';
+
+  @override
+  String get sceneNight => '夜晚';
+
+  @override
+  String get sceneDawn => '黎明';
+
+  @override
+  String get sceneWater => '湖泊';
+
+  @override
+  String get sceneFog => '雾';
+
+  @override
+  String get sceneGolden => '黄金时刻';
 }

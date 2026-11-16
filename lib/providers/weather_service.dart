@@ -55,6 +55,10 @@ class WeatherService extends ChangeNotifier {
 
   String? get locationName => _sharedPreferences.getString(_locationNameKey);
 
+  double? get latitude => _sharedPreferences.getDouble(_latitudeKey);
+
+  double? get longitude => _sharedPreferences.getDouble(_longitudeKey);
+
   bool get hasLocation =>
       _sharedPreferences.containsKey(_latitudeKey) && _sharedPreferences.containsKey(_longitudeKey);
 

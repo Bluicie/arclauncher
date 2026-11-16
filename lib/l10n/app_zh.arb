@@ -294,5 +294,13 @@
   "quickActionsTitle": "快捷操作",
   "quickActionsNone": "暂无。已配对的应用（如 Home Assistant）可以在此添加按钮。",
   "quickActionsCount": "{count} 个按钮，由已配对的应用设置",
-  "quickActionsRemoveAll": "全部移除"
+  "quickActionsRemoveAll": "全部移除",
+  "sceneClock": "玻璃时钟场景",
+  "sceneClockHint": "根据状态栏天气中的位置跟随一天的变化",
+  "sceneFollowDay": "跟随一天",
+  "sceneNight": "夜晚",
+  "sceneDawn": "黎明",
+  "sceneWater": "湖泊",
+  "sceneFog": "雾",
+  "sceneGolden": "黄金时刻"
 }

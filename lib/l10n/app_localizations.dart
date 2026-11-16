@@ -1873,6 +1873,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove all'**
   String get quickActionsRemoveAll;
+
+  /// No description provided for @sceneClock.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene with glass clock'**
+  String get sceneClock;
+
+  /// No description provided for @sceneClockHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the day with the place from Status bar, Weather'**
+  String get sceneClockHint;
+
+  /// No description provided for @sceneFollowDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the day'**
+  String get sceneFollowDay;
+
+  /// No description provided for @sceneNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get sceneNight;
+
+  /// No description provided for @sceneDawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Dawn'**
+  String get sceneDawn;
+
+  /// No description provided for @sceneWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Lake'**
+  String get sceneWater;
+
+  /// No description provided for @sceneFog.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get sceneFog;
+
+  /// No description provided for @sceneGolden.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden hour'**
+  String get sceneGolden;
 }
 
 class _AppLocalizationsDelegate

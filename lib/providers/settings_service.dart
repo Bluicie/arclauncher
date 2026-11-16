@@ -310,6 +310,21 @@ class SettingsService extends ChangeNotifier {
     }
   }
 
+  bool get sceneClockEnabled => _sharedPreferences.getBool("scene_clock_enabled") ?? false;
+
+  Future<void> setSceneClockEnabled(bool enabled) async {
+    await _sharedPreferences.setBool("scene_clock_enabled", enabled);
+    notifyListeners();
+  }
+
+  /// The scene behind the glass clock: a scene id, or "auto" to follow the day.
+  String get sceneClockScene => _sharedPreferences.getString("scene_clock_scene") ?? "auto";
+
+  Future<void> setSceneClockScene(String scene) async {
+    await _sharedPreferences.setString("scene_clock_scene", scene);
+    notifyListeners();
+  }
+
   bool get timeBasedWallpaperEnabled => _sharedPreferences.getBool("time_based_wallpaper_enabled") ?? false;
 
   Future<void> setTimeBasedWallpaperEnabled(bool enabled) async {

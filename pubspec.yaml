@@ -56,4 +56,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/scenes/
     - lib/l10n/
+  fonts:
+    - family: Antonio
+      fonts:
+        - asset: assets/fonts/Antonio.ttf

@@ -36,6 +36,7 @@ import 'package:flauncher/widgets/category_clean_row.dart';
 import 'package:flauncher/widgets/category_row.dart';
 import 'package:flauncher/widgets/dock_contour_painter.dart';
 import 'package:flauncher/widgets/launcher_alternative_view.dart';
+import 'package:flauncher/widgets/scene_clock_background.dart';
 import 'package:flauncher/widgets/focus_aware_app_bar.dart';
 import 'package:flauncher/widgets/wallpaper_video_background.dart';
 import 'package:flauncher/widgets/watch_next_row.dart';
@@ -112,6 +113,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                 final heroUri = isBigPicture ? watchNextService.getPosterUriForItem(activeItem) : null;
                 final heroBytes = isBigPicture ? watchNextService.getCachedPoster(heroUri) : null;
                 final hasHeroBackdrop = isBigPicture && heroBytes != null;
+                final sceneClock = settingsService.sceneClockEnabled;
                 final screenSize = MediaQuery.sizeOf(context);
                 final dpr = MediaQuery.devicePixelRatioOf(context);
                 _heroBackdropBaker.update(
@@ -126,7 +128,12 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                       duration: const Duration(milliseconds: 1500),
                       child: hasHeroBackdrop
                           ? const SizedBox.shrink(key: ValueKey('occluded_wallpaper'))
-                          : _wallpaper(context, wallpaperService),
+                          : sceneClock
+                              ? SceneClockBackground(
+                                  key: const ValueKey('scene_clock'),
+                                  contentTop: _homeContentTop(context, settingsService, watchNextService),
+                                )
+                              : _wallpaper(context, wallpaperService),
                     ),
                     // Hero items crossfade once baked simultaneously with dock blur.
                     AnimatedSwitcher(
@@ -157,7 +164,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                             )
                           : const SizedBox.shrink(key: ValueKey('no_hero_bg')),
                     ),
-                    if (redditCredit != null && !hasHeroBackdrop)
+                    if (redditCredit != null && !hasHeroBackdrop && !sceneClock)
                       Positioned(
                         right: 24,
                         top: 64,
@@ -172,7 +179,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
                           ),
                         ),
                       )
-                    else if (author != null && !hasHeroBackdrop)
+                    else if (author != null && !hasHeroBackdrop && !sceneClock)
                       Positioned(
                         right: 24,
                         top: 64,
@@ -197,7 +204,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
             selector: (_, launcherState, settings, wallpaperService) => (
               launcherState.appGridFocused,
               settings.backgroundBlurDisabled,
-              wallpaperService.wallpaperVideoFile != null,
+              wallpaperService.wallpaperVideoFile != null && !settings.sceneClockEnabled,
             ),
             builder: (_, data, __) {
               final (appGridFocused, blurDisabled, hasVideoWallpaper) = data;
@@ -336,6 +343,14 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         SliverToBoxAdapter(child: SizedBox(height: _bottomScrollPadding(context, hasDock: favoriteApps.isNotEmpty))),
       ],
     );
+  }
+
+  /// Where the home content (Watch Next or the dock) starts on screen, as laid out by
+  /// [_tvOSLayout]: the scene clock stays above it.
+  double _homeContentTop(BuildContext context, SettingsService settings, WatchNextService watchNext) {
+    final reserveWatchNextSpace = settings.showWatchNextSection && watchNext.hasVisibleSection;
+    final reserved = reserveWatchNextSpace ? (settings.watchNextBigPictureMode ? 385 : 410) : 150;
+    return MediaQuery.sizeOf(context).height - reserved;
   }
 
   double _bottomScrollPadding(BuildContext context, {required bool hasDock}) {

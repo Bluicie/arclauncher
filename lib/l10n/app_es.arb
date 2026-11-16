@@ -314,5 +314,13 @@
     "quickActionsTitle": "Acciones rápidas",
     "quickActionsNone": "Ninguna todavía. Una app emparejada como Home Assistant puede añadir botones aquí.",
     "quickActionsCount": "{count} botones, configurados por una app emparejada",
-    "quickActionsRemoveAll": "Quitar todas"
+    "quickActionsRemoveAll": "Quitar todas",
+    "sceneClock": "Escena con reloj de cristal",
+    "sceneClockHint": "Sigue el día con el lugar de Barra de estado, Tiempo",
+    "sceneFollowDay": "Seguir el día",
+    "sceneNight": "Noche",
+    "sceneDawn": "Amanecer",
+    "sceneWater": "Lago",
+    "sceneFog": "Niebla",
+    "sceneGolden": "Hora dorada"
 }

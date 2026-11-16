@@ -294,5 +294,13 @@
   "quickActionsTitle": "Thao tác nhanh",
   "quickActionsNone": "Chưa có. Ứng dụng đã ghép nối như Home Assistant có thể thêm nút vào đây.",
   "quickActionsCount": "{count} nút do ứng dụng đã ghép nối thiết lập",
-  "quickActionsRemoveAll": "Xóa tất cả"
+  "quickActionsRemoveAll": "Xóa tất cả",
+  "sceneClock": "Cảnh với đồng hồ kính",
+  "sceneClockHint": "Theo thời gian trong ngày với địa điểm trong Thanh trạng thái, Thời tiết",
+  "sceneFollowDay": "Theo thời gian trong ngày",
+  "sceneNight": "Ban đêm",
+  "sceneDawn": "Bình minh",
+  "sceneWater": "Hồ",
+  "sceneFog": "Sương mù",
+  "sceneGolden": "Giờ vàng"
 }

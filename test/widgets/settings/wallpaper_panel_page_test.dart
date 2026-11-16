@@ -59,4 +59,36 @@ void main() {
     expect(unsplashTop, greaterThan(gradientTop));
     expect(redditTop, greaterThan(unsplashTop));
   });
+
+  testWidgets("shows the scene choices when the scene clock is on", (tester) async {
+    final settingsService = MockSettingsService();
+    final wallpaperService = MockWallpaperService();
+    when(settingsService.timeBasedWallpaperEnabled).thenReturn(false);
+    when(settingsService.sceneClockEnabled).thenReturn(true);
+    when(settingsService.sceneClockScene).thenReturn("fog");
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<SettingsService>.value(value: settingsService),
+          ChangeNotifierProvider<WallpaperService>.value(value: wallpaperService),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(body: WallpaperPanelPage()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Scene with glass clock'), findsOneWidget);
+    expect(find.text('Follow the day'), findsOneWidget);
+    expect(find.text('Golden hour'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Golden hour'));
+    await tester.tap(find.text('Golden hour'));
+    verify(settingsService.setSceneClockScene("golden"));
+  });
 }

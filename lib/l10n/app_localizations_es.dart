@@ -796,4 +796,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Temperatura en °F';
+
+  @override
+  String get sceneClock => 'Escena con reloj de cristal';
+
+  @override
+  String get sceneClockHint =>
+      'Sigue el día con el lugar de Barra de estado, Tiempo';
+
+  @override
+  String get sceneFollowDay => 'Seguir el día';
+
+  @override
+  String get sceneNight => 'Noche';
+
+  @override
+  String get sceneDawn => 'Amanecer';
+
+  @override
+  String get sceneWater => 'Lago';
+
+  @override
+  String get sceneFog => 'Niebla';
+
+  @override
+  String get sceneGolden => 'Hora dorada';
 }

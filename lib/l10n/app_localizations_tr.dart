@@ -790,4 +790,29 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Sıcaklık °F olarak';
+
+  @override
+  String get sceneClock => 'Cam saatli sahne';
+
+  @override
+  String get sceneClockHint =>
+      'Durum çubuğu, Hava durumu\'ndaki konuma göre günü takip eder';
+
+  @override
+  String get sceneFollowDay => 'Günü takip et';
+
+  @override
+  String get sceneNight => 'Gece';
+
+  @override
+  String get sceneDawn => 'Şafak';
+
+  @override
+  String get sceneWater => 'Göl';
+
+  @override
+  String get sceneFog => 'Sis';
+
+  @override
+  String get sceneGolden => 'Altın saat';
 }

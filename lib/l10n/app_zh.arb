@@ -241,5 +241,13 @@
   "weatherSearchHint": "城镇或城市",
   "weatherNoPlaces": "未找到地点",
   "weatherSearchFailed": "搜索失败：{error}",
-  "weatherFahrenheit": "以 °F 显示温度"
+  "weatherFahrenheit": "以 °F 显示温度",
+  "sceneClock": "玻璃时钟场景",
+  "sceneClockHint": "根据状态栏天气中的位置跟随一天的变化",
+  "sceneFollowDay": "跟随一天",
+  "sceneNight": "夜晚",
+  "sceneDawn": "黎明",
+  "sceneWater": "湖泊",
+  "sceneFog": "雾",
+  "sceneGolden": "黄金时刻"
 }

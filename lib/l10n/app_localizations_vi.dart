@@ -794,4 +794,29 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Nhiệt độ theo °F';
+
+  @override
+  String get sceneClock => 'Cảnh với đồng hồ kính';
+
+  @override
+  String get sceneClockHint =>
+      'Theo thời gian trong ngày với địa điểm trong Thanh trạng thái, Thời tiết';
+
+  @override
+  String get sceneFollowDay => 'Theo thời gian trong ngày';
+
+  @override
+  String get sceneNight => 'Ban đêm';
+
+  @override
+  String get sceneDawn => 'Bình minh';
+
+  @override
+  String get sceneWater => 'Hồ';
+
+  @override
+  String get sceneFog => 'Sương mù';
+
+  @override
+  String get sceneGolden => 'Giờ vàng';
 }

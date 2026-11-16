@@ -367,5 +367,13 @@
           "type": "String"
         }
       }
-    }
+    },
+    "sceneClock": "Scene with glass clock",
+    "sceneClockHint": "Follows the day with the place from Status bar, Weather",
+    "sceneFollowDay": "Follow the day",
+    "sceneNight": "Night",
+    "sceneDawn": "Dawn",
+    "sceneWater": "Lake",
+    "sceneFog": "Fog",
+    "sceneGolden": "Golden hour"
 }

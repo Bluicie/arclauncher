@@ -788,4 +788,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weatherFahrenheit => 'Temperature in °F';
+
+  @override
+  String get sceneClock => 'Scene with glass clock';
+
+  @override
+  String get sceneClockHint =>
+      'Follows the day with the place from Status bar, Weather';
+
+  @override
+  String get sceneFollowDay => 'Follow the day';
+
+  @override
+  String get sceneNight => 'Night';
+
+  @override
+  String get sceneDawn => 'Dawn';
+
+  @override
+  String get sceneWater => 'Lake';
+
+  @override
+  String get sceneFog => 'Fog';
+
+  @override
+  String get sceneGolden => 'Golden hour';
 }

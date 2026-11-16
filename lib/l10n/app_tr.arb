@@ -204,5 +204,13 @@
     "weatherSearchHint": "Kasaba veya şehir",
     "weatherNoPlaces": "Yer bulunamadı",
     "weatherSearchFailed": "Arama başarısız: {error}",
-    "weatherFahrenheit": "Sıcaklık °F olarak"
+    "weatherFahrenheit": "Sıcaklık °F olarak",
+    "sceneClock": "Cam saatli sahne",
+    "sceneClockHint": "Durum çubuğu, Hava durumu'ndaki konuma göre günü takip eder",
+    "sceneFollowDay": "Günü takip et",
+    "sceneNight": "Gece",
+    "sceneDawn": "Şafak",
+    "sceneWater": "Göl",
+    "sceneFog": "Sis",
+    "sceneGolden": "Altın saat"
 }

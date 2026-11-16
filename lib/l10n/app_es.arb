@@ -261,5 +261,13 @@
     "weatherSearchHint": "Pueblo o ciudad",
     "weatherNoPlaces": "No se encontraron lugares",
     "weatherSearchFailed": "Error en la búsqueda: {error}",
-    "weatherFahrenheit": "Temperatura en °F"
+    "weatherFahrenheit": "Temperatura en °F",
+    "sceneClock": "Escena con reloj de cristal",
+    "sceneClockHint": "Sigue el día con el lugar de Barra de estado, Tiempo",
+    "sceneFollowDay": "Seguir el día",
+    "sceneNight": "Noche",
+    "sceneDawn": "Amanecer",
+    "sceneWater": "Lago",
+    "sceneFog": "Niebla",
+    "sceneGolden": "Hora dorada"
 }

@@ -1839,6 +1839,26 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
       ) as List<String>);
 
   @override
+  bool get sceneClockEnabled => (super.noSuchMethod(
+        Invocation.getter(#sceneClockEnabled),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  String get sceneClockScene => (super.noSuchMethod(
+        Invocation.getter(#sceneClockScene),
+        returnValue: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#sceneClockScene),
+        ),
+        returnValueForMissingStub: _i19.dummyValue<String>(
+          this,
+          Invocation.getter(#sceneClockScene),
+        ),
+      ) as String);
+
+  @override
   bool get timeBasedWallpaperEnabled => (super.noSuchMethod(
         Invocation.getter(#timeBasedWallpaperEnabled),
         returnValue: false,
@@ -2273,6 +2293,26 @@ class MockSettingsService extends _i1.Mock implements _i18.SettingsService {
         Invocation.method(
           #setShowFocusBorders,
           [value],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setSceneClockEnabled(bool? enabled) => (super.noSuchMethod(
+        Invocation.method(
+          #setSceneClockEnabled,
+          [enabled],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setSceneClockScene(String? scene) => (super.noSuchMethod(
+        Invocation.method(
+          #setSceneClockScene,
+          [scene],
         ),
         returnValue: _i9.Future<void>.value(),
         returnValueForMissingStub: _i9.Future<void>.value(),

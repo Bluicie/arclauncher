@@ -241,5 +241,13 @@
   "weatherSearchHint": "Thị trấn hoặc thành phố",
   "weatherNoPlaces": "Không tìm thấy địa điểm",
   "weatherSearchFailed": "Tìm kiếm thất bại: {error}",
-  "weatherFahrenheit": "Nhiệt độ theo °F"
+  "weatherFahrenheit": "Nhiệt độ theo °F",
+  "sceneClock": "Cảnh với đồng hồ kính",
+  "sceneClockHint": "Theo thời gian trong ngày với địa điểm trong Thanh trạng thái, Thời tiết",
+  "sceneFollowDay": "Theo thời gian trong ngày",
+  "sceneNight": "Ban đêm",
+  "sceneDawn": "Bình minh",
+  "sceneWater": "Hồ",
+  "sceneFog": "Sương mù",
+  "sceneGolden": "Giờ vàng"
 }

@@ -200,14 +200,28 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
               },
             ),
           ),
-          Selector3<LauncherState, SettingsService, WallpaperService, (bool, bool, bool)>(
+          Selector3<LauncherState, SettingsService, WallpaperService, (bool, bool, bool, bool)>(
             selector: (_, launcherState, settings, wallpaperService) => (
               launcherState.appGridFocused,
               settings.backgroundBlurDisabled,
               wallpaperService.wallpaperVideoFile != null && !settings.sceneClockEnabled,
+              settings.sceneClockEnabled && !(settings.showWatchNextSection && settings.watchNextBigPictureMode),
             ),
             builder: (_, data, __) {
-              final (appGridFocused, blurDisabled, hasVideoWallpaper) = data;
+              final (appGridFocused, blurDisabled, hasVideoWallpaper, sceneClock) = data;
+              if (sceneClock) {
+                // The blur snapshots are of the wallpaper, not the scene: darken the scene instead.
+                return Positioned.fill(
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: appGridFocused ? 1 : 0,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      child: const ColoredBox(color: Color(0x99000000)),
+                    ),
+                  ),
+                );
+              }
               return ListenableBuilder(
                 listenable: _heroBackdropBaker,
                 builder: (context, _) {
@@ -668,7 +682,8 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
         child: ClipRRect(
           borderRadius: borderRadius,
           clipBehavior: Clip.antiAlias,
-          child: backdropDisabled
+          // The blur is a snapshot of the wallpaper, which the scene clock hides: plain glass then.
+          child: backdropDisabled || (sceneClock && !isBigPicture)
               ? content
               : ListenableBuilder(
                   listenable: _heroBackdropBaker,

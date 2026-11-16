@@ -90,7 +90,8 @@ void main() {
     expect(find.byIcon(Icons.check), findsNWidgets(2));
     expect(find.text('Pixel island'), findsOneWidget);
 
-    await tester.ensureVisible(find.text('Golden hour'));
+    await tester.scrollUntilVisible(find.text('Golden hour'), 80, scrollable: find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Golden hour'));
     verify(settingsService.setSceneClockScene("golden"));
   });

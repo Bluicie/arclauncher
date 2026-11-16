@@ -499,9 +499,8 @@ class _CategorySettingsState extends State<_CategorySettings>
             )
           )
         ),
-        // Favorites is also the dock, a single line whose slot count follows this setting.
-        if (_categoryType == CategoryType.grid || _name == 'Favorites')
-          _listTile(
+        // Grids, single-line rows and the dock (Favorites) all fit this many apps across.
+        _listTile(
             context,
             Text(localizations.columnCount),
             Padding(
@@ -531,37 +530,6 @@ class _CategorySettingsState extends State<_CategorySettings>
               )
             )
           ),
-        if (_categoryType == CategoryType.row)
-          _listTile(
-            context,
-            Text(localizations.rowHeight),
-            Padding(
-              padding: EdgeInsets.only(top: 4),
-              child: DropdownButtonFormField<int>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 2)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-                initialValue: _rowHeight,
-                isDense: true,
-                isExpanded: true,
-                items: [for (int i = 80; i <= 150; i += 10) i]
-                    .map(
-                      (value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(value.toString(), style: Theme.of(context).textTheme.bodySmall),
-                  ),
-                ).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _rowHeight = value!;
-                  });
-                  _notifyChange();
-                }
-              )
-            )
-          )
       ]
     );
   }

@@ -52,29 +52,43 @@ class CategoryRow extends StatelessWidget
       categoryContent = categoryContainerEmptyState(context);
     }
     else {
-      categoryContent = SizedBox(
-        height: category.rowHeight.toDouble() + (showAppNames ? kAppNameLabelHeight : 0),
-        child: ListView.custom(
-          padding: const EdgeInsets.all(8),
-          scrollDirection: Axis.horizontal,
-          childrenDelegate: SliverChildBuilderDelegate(
-            childCount: applications.length,
-            findChildIndexCallback: _findChildIndex,
-            (context, index) => Padding(
-                key: Key(applications[index].packageName),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: AppCard(
-                  category: category,
-                  application: applications[index],
-                  autofocus: index == 0,
-                  handleUpNavigationToSettings: isFirstSection,
-                  onFocused: onAppFocused,
-                  onMove: (direction) => _onMove(context, direction, index),
-                  onMoveEnd: () => _onMoveEnd(context)
-                )
-            )
-          )
-        )
+      // As many apps fit across as the section's column count, like the dock; the rest scroll in.
+      categoryContent = LayoutBuilder(
+        builder: (context, constraints) {
+          final columns = category.columnsCount;
+          final slotWidth = constraints.maxWidth / columns;
+          final rowHeight = appCardRowExtentFromContentWidth(constraints.maxWidth, columnCount: columns) +
+              (showAppNames ? kAppNameLabelHeight : 0);
+          return SizedBox(
+            height: rowHeight,
+            child: ListView.custom(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.horizontal,
+              itemExtent: slotWidth,
+              childrenDelegate: SliverChildBuilderDelegate(
+                childCount: applications.length,
+                findChildIndexCallback: _findChildIndex,
+                (context, index) => Padding(
+                  key: Key(applications[index].packageName),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kAppCardHorizontalPadding,
+                    vertical: kAppCardVerticalPadding,
+                  ),
+                  child: AppCard(
+                    category: category,
+                    application: applications[index],
+                    autofocus: index == 0,
+                    handleUpNavigationToSettings: isFirstSection,
+                    enforceAspectRatio: false,
+                    onFocused: onAppFocused,
+                    onMove: (direction) => _onMove(context, direction, index),
+                    onMoveEnd: () => _onMoveEnd(context),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
 

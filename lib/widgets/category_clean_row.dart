@@ -54,12 +54,13 @@ class CategoryCleanRow extends StatelessWidget
     else {
       categoryContent = LayoutBuilder(
         builder: (context, constraints) {
-          final rowHeight = appCardRowExtentFromContentWidth(constraints.maxWidth)
+          final columns = category.columnsCount;
+          final rowHeight = appCardRowExtentFromContentWidth(constraints.maxWidth, columnCount: columns)
               + (showAppNames ? kAppNameLabelHeight : 0);
           return SizedBox(
             height: rowHeight,
             child: Row(
-              children: List.generate(Category.ColumnsCount, (index) {
+              children: List.generate(columns, (index) {
                 if (index < applications.length) {
                   return Expanded(
                     child: Padding(

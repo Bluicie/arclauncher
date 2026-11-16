@@ -499,7 +499,8 @@ class _CategorySettingsState extends State<_CategorySettings>
             )
           )
         ),
-        if (_categoryType == CategoryType.grid)
+        // Favorites is also the dock, a single line whose slot count follows this setting.
+        if (_categoryType == CategoryType.grid || _name == 'Favorites')
           _listTile(
             context,
             Text(localizations.columnCount),

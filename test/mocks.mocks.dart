@@ -2580,6 +2580,21 @@ class MockWatchNextService extends _i1.Mock implements _i20.WatchNextService {
       ) as bool);
 
   @override
+  _i21.WatchNextItem? get focusedItem => (super.noSuchMethod(
+        Invocation.getter(#focusedItem),
+        returnValueForMissingStub: null,
+      ) as _i21.WatchNextItem?);
+
+  @override
+  void setFocusedItem(_i21.WatchNextItem? item) => super.noSuchMethod(
+        Invocation.method(
+          #setFocusedItem,
+          [item],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void setActiveHeroIndex(int? index) => super.noSuchMethod(
         Invocation.method(
           #setActiveHeroIndex,

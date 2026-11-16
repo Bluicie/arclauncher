@@ -18,6 +18,7 @@
 
 import 'package:flauncher/models/watch_next_item.dart';
 import 'package:flauncher/actions.dart';
+import 'package:flauncher/providers/apps_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/widgets/app_card.dart';
@@ -42,6 +43,20 @@ const double _kWatchNextItemWidth = 360;
 const double _kWatchNextItemHeight = 200;
 const double _kWatchNextItemSpacing = 24;
 const double _kWatchNextRowVerticalSlack = 8;
+
+// The compact row, used with the scene clock: slim glass cards with a thumbnail.
+const double _kCompactItemWidth = 236;
+const double _kCompactItemHeight = 60;
+const double _kCompactItemSpacing = 12;
+const double _kCompactRowVerticalPadding = 8;
+const double _kCompactTitleHeight = 26;
+
+/// The height of the compact recommendations section: title, row and the gap under it.
+const double kCompactWatchNextSectionHeight = _kCompactTitleHeight +
+    _kCompactItemHeight +
+    2 * _kCompactRowVerticalPadding +
+    _kWatchNextRowVerticalSlack / 2 +
+    12;
 const double _kWatchNextHorizontalPadding =
     kLauncherSectionHorizontalPadding + kAppCardHorizontalPadding;
 
@@ -93,6 +108,7 @@ class WatchNextRow extends StatelessWidget {
         }
 
         final isBigPicture = context.select<SettingsService, bool>((s) => s.watchNextBigPictureMode);
+        final compact = !isBigPicture && context.select<SettingsService, bool>((s) => s.sceneClockEnabled);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,13 +120,16 @@ class WatchNextRow extends StatelessWidget {
                 handleUpNavigationToSettings: isAboveDock,
                 onItemFocused: onItemFocused,
               )
-            else
+            else ...[
+              if (compact) _CompactSectionTitle(title: localizations.watchNextSectionTitle),
               _WatchNextCleanRow(
                 items: data.items,
                 isFirstSection: isFirstSection,
                 handleUpNavigationToSettings: isAboveDock,
                 onItemFocused: onItemFocused,
+                compact: compact,
               ),
+            ],
             SizedBox(height: isBigPicture ? 16 : 12),
           ],
         );
@@ -138,6 +157,30 @@ class _WatchNextSectionTitle extends StatelessWidget {
               blurRadius: 8,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CompactSectionTitle extends StatelessWidget {
+  final String title;
+
+  const _CompactSectionTitle({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _kCompactTitleHeight,
+      child: Padding(
+        padding: const EdgeInsets.only(left: _kWatchNextHorizontalPadding, top: 8),
+        child: Text(
+          title,
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: Colors.white.withValues(alpha: 0.9),
+            fontWeight: FontWeight.w500,
+            shadows: const [Shadow(color: Colors.black54, offset: Offset(0, 1), blurRadius: 6)],
+          ),
         ),
       ),
     );
@@ -214,12 +257,14 @@ class _WatchNextCleanRow extends StatefulWidget {
   final bool isFirstSection;
   final bool handleUpNavigationToSettings;
   final VoidCallback? onItemFocused;
+  final bool compact;
 
   const _WatchNextCleanRow({
     required this.items,
     this.isFirstSection = false,
     this.handleUpNavigationToSettings = false,
     this.onItemFocused,
+    this.compact = false,
   });
 
   @override
@@ -279,7 +324,20 @@ class _WatchNextCleanRowState extends State<_WatchNextCleanRow> {
     return KeyEventResult.ignored;
   }
 
+  double get _itemWidth => widget.compact ? _kCompactItemWidth : _kWatchNextItemWidth;
+  double get _itemSpacing => widget.compact ? _kCompactItemSpacing : _kWatchNextItemSpacing;
+
   void _onFocusChanged(int index, bool focused) {
+    if (widget.compact) {
+      // The scene clock takes its colours from the focused recommendation.
+      final service = context.read<WatchNextService>();
+      final item = widget.items[index];
+      if (focused) {
+        service.setFocusedItem(item);
+      } else if (service.focusedItem?.id == item.id) {
+        service.setFocusedItem(null);
+      }
+    }
     if (focused) {
       widget.onItemFocused?.call();
       _scrollToIndex(index);
@@ -291,10 +349,10 @@ class _WatchNextCleanRowState extends State<_WatchNextCleanRow> {
 
     final position = _scrollController.position;
     final viewportWidth = position.viewportDimension;
-    final slotWidth = _kWatchNextItemWidth + _kWatchNextItemSpacing;
+    final slotWidth = _itemWidth + _itemSpacing;
 
     final cardStart = _kWatchNextHorizontalPadding + index * slotWidth;
-    final cardCenter = cardStart + _kWatchNextItemWidth / 2;
+    final cardCenter = cardStart + _itemWidth / 2;
     final targetOffset = (cardCenter - viewportWidth / 2).clamp(
       position.minScrollExtent,
       position.maxScrollExtent,
@@ -318,13 +376,19 @@ class _WatchNextCleanRowState extends State<_WatchNextCleanRow> {
 
   @override
   Widget build(BuildContext context) {
+    final compact = widget.compact;
     return SizedBox(
-      height: _kWatchNextItemHeight + 24 + _kWatchNextRowVerticalSlack,
+      height: compact
+          ? _kCompactItemHeight + 2 * _kCompactRowVerticalPadding + _kWatchNextRowVerticalSlack / 2
+          : _kWatchNextItemHeight + 24 + _kWatchNextRowVerticalSlack,
       child: ListView.builder(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: _kWatchNextHorizontalPadding, vertical: 12),
-        itemExtent: _kWatchNextItemWidth + _kWatchNextItemSpacing,
+        padding: EdgeInsets.symmetric(
+          horizontal: _kWatchNextHorizontalPadding,
+          vertical: compact ? _kCompactRowVerticalPadding : 12,
+        ),
+        itemExtent: _itemWidth + _itemSpacing,
         addSemanticIndexes: false,
         addRepaintBoundaries: true,
         itemCount: widget.items.length,
@@ -337,6 +401,7 @@ class _WatchNextCleanRowState extends State<_WatchNextCleanRow> {
             onFocusChanged: (focused) => _onFocusChanged(index, focused),
             onNavigationKey: (key) => _handleNavigationKey(index, key),
             handleUpNavigationToSettings: widget.handleUpNavigationToSettings,
+            compact: compact,
           );
         },
       ),
@@ -351,6 +416,7 @@ class _WatchNextCard extends StatefulWidget {
   final ValueChanged<bool> onFocusChanged;
   final KeyEventResult Function(LogicalKeyboardKey key) onNavigationKey;
   final bool handleUpNavigationToSettings;
+  final bool compact;
 
   const _WatchNextCard({
     required this.item,
@@ -359,6 +425,7 @@ class _WatchNextCard extends StatefulWidget {
     required this.onFocusChanged,
     required this.onNavigationKey,
     this.handleUpNavigationToSettings = false,
+    this.compact = false,
   });
 
   @override
@@ -449,7 +516,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
 
 
     return Padding(
-      padding: const EdgeInsets.only(right: _kWatchNextItemSpacing),
+      padding: EdgeInsets.only(right: widget.compact ? _kCompactItemSpacing : _kWatchNextItemSpacing),
       child: RepaintBoundary(
         child: Focus(
           focusNode: widget.focusNode,
@@ -476,7 +543,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                 scale: targetScale,
                 duration: const Duration(milliseconds: 180),
                 curve: Curves.easeOutCubic,
-                child: Card(
+                child: widget.compact ? _buildCompactCard(posterData) : Card(
                   margin: EdgeInsets.zero,
                   elevation: _isHovered ? 6 : 2,
                   clipBehavior: Clip.antiAlias,
@@ -517,6 +584,90 @@ class _WatchNextCardState extends State<_WatchNextCard> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// A slim glass card: thumbnail, app name, title and progress.
+  Widget _buildCompactCard(Uint8List? posterData) {
+    final appName = context.select<AppsService, String?>(
+      (service) => service.getApplication(widget.item.packageName)?.name,
+    );
+    final progress = widget.item.progressPercent;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      width: _kCompactItemWidth,
+      height: _kCompactItemHeight,
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: _isHovered ? const Color(0x47FFFFFF) : const Color(0x8C12161C),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: _isHovered ? const Color(0xD9FFFFFF) : const Color(0x2EFFFFFF),
+          width: _isHovered ? 1.5 : 1,
+        ),
+        boxShadow: const [BoxShadow(color: Color(0x47000000), blurRadius: 16, offset: Offset(0, 6))],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: SizedBox(
+              width: 88,
+              height: _kCompactItemHeight - 10,
+              child: posterData != null
+                  ? Image.memory(
+                      posterData,
+                      fit: BoxFit.cover,
+                      cacheWidth: 176,
+                      filterQuality: FilterQuality.low,
+                    )
+                  : ColoredBox(
+                      color: Colors.grey.shade800,
+                      child: const Icon(Icons.play_circle_outline, size: 20, color: Colors.white70),
+                    ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (appName != null)
+                  Text(
+                    appName.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                      fontSize: 8,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                Text(
+                  widget.item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+                if (progress != null && progress > 0) ...[
+                  const SizedBox(height: 5),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: LinearProgressIndicator(
+                      value: progress / 100.0,
+                      minHeight: 2.5,
+                      backgroundColor: Colors.white24,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

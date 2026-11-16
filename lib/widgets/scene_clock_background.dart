@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flauncher/models/clock_scene.dart';
 import 'package:flauncher/providers/settings_service.dart';
+import 'package:flauncher/providers/watch_next_service.dart';
 import 'package:flauncher/providers/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 /// A layered scene with a large frosted glass clock, used instead of the wallpaper.
 ///
 /// The scene follows the day (or a fixed scene from the settings) and changes with a crossfade.
+/// While a recommendation has the focus, the glass takes the colours of its poster.
 class SceneClockBackground extends StatefulWidget {
   /// Where the home content starts, in logical pixels from the top of the screen. The clock is
   /// kept above it.
@@ -33,12 +35,19 @@ class _LoadedScene {
   const _LoadedScene(this.scene, this.image, this.foreground, this.glass);
 }
 
-class _SceneClockBackgroundState extends State<SceneClockBackground> {
+class _SceneClockBackgroundState extends State<SceneClockBackground> with SingleTickerProviderStateMixin {
   Timer? _timer;
   DateTime _now = DateTime.now();
   _LoadedScene? _shown;
   String? _loading;
   final Set<String> _failed = {};
+
+  // The glass fades from [_tintFrom] to [_tintTo]; `null` is the scene's own glass.
+  late final AnimationController _tint =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 600), value: 1);
+  ui.Image? _tintFrom;
+  ui.Image? _tintTo;
+  Uint8List? _posterBytes;
 
   @override
   void initState() {
@@ -49,7 +58,32 @@ class _SceneClockBackgroundState extends State<SceneClockBackground> {
   @override
   void dispose() {
     _timer?.cancel();
+    _tint.dispose();
     super.dispose();
+  }
+
+  /// Makes the glass for the focused recommendation's poster, or goes back to the scene's glass.
+  Future<void> _followPoster(Uint8List? bytes) async {
+    // Never change state during the build that noticed the new poster.
+    await Future<void>.value();
+    ui.Image? glass;
+    if (bytes != null) {
+      try {
+        final codec = await ui.instantiateImageCodec(bytes, targetWidth: 480);
+        final poster = (await codec.getNextFrame()).image;
+        codec.dispose();
+        glass = await _makeGlass(poster);
+        poster.dispose();
+      } catch (_) {
+        glass = null;
+      }
+    }
+    if (!mounted || !identical(bytes, _posterBytes)) return;
+    setState(() {
+      _tintFrom = _tint.value >= 0.5 ? _tintTo : _tintFrom;
+      _tintTo = glass;
+    });
+    _tint.forward(from: 0);
   }
 
   void _scheduleTick() {
@@ -104,6 +138,15 @@ class _SceneClockBackgroundState extends State<SceneClockBackground> {
       _load(id, physicalWidth <= 0 ? 1920 : math.min(physicalWidth, 1920));
     }
 
+    final posterBytes = context.select<WatchNextService?, Uint8List?>((service) {
+      final item = service?.focusedItem;
+      return item == null ? null : service!.getCachedPoster(service.getPosterUriForItem(item));
+    });
+    if (!identical(posterBytes, _posterBytes)) {
+      _posterBytes = posterBytes;
+      _followPoster(posterBytes);
+    }
+
     final shown = _shown;
     final pattern = MediaQuery.alwaysUse24HourFormatOf(context) ? "HH:mm" : "h:mm";
     return SizedBox(
@@ -113,18 +156,23 @@ class _SceneClockBackgroundState extends State<SceneClockBackground> {
         duration: const Duration(milliseconds: 1500),
         child: shown == null
             ? const ColoredBox(key: ValueKey("scene_loading"), color: Colors.black, child: SizedBox.expand())
-            : CustomPaint(
+            : AnimatedBuilder(
                 key: ValueKey("scene_${shown.scene.id}"),
-                size: size,
-                painter: ClockScenePainter(
-                  scene: shown.scene,
-                  image: shown.image,
-                  foreground: shown.foreground,
-                  glass: shown.glass,
-                  time: DateFormat(pattern).format(_now),
-                  contentTop: widget.contentTop,
-                  // After 9 pm everything dims a little.
-                  dim: _now.hour >= 21 || _now.hour < 6,
+                animation: _tint,
+                builder: (context, _) => CustomPaint(
+                  size: size,
+                  painter: ClockScenePainter(
+                    scene: shown.scene,
+                    image: shown.image,
+                    foreground: shown.foreground,
+                    glass: _tintFrom ?? shown.glass,
+                    tintGlass: _tintTo ?? shown.glass,
+                    tint: _tint.value,
+                    time: DateFormat(pattern).format(_now),
+                    contentTop: widget.contentTop,
+                    // After 9 pm everything dims a little.
+                    dim: _now.hour >= 21 || _now.hour < 6,
+                  ),
                 ),
               ),
       ),
@@ -219,6 +267,10 @@ class ClockScenePainter extends CustomPainter {
   final ui.Image image;
   final ui.Image? foreground;
   final ui.Image glass;
+
+  /// The glass fading in over [glass], by [tint] (0 to 1).
+  final ui.Image? tintGlass;
+  final double tint;
   final String time;
   final double contentTop;
   final bool dim;
@@ -228,6 +280,8 @@ class ClockScenePainter extends CustomPainter {
     required this.image,
     required this.foreground,
     required this.glass,
+    this.tintGlass,
+    this.tint = 0,
     required this.time,
     required this.contentTop,
     required this.dim,
@@ -333,6 +387,15 @@ class ClockScenePainter extends CustomPainter {
       ..filterQuality = FilterQuality.low;
     if (glassLight != 1.0) glassPaint.colorFilter = _brightness(glassLight);
     _drawCover(canvas, glass, Offset.zero & size, glassPaint);
+    final incoming = tintGlass;
+    if (incoming != null && tint > 0 && !identical(incoming, glass)) {
+      final tintPaint = Paint()
+        ..blendMode = BlendMode.srcATop
+        ..filterQuality = FilterQuality.low
+        ..color = Color.fromRGBO(0, 0, 0, tint.clamp(0.0, 1.0));
+      if (glassLight != 1.0) tintPaint.colorFilter = _brightness(glassLight);
+      _drawCover(canvas, incoming, Offset.zero & size, tintPaint);
+    }
     if (scene.sheen) {
       canvas.drawRect(
         bounds,
@@ -365,6 +428,8 @@ class ClockScenePainter extends CustomPainter {
       oldDelegate.image != image ||
       oldDelegate.foreground != foreground ||
       oldDelegate.glass != glass ||
+      oldDelegate.tintGlass != tintGlass ||
+      oldDelegate.tint != tint ||
       oldDelegate.time != time ||
       oldDelegate.contentTop != contentTop ||
       oldDelegate.dim != dim;

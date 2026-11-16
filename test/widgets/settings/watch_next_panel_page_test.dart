@@ -106,6 +106,12 @@ class MockWatchNextServiceForPanel extends ChangeNotifier implements WatchNextSe
 
   @override
   void setActiveHeroIndex(int index) {}
+
+  @override
+  WatchNextItem? get focusedItem => null;
+
+  @override
+  void setFocusedItem(WatchNextItem? item) {}
 }
 
 class FakeAppsServiceForPanel extends ChangeNotifier implements AppsService {

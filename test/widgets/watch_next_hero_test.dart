@@ -104,6 +104,17 @@ class TestWatchNextService extends ChangeNotifier implements WatchNextService {
 
   @override
   Future<void> forceRefresh() async {}
+
+  WatchNextItem? _focusedItemForTest;
+
+  @override
+  WatchNextItem? get focusedItem => _focusedItemForTest;
+
+  @override
+  void setFocusedItem(WatchNextItem? item) {
+    _focusedItemForTest = item;
+    notifyListeners();
+  }
 }
 
 class TestAppsService extends ChangeNotifier implements AppsService {

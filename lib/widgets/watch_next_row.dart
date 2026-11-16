@@ -45,8 +45,8 @@ const double _kWatchNextItemSpacing = 24;
 const double _kWatchNextRowVerticalSlack = 8;
 
 // The compact row, used with the scene clock: slim glass cards with a thumbnail.
-const double _kCompactItemWidth = 236;
-const double _kCompactItemHeight = 60;
+const double _kCompactItemWidth = 260;
+const double _kCompactItemHeight = 72;
 const double _kCompactItemSpacing = 12;
 const double _kCompactRowVerticalPadding = 8;
 const double _kCompactTitleHeight = 26;
@@ -614,13 +614,13 @@ class _WatchNextCardState extends State<_WatchNextCard> {
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: SizedBox(
-              width: 88,
+              width: 110,
               height: _kCompactItemHeight - 10,
               child: posterData != null
                   ? Image.memory(
                       posterData,
                       fit: BoxFit.cover,
-                      cacheWidth: 176,
+                      cacheWidth: 220,
                       filterQuality: FilterQuality.low,
                     )
                   : ColoredBox(
@@ -642,7 +642,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 8,
+                      fontSize: 9,
                       letterSpacing: 0.6,
                     ),
                   ),
@@ -650,7 +650,7 @@ class _WatchNextCardState extends State<_WatchNextCard> {
                   widget.item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                  style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
                 ),
                 if (progress != null && progress > 0) ...[
                   const SizedBox(height: 5),

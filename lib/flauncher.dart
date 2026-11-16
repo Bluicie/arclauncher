@@ -629,6 +629,7 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
     final darkBackground = context.select<SettingsService, bool>((s) => s.dockDarkBackground);
     final shadowEnabled = context.select<SettingsService, bool>((s) => s.dockShadowEnabled);
     final isBigPicture = context.select<SettingsService, bool>((s) => s.showWatchNextSection && s.watchNextBigPictureMode);
+    final sceneClock = context.select<SettingsService, bool>((s) => s.sceneClockEnabled);
 
     const dockBorderRadius = 24.0;
     final borderRadius = BorderRadius.circular(dockBorderRadius);
@@ -638,9 +639,12 @@ class _FLauncherState extends State<FLauncher> with WidgetsBindingObserver {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: darkBackground
-              ? Colors.black.withValues(alpha: 0.35)
-              : (isBigPicture ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.1)),
+          // With the scene clock: the same dark glass as the compact recommendation cards.
+          color: sceneClock && !isBigPicture
+              ? const Color(0x7312161C)
+              : darkBackground
+                  ? Colors.black.withValues(alpha: 0.35)
+                  : (isBigPicture ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.1)),
           borderRadius: borderRadius,
         ),
         child: CategoryCleanRow(

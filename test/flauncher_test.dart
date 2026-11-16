@@ -30,6 +30,7 @@ import 'package:flauncher/providers/network_service.dart';
 import 'package:flauncher/providers/settings_service.dart';
 import 'package:flauncher/providers/wallpaper_service.dart';
 import 'package:flauncher/providers/watch_next_service.dart';
+import 'package:flauncher/widgets/app_card.dart';
 import 'package:flauncher/widgets/application_info_panel.dart';
 import 'package:flauncher/widgets/apps_grid.dart';
 import 'package:flauncher/widgets/cached_blur_backdrop.dart';
@@ -104,6 +105,23 @@ void main() {
         expect(findAppCard("dock.app.$i"), i < shown ? findsOneWidget : findsNothing, reason: "$columns columns, app $i");
       }
     }
+  });
+
+  testWidgets("A single-line row fits as many apps across as its column count", (tester) async {
+    final appsService = mkAppService();
+    final row = fakeCategory(name: "Games", order: 1, type: CategoryType.row, columnsCount: 8);
+    when(appsService.categoriesWithApps).thenReturn([
+      CategoryWithApps(row, [
+        for (int i = 0; i < 10; i++) fakeApp(packageName: "row.app.$i", name: "Game $i"),
+      ]),
+    ]);
+
+    await _pumpWidgetWith(tester, appsService);
+    await tester.pumpAndSettle();
+
+    final screenWidth = tester.view.physicalSize.width / tester.view.devicePixelRatio;
+    final slot = (screenWidth - 2 * kLauncherSectionHorizontalPadding) / 8;
+    expect(tester.getSize(findAppCard("row.app.0")).width, closeTo(slot - 2 * kAppCardHorizontalPadding, 0.5));
   });
 
   testWidgets("Home page shows category empty-state", (tester) async {
